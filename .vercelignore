@@ -1,0 +1,22 @@
+# Ignorar dependencias globales
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar salidas de build
+.next
+out
+dist
+build
+coverage
+
+# Ignorar servicios que no van a Vercel
+services/
+supabase/
+database/
+
+# Archivos locales
+.env*
+.DS_Store
+Thumbs.db
