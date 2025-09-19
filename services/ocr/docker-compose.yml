@@ -1,0 +1,82 @@
+# =========================================================
+# DOCKER COMPOSE PARA DESARROLLO LOCAL DEL SERVICIO OCR
+# =========================================================
+
+version: '3.8'
+
+services:
+  ocr-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sistema-stock-ocr
+    ports:
+      - "8000:8000"
+    environment:
+      # Autenticación básica
+      - OCR_BASIC_AUTH_USER=ocr_dev
+      - OCR_BASIC_AUTH_PASS=dev_secret_2024
+      
+      # URLs de callback (desarrollo local)
+      - CALLBACK_BASE_URL=http://localhost:3000
+      - CALLBACK_SECRET=dev_callback_secret
+      
+      # Configuración OCR
+      - PADDLE_OCR_LANG=es
+      - MAX_IMAGE_SIZE_MB=10
+      
+      # Logging
+      - PYTHONUNBUFFERED=1
+    
+    volumes:
+      # Persistir modelos OCR descargados
+      - ocr-models:/home/ocruser/.paddleocr
+      # Logs (opcional)
+      - ./logs:/tmp/logs
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    restart: unless-stopped
+    
+    # Recursos límite (ajustar según servidor)
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+volumes:
+  ocr-models:
+    driver: local
+
+# =========================================================
+# COMANDOS ÚTILES
+# =========================================================
+#
+# Levantar el servicio:
+# docker-compose up -d
+#
+# Ver logs en tiempo real:
+# docker-compose logs -f ocr-service
+#
+# Parar el servicio:
+# docker-compose down
+#
+# Rebuilding después de cambios:
+# docker-compose up -d --build
+#
+# Entrar al contenedor para debug:
+# docker-compose exec ocr-service bash
+#
+# Limpiar volúmenes (borra modelos descargados):
+# docker-compose down -v
+#
+# =========================================================

@@ -1,0 +1,1255 @@
+openapi: 3.0.3
+info:
+  title: Sistema Stock - API Contract
+  description: |
+    Contrato de API para el sistema de gestión de stock.
+    
+    ## Arquitectura
+    - **Backoffice**: Gestión interna con service_role key
+    - **B2B**: Tienda para clientes con auth JWT
+    - **OCR**: Microservicio externo en Hetzner
+    
+    ## Autenticación
+    - **Backoffice**: Service role key en headers
+    - **B2B**: JWT token de usuario autenticado
+    - **OCR**: HTTP Basic Authentication
+    
+    ## Base URLs
+    - **Vercel Apps**: `https://your-app.vercel.app`
+    - **OCR Service**: `https://your-ocr.hetzner.com`
+  version: 1.0.0
+  contact:
+    name: Sistema Stock Team
+    email: dev@sistema-stock.com
+
+servers:
+  - url: https://sistema-stock-b2b.vercel.app/api
+    description: B2B Production API
+  - url: https://sistema-stock-backoffice.vercel.app/api
+    description: Backoffice Production API
+  - url: https://ocr-service.hetzner.com
+    description: OCR Service (Hetzner)
+  - url: http://localhost:3000/api
+    description: Development Local
+
+security:
+  - BearerAuth: []
+  - ServiceRoleAuth: []
+  - BasicAuth: []
+
+# =========================================================
+# MODELOS DE DATOS
+# =========================================================
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token para usuarios B2B autenticados
+    
+    ServiceRoleAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: "Bearer {SUPABASE_SERVICE_ROLE_KEY} para Backoffice"
+    
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic para servicio OCR
+
+  schemas:
+    # =========================================================
+    # PRODUCTOS Y STOCK
+    # =========================================================
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+          example: "Tomate Cherry"
+        descripcion:
+          type: string
+        unidad:
+          type: string
+          enum: [kg, g, l, ml, ud, pz, caja, bolsa]
+          default: kg
+        stock_actual:
+          type: number
+          format: decimal
+          minimum: 0
+          example: 25.5
+        stock_minimo:
+          type: number
+          format: decimal
+          minimum: 0
+        stock_maximo:
+          type: number
+          format: decimal
+        categoria:
+          type: string
+          example: "verduras"
+        proveedor_principal:
+          type: string
+          format: uuid
+        precio_promedio:
+          type: number
+          format: decimal
+          minimum: 0
+          example: 3.80
+        brand:
+          type: string
+        image_url:
+          type: string
+          format: uri
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ProductWithDiscount:
+      allOf:
+        - $ref: '#/components/schemas/Product'
+        - type: object
+          properties:
+            discount_percentage:
+              type: number
+              format: decimal
+              minimum: 0
+              maximum: 100
+              example: 10.5
+            final_price:
+              type: number
+              format: decimal
+              minimum: 0
+              example: 3.42
+
+    StockLevel:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        product_name:
+          type: string
+        current_stock:
+          type: number
+          format: decimal
+        minimum_stock:
+          type: number
+          format: decimal
+        status:
+          type: string
+          enum: [normal, low, critical, out]
+        last_updated:
+          type: string
+          format: date-time
+
+    # =========================================================
+    # PEDIDOS B2B
+    # =========================================================
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        customer_id:
+          type: string
+          format: uuid
+        order_number:
+          type: string
+          example: "20241201-0001"
+        status:
+          type: string
+          enum: [pending, confirmed, prepared, delivered, cancelled]
+        total_amount:
+          type: number
+          format: decimal
+          minimum: 0
+          example: 156.80
+        total_items:
+          type: integer
+          minimum: 1
+          example: 4
+        has_backorder:
+          type: boolean
+          default: false
+        backorder_items:
+          type: array
+          items:
+            type: object
+        delivery_date:
+          type: string
+          format: date
+        notes:
+          type: string
+        cancelled_at:
+          type: string
+          format: date-time
+        cancellation_reason:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        order_id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+        product_name:
+          type: string
+          example: "Tomate Cherry"
+        quantity:
+          type: number
+          format: decimal
+          minimum: 0.001
+          example: 5.5
+        unit_price:
+          type: number
+          format: decimal
+          minimum: 0
+          example: 3.80
+        discount_percentage:
+          type: number
+          format: decimal
+          minimum: 0
+          maximum: 100
+          default: 0
+        discount_amount:
+          type: number
+          format: decimal
+          minimum: 0
+          default: 0
+        total_price:
+          type: number
+          format: decimal
+          minimum: 0
+          example: 18.05
+        created_at:
+          type: string
+          format: date-time
+
+    CreateOrderRequest:
+      type: object
+      required:
+        - items
+        - delivery_date
+      properties:
+        items:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [product_id, quantity]
+            properties:
+              product_id:
+                type: string
+                format: uuid
+              quantity:
+                type: number
+                format: decimal
+                minimum: 0.001
+        delivery_date:
+          type: string
+          format: date
+        notes:
+          type: string
+          maxLength: 500
+
+    # =========================================================
+    # CLIENTES Y DESCUENTOS
+    # =========================================================
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        company_name:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        tax_id:
+          type: string
+        is_approved:
+          type: boolean
+          default: false
+        approved_by:
+          type: string
+          format: uuid
+        approved_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CustomerDiscount:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        customer_id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        discount_percentage:
+          type: number
+          format: decimal
+          minimum: 0
+          maximum: 100
+        discount_amount:
+          type: number
+          format: decimal
+          minimum: 0
+        is_active:
+          type: boolean
+          default: true
+        valid_from:
+          type: string
+          format: date-time
+        valid_until:
+          type: string
+          format: date-time
+          nullable: true
+
+    # =========================================================
+    # ALERTAS Y NOTIFICACIONES
+    # =========================================================
+    Alert:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [stock_critical, stock_out, expiry_warning, expiry_critical, entry_processed, order_backorder]
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        title:
+          type: string
+          example: "Stock crítico"
+        message:
+          type: string
+          example: "Tomate Cherry - Stock: 8.25 (Mínimo: 12)"
+        entity_type:
+          type: string
+          enum: [product, batch, order, entry]
+        entity_id:
+          type: string
+          format: uuid
+        metadata:
+          type: object
+          additionalProperties: true
+        is_read:
+          type: boolean
+          default: false
+        is_resolved:
+          type: boolean
+          default: false
+        resolved_by:
+          type: string
+          format: uuid
+        resolved_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    # =========================================================
+    # ENTRADAS Y OCR
+    # =========================================================
+    Entry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tipo:
+          type: string
+          enum: [ocr, manual]
+        estado:
+          type: string
+          enum: [draft, processing, completed, error, validated]
+        supplier_id:
+          type: string
+          format: uuid
+        proveedor_text:
+          type: string
+        fecha_factura:
+          type: string
+          format: date
+        numero_factura:
+          type: string
+        documento_url:
+          type: string
+          format: uri
+        archivo_nombre:
+          type: string
+        productos:
+          type: array
+          items:
+            type: object
+        ocr_confidence:
+          type: number
+          format: decimal
+          minimum: 0
+          maximum: 1
+        total_items:
+          type: integer
+          minimum: 0
+        total_amount:
+          type: number
+          format: decimal
+          minimum: 0
+        validated_by:
+          type: string
+          format: uuid
+        validated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    OCRRequest:
+      type: object
+      required:
+        - image_url
+      properties:
+        image_url:
+          type: string
+          format: uri
+          description: "URL firmada de Supabase Storage"
+        callback_url:
+          type: string
+          format: uri
+          description: "URL de callback opcional"
+        processing_id:
+          type: string
+          format: uuid
+          description: "ID único para tracking"
+
+    OCRResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        processing_id:
+          type: string
+          format: uuid
+        proveedor:
+          type: object
+          properties:
+            nombre:
+              type: string
+            direccion:
+              type: string
+            telefono:
+              type: string
+            email:
+              type: string
+              format: email
+            cif:
+              type: string
+            confianza:
+              type: number
+              minimum: 0
+              maximum: 1
+        documento:
+          type: object
+          properties:
+            tipo:
+              type: string
+              enum: [factura, albarán]
+            numero:
+              type: string
+            fecha:
+              type: string
+              format: date
+            total:
+              type: number
+              minimum: 0
+        productos:
+          type: array
+          items:
+            type: object
+            properties:
+              nombre:
+                type: string
+              cantidad:
+                type: number
+                minimum: 0.001
+              unidad:
+                type: string
+              precio:
+                type: number
+                minimum: 0
+              precio_total:
+                type: number
+                minimum: 0
+              caducidad:
+                type: string
+                format: date
+                nullable: true
+              lote:
+                type: string
+                nullable: true
+              confianza:
+                type: number
+                minimum: 0
+                maximum: 1
+        texto_completo:
+          type: string
+        confianza_general:
+          type: number
+          minimum: 0
+          maximum: 1
+        tiempo_procesamiento:
+          type: number
+          minimum: 0
+        error:
+          type: string
+          nullable: true
+
+    # =========================================================
+    # RESPUESTAS COMUNES
+    # =========================================================
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+
+    PaginatedResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items: {}
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+              minimum: 1
+            limit:
+              type: integer
+              minimum: 1
+              maximum: 100
+            total:
+              type: integer
+              minimum: 0
+            total_pages:
+              type: integer
+              minimum: 0
+
+# =========================================================
+# ENDPOINTS API
+# =========================================================
+
+paths:
+  # =========================================================
+  # B2B - STOCK Y CATÁLOGO
+  # =========================================================
+  /stock:
+    get:
+      tags: [B2B - Stock]
+      summary: Obtener catálogo de productos con descuentos
+      description: |
+        Lista productos activos con stock disponible, aplicando descuentos del cliente autenticado.
+        Incluye precio final calculado con descuentos por producto/categoría.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: category
+          in: query
+          description: Filtrar por categoría
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Búsqueda por nombre
+          schema:
+            type: string
+        - name: in_stock
+          in: query
+          description: Solo productos con stock > 0
+          schema:
+            type: boolean
+            default: true
+        - name: page
+          in: query
+          description: Número de página
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Items por página
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Lista de productos con descuentos aplicados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ProductWithDiscount'
+        '401':
+          description: Usuario no autenticado
+        '403':
+          description: Cliente no aprobado
+
+  # =========================================================
+  # B2B - PEDIDOS
+  # =========================================================
+  /orders:
+    get:
+      tags: [B2B - Orders]
+      summary: Obtener pedidos del cliente
+      description: Lista los pedidos del cliente autenticado con paginación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          description: Filtrar por estado
+          schema:
+            type: string
+            enum: [pending, confirmed, prepared, delivered, cancelled]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Order'
+
+    post:
+      tags: [B2B - Orders]
+      summary: Crear nuevo pedido
+      description: |
+        Crea un pedido nuevo. El pedido inicia en estado 'pending'.
+        Al confirmar, se reserva stock automáticamente.
+        Si no hay stock suficiente, se crea backorder.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Pedido creado exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Order'
+        '400':
+          description: Datos inválidos
+        '401':
+          description: Usuario no autenticado
+        '403':
+          description: Cliente no aprobado
+        '422':
+          description: Stock insuficiente
+
+  /orders/{orderId}:
+    get:
+      tags: [B2B - Orders]
+      summary: Obtener detalle de pedido
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Detalle del pedido con items
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/Order'
+                          - type: object
+                            properties:
+                              items:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/OrderItem'
+
+  /orders/{orderId}/cancel:
+    post:
+      tags: [B2B - Orders]
+      summary: Cancelar pedido
+      description: |
+        Cancela un pedido. Si estaba confirmado, repone automáticamente el stock reservado.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: Motivo de cancelación
+      responses:
+        '200':
+          description: Pedido cancelado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Pedido no se puede cancelar
+        '404':
+          description: Pedido no encontrado
+
+  # =========================================================
+  # BACKOFFICE - ENTRADAS
+  # =========================================================
+  /entries:
+    get:
+      tags: [Backoffice - Entries]
+      summary: Listar entradas de mercancía
+      security:
+        - ServiceRoleAuth: []
+      parameters:
+        - name: estado
+          in: query
+          schema:
+            type: string
+            enum: [draft, processing, completed, error, validated]
+        - name: tipo
+          in: query
+          schema:
+            type: string
+            enum: [ocr, manual]
+        - name: supplier_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de entradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entry'
+
+    post:
+      tags: [Backoffice - Entries]
+      summary: Crear entrada manual
+      description: Crear entrada manual de mercancía sin OCR
+      security:
+        - ServiceRoleAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tipo, productos]
+              properties:
+                tipo:
+                  type: string
+                  enum: [manual]
+                supplier_id:
+                  type: string
+                  format: uuid
+                fecha_factura:
+                  type: string
+                  format: date
+                numero_factura:
+                  type: string
+                productos:
+                  type: array
+                  items:
+                    type: object
+                    required: [nombre, cantidad]
+                    properties:
+                      nombre:
+                        type: string
+                      cantidad:
+                        type: number
+                        minimum: 0.001
+                      precio:
+                        type: number
+                        minimum: 0
+                      caducidad:
+                        type: string
+                        format: date
+                      lote:
+                        type: string
+      responses:
+        '201':
+          description: Entrada creada exitosamente
+
+  /entries/{entryId}/validate:
+    post:
+      tags: [Backoffice - Entries]
+      summary: Validar entrada
+      description: |
+        Valida una entrada procesada por OCR o manual.
+        Esto actualiza el stock de productos automáticamente.
+      security:
+        - ServiceRoleAuth: []
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Entrada validada, stock actualizado
+
+  # =========================================================
+  # BACKOFFICE - OCR
+  # =========================================================
+  /ocr/upload:
+    post:
+      tags: [Backoffice - OCR]
+      summary: Subir documento para OCR
+      description: |
+        Sube imagen/PDF de albarán/factura a Storage y lanza procesamiento OCR.
+        El resultado llega vía callback a /api/ocr/callback.
+      security:
+        - ServiceRoleAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Imagen o PDF del documento
+                supplier_id:
+                  type: string
+                  format: uuid
+                  description: ID del proveedor (opcional)
+      responses:
+        '202':
+          description: Archivo subido, OCR en proceso
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          entry_id:
+                            type: string
+                            format: uuid
+                          processing_id:
+                            type: string
+                            format: uuid
+                          status:
+                            type: string
+                            enum: [processing]
+
+  /ocr/callback:
+    post:
+      tags: [Backoffice - OCR]
+      summary: Callback desde servicio OCR
+      description: |
+        Endpoint interno para recibir resultados del servicio OCR.
+        Actualiza la entrada con datos extraídos.
+      security:
+        - ServiceRoleAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OCRResponse'
+      responses:
+        '200':
+          description: Callback procesado exitosamente
+
+  # =========================================================
+  # BACKOFFICE - ALERTAS
+  # =========================================================
+  /alerts:
+    get:
+      tags: [Backoffice - Alerts]
+      summary: Obtener alertas del sistema
+      security:
+        - ServiceRoleAuth: []
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [stock_critical, stock_out, expiry_warning, expiry_critical, entry_processed, order_backorder]
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+        - name: is_read
+          in: query
+          schema:
+            type: boolean
+        - name: is_resolved
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Lista de alertas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alert'
+
+  /alerts/{alertId}/mark-read:
+    patch:
+      tags: [Backoffice - Alerts]
+      summary: Marcar alerta como leída
+      security:
+        - ServiceRoleAuth: []
+      parameters:
+        - name: alertId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Alerta marcada como leída
+
+  /alerts/{alertId}/resolve:
+    patch:
+      tags: [Backoffice - Alerts]
+      summary: Resolver alerta
+      security:
+        - ServiceRoleAuth: []
+      parameters:
+        - name: alertId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Alerta resuelta
+
+  /alerts/generate:
+    post:
+      tags: [Backoffice - Alerts]
+      summary: Generar alertas manualmente
+      description: Ejecuta la generación de alertas de stock crítico y caducidades
+      security:
+        - ServiceRoleAuth: []
+      responses:
+        '200':
+          description: Alertas generadas
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          stock_alerts_generated:
+                            type: integer
+                          expiry_alerts_generated:
+                            type: integer
+
+  # =========================================================
+  # BACKOFFICE - AJUSTES DE STOCK
+  # =========================================================
+  /stock/adjustment:
+    post:
+      tags: [Backoffice - Stock]
+      summary: Ajustar stock manualmente
+      description: |
+        Realizar ajustes de stock (mermas, correcciones, inventarios).
+        Se registra trazabilidad y se actualiza histórico de consumo.
+      security:
+        - ServiceRoleAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [product_id, tipo, cantidad, motivo]
+              properties:
+                product_id:
+                  type: string
+                  format: uuid
+                tipo:
+                  type: string
+                  enum: [merma, correccion, devolucion, inventario]
+                cantidad:
+                  type: number
+                  description: "Cambio de stock (positivo=suma, negativo=resta)"
+                motivo:
+                  type: string
+                  minLength: 5
+                observaciones:
+                  type: string
+                batch_id:
+                  type: string
+                  format: uuid
+                  description: "ID del lote específico (opcional)"
+      responses:
+        '200':
+          description: Ajuste realizado exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          adjustment_id:
+                            type: string
+                            format: uuid
+                          old_stock:
+                            type: number
+                          new_stock:
+                            type: number
+                          change:
+                            type: number
+
+  # =========================================================
+  # SERVICIO OCR EXTERNO (HETZNER)
+  # =========================================================
+  /extract:
+    post:
+      tags: [OCR Service]
+      summary: Extraer datos de documento
+      description: |
+        Procesa imagen de albarán/factura y extrae:
+        - Información del proveedor  
+        - Datos del documento (número, fecha, total)
+        - Lista de productos con cantidades y precios
+        
+        Envía resultado vía callback si se proporciona URL.
+      servers:
+        - url: https://ocr-service.hetzner.com
+      security:
+        - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OCRRequest'
+      responses:
+        '200':
+          description: OCR procesado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OCRResponse'
+        '400':
+          description: URL de imagen inválida o no accesible
+        '413':
+          description: Imagen demasiado grande
+        '422':
+          description: No se pudo extraer texto de la imagen
+        '401':
+          description: Credenciales incorrectas
+
+  /health:
+    get:
+      tags: [OCR Service]
+      summary: Health check del servicio OCR
+      servers:
+        - url: https://ocr-service.hetzner.com
+      security: []
+      responses:
+        '200':
+          description: Servicio funcionando correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy]
+                  timestamp:
+                    type: string
+                    format: date-time
+                  ocr_ready:
+                    type: boolean
+                  memory_info:
+                    type: string
+
+# =========================================================
+# EJEMPLOS DE FLUJOS COMPLETOS
+# =========================================================
+
+# FLUJO 1: PROCESAMIENTO OCR COMPLETO
+# 1. POST /api/ocr/upload (Backoffice sube archivo)
+#    Response: { entry_id, processing_id, status: "processing" }
+# 2. [INTERNO] OCR service procesa imagen
+# 3. POST /api/ocr/callback (OCR envía resultados)  
+# 4. GET /api/entries/{entry_id} (Ver propuesta OCR)
+# 5. POST /api/entries/{entry_id}/validate (Validar y actualizar stock)
+
+# FLUJO 2: PEDIDO B2B COMPLETO  
+# 1. GET /api/stock (Cliente ve catálogo con descuentos)
+# 2. POST /api/orders (Cliente crea pedido)
+#    Response: Order with status "pending"
+# 3. [INTERNO] Manager confirma pedido → status "confirmed" → stock reservado
+# 4. GET /api/orders/{order_id} (Cliente ve estado)
+# 5. [OPCIONAL] POST /api/orders/{order_id}/cancel (Cancelar → repone stock)
+
+# FLUJO 3: GESTIÓN DE ALERTAS
+# 1. [AUTO] Triggers generan alertas en cambios de stock
+# 2. GET /api/alerts?is_read=false (Ver alertas pendientes)  
+# 3. PATCH /api/alerts/{alert_id}/mark-read (Marcar como leída)
+# 4. POST /api/stock/adjustment (Corregir stock si es necesario)
+# 5. PATCH /api/alerts/{alert_id}/resolve (Resolver alerta)

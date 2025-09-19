@@ -1,0 +1,13 @@
+{
+  "name": "sistema-stock",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/backoffice",
+    "build": "npm run build --workspace=apps/backoffice",
+    "start": "npm run start --workspace=apps/backoffice"
+  }
+}
