@@ -31,11 +31,9 @@
   ],
   "functions": {
     "apps/*/app/api/**/*.js": {
-      "runtime": "nodejs20.x",
       "maxDuration": 30
     },
     "apps/*/app/api/**/*.ts": {
-      "runtime": "nodejs20.x",
       "maxDuration": 30
     }
   },
