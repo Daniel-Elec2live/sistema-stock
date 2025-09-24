@@ -109,10 +109,10 @@ export async function GET(request: NextRequest) {
         sql_calculation: priceCalculation || null,
         manual_calculation: manualCalculation,
         comparison: priceCalculation && manualCalculation ? {
-          sql_final: priceCalculation.precio_final,
+          sql_final: (priceCalculation as any)?.precio_final,
           manual_final: manualCalculation.finalPrice,
-          difference: Math.abs(priceCalculation.precio_final - manualCalculation.finalPrice),
-          match: Math.abs(priceCalculation.precio_final - manualCalculation.finalPrice) < 0.01
+          difference: Math.abs((priceCalculation as any)?.precio_final - manualCalculation.finalPrice),
+          match: Math.abs((priceCalculation as any)?.precio_final - manualCalculation.finalPrice) < 0.01
         } : null,
         errors: {
           productError,

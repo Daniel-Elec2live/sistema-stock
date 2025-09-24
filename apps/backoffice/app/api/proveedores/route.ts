@@ -21,11 +21,12 @@ export async function GET() {
     }
     
     // Obtener lista única de proveedores
-    const proveedores = [...new Set(
+    const uniqueProveedores = new Set(
       products
         .map(p => p.proveedor)
         .filter(Boolean)
-    )].sort()
+    )
+    const proveedores = Array.from(uniqueProveedores).sort()
     
     const response = NextResponse.json({ proveedores })
 

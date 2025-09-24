@@ -50,9 +50,13 @@ export async function GET() {
     })
 
     // Test 4: Raw SQL query para verificar directamente
-    const { data: rawQuery } = await client1
-      .rpc('get_order_status', { order_id: testOrderId })
-      .catch(() => ({ data: null })) // Si la función no existe
+    let rawQuery = null
+    try {
+      const { data } = await client1.rpc('get_order_status', { order_id: testOrderId })
+      rawQuery = data
+    } catch (error) {
+      console.log('RPC function might not exist:', error)
+    }
 
     console.log('📋 RAW QUERY Result:', rawQuery)
 

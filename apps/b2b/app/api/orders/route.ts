@@ -162,8 +162,8 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      const unitPrice = priceData.precio_final || 0
-      const discount = priceData.descuento_aplicado || 0
+      const unitPrice = (priceData as any)?.precio_final || 0
+      const discount = (priceData as any)?.descuento_aplicado || 0
 
       if (availableStock >= requestedItem.quantity) {
         // Stock suficiente

@@ -53,7 +53,7 @@ export default function ProductoPage() {
     addItem(product, quantity)
     toast({
       title: "Producto agregado",
-      description: `${product.name} se agregó al carrito`,
+      description: `${product.nombre} se agregó al carrito`,
     })
     setQuantity(1)
   }
@@ -69,7 +69,7 @@ export default function ProductoPage() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: product?.name,
+          title: product?.nombre,
           text: `Mira este producto en La Traviata 1999`,
           url: window.location.href
         })
@@ -138,18 +138,18 @@ export default function ProductoPage() {
           Catálogo
         </Link>
         <span>/</span>
-        {product.category && (
+        {product.categoria && (
           <>
             <Link 
-              href={`/catalogo?category=${product.category}`}
+              href={`/catalogo?category=${product.categoria}`}
               className="hover:text-[var(--color-tomate)] capitalize"
             >
-              {product.category}
+              {product.categoria}
             </Link>
             <span>/</span>
           </>
         )}
-        <span className="text-gray-900 font-medium">{product.name}</span>
+        <span className="text-gray-900 font-medium">{product.nombre}</span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -159,7 +159,7 @@ export default function ProductoPage() {
           <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
             <Image
               src={product.image_url || '/placeholder-product.svg'}
-              alt={product.name || product.nombre || 'Producto'}
+              alt={product.nombre || product.nombre || 'Producto'}
               fill
               className="object-cover"
               priority
@@ -196,23 +196,16 @@ export default function ProductoPage() {
               <p className="text-sm text-gray-600 mb-2">{product.brand}</p>
             )}
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              {product.name}
+              {product.nombre}
             </h1>
             
             <div className="flex items-center space-x-4 mb-4">
               <StockIndicator 
-                stock={product.stock_quantity} 
-                minStock={product.min_stock}
+                stock={product.stock_actual} 
+                minStock={product.stock_minimo}
                 size="md"
                 showQuantity={true}
               />
-              
-              {product.approx_expiry && (
-                <div className="flex items-center text-sm text-gray-600">
-                  <Calendar className="w-4 h-4 mr-1" />
-                  Caduca: {formatDate(product.approx_expiry)}
-                </div>
-              )}
             </div>
           </div>
 
@@ -221,14 +214,14 @@ export default function ProductoPage() {
             {product.discount_percentage > 0 ? (
               <div className="space-y-2">
                 <p className="text-2xl text-gray-500 line-through">
-                  {formatPrice(product.price)}
+                  {formatPrice(product.precio_promedio || 0)}
                 </p>
                 <div className="flex items-center space-x-3">
                   <p className="text-4xl font-bold text-[var(--color-tomate)]">
                     {formatPrice(product.final_price)}
                   </p>
                   <Badge variant="destructive" className="text-sm">
-                    Ahorras {formatPrice(product.price - product.final_price)}
+                    Ahorras {formatPrice((product.precio_promedio || 0) - product.final_price)}
                   </Badge>
                 </div>
               </div>
@@ -244,27 +237,27 @@ export default function ProductoPage() {
           </div>
 
           {/* Descripción */}
-          {product.description && (
+          {product.descripcion && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Descripción</h3>
-              <p className="text-gray-700 leading-relaxed">{product.description}</p>
+              <p className="text-gray-700 leading-relaxed">{product.descripcion}</p>
             </div>
           )}
 
           {/* Información adicional */}
           <div className="grid grid-cols-2 gap-4 text-sm">
-            {product.category && (
+            {product.categoria && (
               <div className="flex items-center space-x-2">
                 <Tag className="w-4 h-4 text-gray-400" />
                 <span className="text-gray-600">Categoría:</span>
-                <span className="font-medium capitalize">{product.category}</span>
+                <span className="font-medium capitalize">{product.categoria}</span>
               </div>
             )}
             
             <div className="flex items-center space-x-2">
               <Package className="w-4 h-4 text-gray-400" />
               <span className="text-gray-600">Stock disponible:</span>
-              <span className="font-medium">{product.stock_quantity} unidades</span>
+              <span className="font-medium">{product.stock_actual} unidades</span>
             </div>
           </div>
 
@@ -290,9 +283,9 @@ export default function ProductoPage() {
                   <input
                     type="number"
                     min="1"
-                    max={product.stock_quantity}
+                    max={product.stock_actual}
                     value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock_quantity, parseInt(e.target.value) || 1)))}
+                    onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock_actual, parseInt(e.target.value) || 1)))}
                     className="w-full text-center border border-gray-300 rounded-md py-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-tomate)]"
                   />
                 </div>
@@ -300,14 +293,14 @@ export default function ProductoPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setQuantity(Math.min(product.stock_quantity, quantity + 1))}
-                  disabled={quantity >= product.stock_quantity}
+                  onClick={() => setQuantity(Math.min(product.stock_actual, quantity + 1))}
+                  disabled={quantity >= product.stock_actual}
                 >
                   <Plus className="w-4 h-4" />
                 </Button>
                 
                 <span className="text-sm text-gray-600">
-                  de {product.stock_quantity} disponibles
+                  de {product.stock_actual} disponibles
                 </span>
               </div>
             </div>
@@ -331,7 +324,7 @@ export default function ProductoPage() {
             <div className="space-y-3">
               <Button
                 onClick={handleBuyNow}
-                disabled={product.stock_quantity === 0}
+                disabled={product.stock_actual === 0}
                 className="w-full btn-primary"
                 size="lg"
               >
@@ -341,7 +334,7 @@ export default function ProductoPage() {
               
               <Button
                 onClick={handleAddToCart}
-                disabled={product.stock_quantity === 0}
+                disabled={product.stock_actual === 0}
                 variant="outline"
                 className="w-full"
                 size="lg"
@@ -365,16 +358,16 @@ export default function ProductoPage() {
             </div>
 
             {/* Aviso de stock bajo */}
-            {product.stock_quantity > 0 && product.stock_quantity <= product.min_stock && (
+            {product.stock_actual > 0 && product.stock_actual <= product.stock_minimo && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <p className="text-sm text-amber-800">
-                  ⚠️ <strong>¡Últimas unidades!</strong> Solo quedan {product.stock_quantity} en stock.
+                  ⚠️ <strong>¡Últimas unidades!</strong> Solo quedan {product.stock_actual} en stock.
                 </p>
               </div>
             )}
 
             {/* Producto agotado */}
-            {product.stock_quantity === 0 && (
+            {product.stock_actual === 0 && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                 <p className="text-sm text-red-800">
                   😞 <strong>Producto agotado.</strong> Te notificaremos cuando vuelva a estar disponible.

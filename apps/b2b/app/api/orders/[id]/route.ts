@@ -115,7 +115,7 @@ export async function GET(
     // Enriquecer el pedido con información del cliente
     const enrichedOrder = {
       ...order,
-      customer_name: customerInfo?.name || user.name || 'Cliente',
+      customer_name: customerInfo?.name || user.customer?.name || 'Cliente',
       customer_company: customerInfo?.company_name || '',
       customer_phone: customerInfo?.phone || '',
       customer_address: customerInfo?.address || '',

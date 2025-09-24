@@ -89,7 +89,7 @@ export function CartSidebar() {
                       <div className="w-16 h-16 flex-shrink-0">
                         <Image
                           src={item.product.image_url || '/placeholder-product.svg'}
-                          alt={item.product.nombre || item.product.name || 'Producto'}
+                          alt={item.product.nombre || 'Producto'}
                           width={64}
                           height={64}
                           className="w-full h-full object-cover rounded-md"
@@ -103,7 +103,7 @@ export function CartSidebar() {
                           onClick={closeCart}
                         >
                           <h4 className="text-sm font-medium text-gray-900 hover:text-[var(--color-tomate)] line-clamp-2">
-                            {item.product.name}
+                            {item.product.nombre}
                           </h4>
                         </Link>
                         
@@ -118,7 +118,7 @@ export function CartSidebar() {
                           {item.product.discount_percentage > 0 ? (
                             <div className="flex items-center space-x-2">
                               <span className="text-xs text-gray-500 line-through">
-                                {formatPrice(item.product.price)}
+                                {formatPrice(item.product.precio_promedio || 0)}
                               </span>
                               <span className="text-sm font-semibold text-[var(--color-tomate)]">
                                 {formatPrice(item.product.final_price)}
@@ -152,7 +152,7 @@ export function CartSidebar() {
                               variant="outline"
                               size="sm"
                               onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
-                              disabled={item.quantity >= item.product.stock_quantity}
+                              disabled={item.quantity >= item.product.stock_actual}
                               className="w-7 h-7 p-0"
                             >
                               <Plus className="w-3 h-3" />

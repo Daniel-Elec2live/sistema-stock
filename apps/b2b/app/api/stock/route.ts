@@ -125,13 +125,13 @@ export async function GET(request: NextRequest) {
 
         return {
           ...product,
-          discount_percentage: priceData.descuento_aplicado || 0,
-          discounted_price: priceData.precio_final || 0,
-          final_price: priceData.precio_final || 0,
+          discount_percentage: (priceData as any)?.descuento_aplicado || 0,
+          discounted_price: (priceData as any)?.precio_final || 0,
+          final_price: (priceData as any)?.precio_final || 0,
           // Campos extra para debug (opcional)
-          precio_compra_promedio: priceData.precio_compra_promedio,
-          precio_con_margen: priceData.precio_con_margen,
-          margen_aplicado: priceData.margen_aplicado
+          precio_compra_promedio: (priceData as any)?.precio_compra_promedio,
+          precio_con_margen: (priceData as any)?.precio_con_margen,
+          margen_aplicado: (priceData as any)?.margen_aplicado
         }
       })
     )

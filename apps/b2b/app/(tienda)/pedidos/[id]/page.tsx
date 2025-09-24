@@ -449,7 +449,7 @@ export default function PedidoDetallePage() {
 
                 {order.status === 'pending' && (
                   <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
-                    <DialogTrigger asChild>
+                    <DialogTrigger onClick={() => setShowCancelDialog(true)}>
                       <Button variant="outline" className="w-full text-red-600 hover:text-red-700">
                         <XCircle className="w-4 h-4 mr-2" />
                         Cancelar pedido

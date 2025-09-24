@@ -1,0 +1,52 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "projects": [
+    {
+      "name": "la-traviata-b2b",
+      "source": "apps/b2b",
+      "framework": "nextjs",
+      "buildCommand": "npm run build",
+      "outputDirectory": ".next",
+      "installCommand": "npm ci --workspace=apps/b2b",
+      "devCommand": "npm run dev",
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "regions": ["fra1"]
+    },
+    {
+      "name": "la-traviata-backoffice",
+      "source": "apps/backoffice",
+      "framework": "nextjs",
+      "buildCommand": "npm run build",
+      "outputDirectory": ".next",
+      "installCommand": "npm ci --workspace=apps/backoffice",
+      "devCommand": "npm run dev",
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "regions": ["fra1"]
+    }
+  ],
+  "functions": {
+    "apps/*/app/api/**/*.js": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 30
+    },
+    "apps/*/app/api/**/*.ts": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/b2b/(.*)",
+      "destination": "https://la-traviata-b2b.vercel.app/$1"
+    },
+    {
+      "source": "/backoffice/(.*)",
+      "destination": "https://la-traviata-backoffice.vercel.app/$1"
+    }
+  ]
+}
