@@ -58,6 +58,8 @@ export default function ClientesPage() {
 
   const approveCustomer = async (customerId: string, approved: boolean) => {
     try {
+      console.log('Enviando solicitud:', { customerId, approved })
+
       const response = await fetch(`/api/customers/${customerId}/approve`, {
         method: 'PUT',
         headers: {
@@ -66,18 +68,19 @@ export default function ClientesPage() {
         body: JSON.stringify({ approved }),
       })
 
+      console.log('Response status:', response.status)
       const data = await response.json()
+      console.log('Response data:', data)
 
       if (response.ok && data.success) {
         fetchCustomers() // Refresh the list
-        // Opcional: mostrar mensaje de éxito
-        console.log(data.message)
+        console.log('✅', data.message)
       } else {
-        console.error('Error updating customer:', data.error)
+        console.error('❌ Error updating customer:', data.error)
         alert(`Error: ${data.error}`)
       }
     } catch (error) {
-      console.error('Error updating customer:', error)
+      console.error('❌ Error updating customer:', error)
       alert('Error de conexión. Inténtalo de nuevo.')
     }
   }

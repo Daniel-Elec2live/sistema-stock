@@ -23,6 +23,7 @@ export interface ProductWithDiscount extends Product {
   discounted_price: number
   discount_percentage: number
   final_price: number
+  original_price: number // Precio base sin descuento para mostrar tachado
   // Campos adicionales del nuevo sistema de precios (opcional)
   precio_compra_promedio?: number
   precio_con_margen?: number

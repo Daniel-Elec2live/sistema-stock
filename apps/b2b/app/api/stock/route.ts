@@ -114,6 +114,7 @@ export async function GET(request: NextRequest) {
 
     // Calcular precios finales aplicando descuentos
     const productsWithDiscounts: ProductWithDiscount[] = products.map((product) => {
+      // El precio_promedio es el precio base SIN descuentos aplicados
       const basePrice = product.precio_promedio || 0
       let bestDiscount = 0
 
@@ -142,15 +143,18 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // Calcular precio final aplicando descuento
+      // Calcular precio final aplicando descuento UNA SOLA VEZ
       const discountAmount = (basePrice * bestDiscount) / 100
       const finalPrice = Math.max(0, basePrice - discountAmount)
 
       return {
         ...product,
         discount_percentage: bestDiscount,
+        // discounted_price es el precio final CON descuento aplicado
         discounted_price: finalPrice,
-        final_price: finalPrice
+        final_price: finalPrice,
+        // Mantener el precio base original para mostrar tachado
+        original_price: basePrice
       }
     })
 

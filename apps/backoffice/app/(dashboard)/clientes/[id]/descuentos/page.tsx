@@ -94,7 +94,8 @@ export default function CustomerDiscountsPage() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products')
+      // Obtener todos los productos sin límite para tener todas las categorías
+      const response = await fetch('/api/products?limit=1000')
       const data = await response.json()
       if (data.success) {
         setProducts(data.products)
