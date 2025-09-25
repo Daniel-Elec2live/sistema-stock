@@ -17,7 +17,8 @@ import {
   Plus,
   Menu,
   X,
-  ShoppingBag
+  ShoppingBag,
+  Users
 } from 'lucide-react'
 
 const navigationItems = [
@@ -32,6 +33,12 @@ const navigationItems = [
     href: '/pedidos',
     icon: ShoppingBag,
     description: 'Gestión de pedidos B2B'
+  },
+  {
+    name: 'Clientes',
+    href: '/clientes',
+    icon: Users,
+    description: 'Gestión y aprobación de clientes'
   },
   {
     name: 'Productos',
