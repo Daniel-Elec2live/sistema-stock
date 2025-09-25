@@ -107,7 +107,8 @@ export async function GET(
       ...product,
       discount_percentage: bestDiscount,
       discounted_price: discountedPrice,
-      final_price: discountedPrice
+      final_price: discountedPrice,
+      original_price: product.precio_promedio || 0
     }
 
     return NextResponse.json({

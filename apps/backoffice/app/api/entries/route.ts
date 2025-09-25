@@ -33,7 +33,7 @@ const entrySchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = request.nextUrl
+    const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '20')
     const order = searchParams.get('order') || 'desc'
     
