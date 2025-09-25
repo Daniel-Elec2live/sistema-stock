@@ -66,11 +66,19 @@ export default function ClientesPage() {
         body: JSON.stringify({ approved }),
       })
 
-      if (response.ok) {
+      const data = await response.json()
+
+      if (response.ok && data.success) {
         fetchCustomers() // Refresh the list
+        // Opcional: mostrar mensaje de éxito
+        console.log(data.message)
+      } else {
+        console.error('Error updating customer:', data.error)
+        alert(`Error: ${data.error}`)
       }
     } catch (error) {
       console.error('Error updating customer:', error)
+      alert('Error de conexión. Inténtalo de nuevo.')
     }
   }
 
@@ -91,7 +99,7 @@ export default function ClientesPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
@@ -179,10 +187,10 @@ function CustomerCard({
   onApprove: (approved: boolean) => void
 }) {
   return (
-    <Card className="p-6">
-      <div className="flex items-start justify-between">
+    <Card className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex-1">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
             <h3 className="text-lg font-semibold">{customer.name}</h3>
             <Badge
               variant={customer.is_approved ? "default" : "secondary"}
@@ -192,30 +200,30 @@ function CustomerCard({
             </Badge>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 gap-2 sm:gap-4 mb-4">
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Mail className="h-4 w-4" />
-              {customer.email}
+              <Mail className="h-4 w-4 flex-shrink-0" />
+              <span className="break-all">{customer.email}</span>
             </div>
 
             {customer.company_name && (
               <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Building className="h-4 w-4" />
-                {customer.company_name}
+                <Building className="h-4 w-4 flex-shrink-0" />
+                <span className="break-words">{customer.company_name}</span>
               </div>
             )}
 
             {customer.phone && (
               <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Phone className="h-4 w-4" />
-                {customer.phone}
+                <Phone className="h-4 w-4 flex-shrink-0" />
+                <span>{customer.phone}</span>
               </div>
             )}
 
             {customer.address && (
               <div className="flex items-center gap-2 text-sm text-gray-600">
-                <MapPin className="h-4 w-4" />
-                {customer.address}
+                <MapPin className="h-4 w-4 flex-shrink-0" />
+                <span className="break-words">{customer.address}</span>
               </div>
             )}
           </div>
@@ -225,25 +233,31 @@ function CustomerCard({
           </p>
         </div>
 
-        <div className="flex flex-col gap-2 ml-4">
+        <div className="flex flex-row sm:flex-col gap-2 sm:ml-4">
           {!customer.is_approved ? (
             <>
               <Button
                 size="sm"
                 onClick={() => onApprove(true)}
-                className="bg-green-600 hover:bg-green-700"
+                className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
               >
                 <Check className="h-4 w-4 mr-1" />
-                Aprobar
+                <span className="hidden sm:inline">Aprobar</span>
+                <span className="sm:hidden">Aprov.</span>
               </Button>
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => onApprove(false)}
-                className="text-red-600 border-red-200 hover:bg-red-50"
+                onClick={() => {
+                  if (confirm('¿Estás seguro de que quieres rechazar este cliente?')) {
+                    onApprove(false)
+                  }
+                }}
+                className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50"
               >
                 <X className="h-4 w-4 mr-1" />
-                Rechazar
+                <span className="hidden sm:inline">Rechazar</span>
+                <span className="sm:hidden">Rech.</span>
               </Button>
             </>
           ) : (
@@ -251,19 +265,25 @@ function CustomerCard({
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => onApprove(false)}
-                className="text-red-600 border-red-200 hover:bg-red-50"
+                onClick={() => {
+                  if (confirm('¿Estás seguro de que quieres revocar la aprobación de este cliente?')) {
+                    onApprove(false)
+                  }
+                }}
+                className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50"
               >
                 <X className="h-4 w-4 mr-1" />
-                Revocar
+                <span className="hidden sm:inline">Revocar</span>
+                <span className="sm:hidden">Revoc.</span>
               </Button>
             </>
           )}
 
-          <Link href={`/clientes/${customer.id}/descuentos`}>
+          <Link href={`/clientes/${customer.id}/descuentos`} className="flex-1 sm:flex-none">
             <Button size="sm" variant="outline" className="w-full">
               <Percent className="h-4 w-4 mr-1" />
-              Descuentos
+              <span className="hidden sm:inline">Descuentos</span>
+              <span className="sm:hidden">Desc.</span>
             </Button>
           </Link>
         </div>

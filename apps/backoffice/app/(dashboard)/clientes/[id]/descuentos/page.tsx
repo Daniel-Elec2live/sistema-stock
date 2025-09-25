@@ -14,7 +14,8 @@ import {
   Calendar,
   Edit,
   Trash2,
-  User
+  User,
+  Search
 } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -174,39 +175,43 @@ export default function CustomerDiscountsPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <Link href="/clientes">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Volver
-          </Button>
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Percent className="h-6 w-6" />
-            Descuentos de Cliente
-          </h1>
-          {customer && (
-            <div className="flex items-center gap-2 text-gray-600 mt-1">
-              <User className="h-4 w-4" />
-              <span>{customer.name}</span>
-              {customer.company_name && (
-                <span className="text-gray-400">• {customer.company_name}</span>
-              )}
-            </div>
-          )}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+        <div className="flex items-center gap-4">
+          <Link href="/clientes">
+            <Button variant="outline" size="sm">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Volver
+            </Button>
+          </Link>
+          <div className="flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <Percent className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="hidden sm:inline">Descuentos de Cliente</span>
+              <span className="sm:hidden">Descuentos</span>
+            </h1>
+            {customer && (
+              <div className="flex items-center gap-2 text-gray-600 mt-1 text-sm">
+                <User className="h-4 w-4" />
+                <span>{customer.name}</span>
+                {customer.company_name && (
+                  <span className="text-gray-400 hidden sm:inline">• {customer.company_name}</span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-        <Button onClick={() => setShowCreateForm(true)}>
+        <Button onClick={() => setShowCreateForm(true)} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
-          Nuevo Descuento
+          <span className="hidden sm:inline">Nuevo Descuento</span>
+          <span className="sm:hidden">Nuevo</span>
         </Button>
       </div>
 
       {/* Create Form */}
       {showCreateForm && (
-        <Card className="p-6 mb-6">
+        <Card className="p-4 sm:p-6 mb-6">
           <h2 className="text-lg font-semibold mb-4">Crear Nuevo Descuento</h2>
           <CreateDiscountForm
             products={products}
@@ -260,7 +265,44 @@ function CreateDiscountForm({
     is_active: true
   })
 
+  const [productSearch, setProductSearch] = useState('')
+  const [showProductDropdown, setShowProductDropdown] = useState(false)
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const [selectedProductName, setSelectedProductName] = useState('')
+
+  // Filtrar productos por búsqueda
+  useEffect(() => {
+    if (productSearch) {
+      const filtered = products.filter(product =>
+        product.nombre.toLowerCase().includes(productSearch.toLowerCase())
+      )
+      setFilteredProducts(filtered.slice(0, 10)) // Limitar a 10 resultados
+    } else {
+      setFilteredProducts([])
+    }
+  }, [productSearch, products])
+
   const categories = Array.from(new Set(products.map(p => p.categoria).filter(Boolean)))
+
+  const handleProductSelect = (product: Product) => {
+    setFormData({ ...formData, product_id: product.id })
+    setSelectedProductName(product.nombre)
+    setProductSearch(product.nombre)
+    setShowProductDropdown(false)
+  }
+
+  // Cerrar dropdown al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (!target.closest('.product-search-container')) {
+        setShowProductDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -288,7 +330,7 @@ function CreateDiscountForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Tipo de Descuento
@@ -321,23 +363,44 @@ function CreateDiscountForm({
         </div>
 
         {formData.discount_type === 'product' && (
-          <div>
+          <div className="relative product-search-container">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Producto
             </label>
-            <select
-              value={formData.product_id}
-              onChange={(e) => setFormData({ ...formData, product_id: e.target.value })}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            >
-              <option value="">Seleccionar producto</option>
-              {products.map((product) => (
-                <option key={product.id} value={product.id}>
-                  {product.nombre}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <Input
+                type="text"
+                value={productSearch}
+                onChange={(e) => {
+                  setProductSearch(e.target.value)
+                  setShowProductDropdown(true)
+                  if (!e.target.value) {
+                    setFormData({ ...formData, product_id: '' })
+                    setSelectedProductName('')
+                  }
+                }}
+                onFocus={() => setShowProductDropdown(true)}
+                placeholder="Buscar producto..."
+                className="pr-8"
+                required
+              />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            </div>
+
+            {showProductDropdown && filteredProducts.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={() => handleProductSelect(product)}
+                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                  >
+                    <div className="font-medium">{product.nombre}</div>
+                    <div className="text-gray-500 text-xs">{product.categoria}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -432,10 +495,10 @@ function DiscountCard({
   }
 
   return (
-    <Card className="p-6">
-      <div className="flex items-start justify-between">
+    <Card className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex-1">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
             <div className="flex items-center gap-2">
               {discount.product_id ? (
                 <Package className="h-5 w-5 text-blue-500" />
@@ -460,17 +523,28 @@ function DiscountCard({
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <span className="font-medium">Tipo:</span> {getDiscountType()}
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <span className="font-medium">Aplica a:</span> {getDiscountTarget()}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm text-gray-600">
+              <span className="font-medium">Aplica a:</span>
+              <span className="break-words">{getDiscountTarget()}</span>
             </div>
 
             {(discount.valid_from || discount.valid_until) && (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Calendar className="h-4 w-4" />
-                <span>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  <span className="font-medium sm:hidden">Vigencia:</span>
+                </div>
+                <span className="text-xs sm:text-sm">
                   {discount.valid_from && `Desde: ${new Date(discount.valid_from).toLocaleDateString('es-ES')}`}
-                  {discount.valid_from && discount.valid_until && ' • '}
-                  {discount.valid_until && `Hasta: ${new Date(discount.valid_until).toLocaleDateString('es-ES')}`}
+                  {discount.valid_from && discount.valid_until && (
+                    <span className="hidden sm:inline"> • </span>
+                  )}
+                  {discount.valid_until && (
+                    <span className="block sm:inline">
+                      {discount.valid_from && <br className="sm:hidden" />}
+                      Hasta: {new Date(discount.valid_until).toLocaleDateString('es-ES')}
+                    </span>
+                  )}
                 </span>
               </div>
             )}
@@ -481,23 +555,29 @@ function DiscountCard({
           </p>
         </div>
 
-        <div className="flex gap-2 ml-4">
+        <div className="flex flex-row sm:flex-col gap-2 sm:ml-4">
           <Button
             size="sm"
             variant="outline"
             onClick={() => onToggleStatus(discount.id, discount.is_active)}
-            className={discount.is_active ? "text-gray-600" : "text-green-600"}
+            className={`flex-1 sm:flex-none ${discount.is_active ? "text-gray-600" : "text-green-600"}`}
           >
-            {discount.is_active ? 'Desactivar' : 'Activar'}
+            <span className="hidden sm:inline">
+              {discount.is_active ? 'Desactivar' : 'Activar'}
+            </span>
+            <span className="sm:hidden">
+              {discount.is_active ? 'Desact.' : 'Activ.'}
+            </span>
           </Button>
 
           <Button
             size="sm"
             variant="outline"
             onClick={() => onDelete(discount.id)}
-            className="text-red-600 border-red-200 hover:bg-red-50"
+            className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50"
           >
             <Trash2 className="h-4 w-4" />
+            <span className="ml-1 sm:hidden">Borrar</span>
           </Button>
         </div>
       </div>

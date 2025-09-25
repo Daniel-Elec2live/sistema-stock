@@ -101,40 +101,58 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Calcular precios finales usando el nuevo sistema
-    const productsWithDiscounts: ProductWithDiscount[] = await Promise.all(
-      products.map(async (product) => {
-        // Usar función SQL para calcular precio final
-        const { data: priceData, error: priceError } = await supabase
-          .rpc('calcular_precio_final', {
-            producto_id: product.id,
-            cliente_id: user.customer?.id
-          })
-          .single()
+    // Obtener descuentos del cliente una sola vez
+    const { data: customerDiscounts, error: discountsError } = await supabase
+      .from('customer_discounts')
+      .select('*')
+      .eq('customer_id', user.customer?.id)
+      .eq('is_active', true)
 
-        if (priceError) {
-          console.error('Error calculating price for product:', product.id, priceError)
-          // Fallback: precio base sin descuento
-          return {
-            ...product,
-            discount_percentage: 0,
-            discounted_price: product.precio_promedio || 0,
-            final_price: product.precio_promedio || 0
+    if (discountsError) {
+      console.error('Error fetching customer discounts:', discountsError)
+    }
+
+    // Calcular precios finales aplicando descuentos
+    const productsWithDiscounts: ProductWithDiscount[] = products.map((product) => {
+      const basePrice = product.precio_promedio || 0
+      let bestDiscount = 0
+
+      if (customerDiscounts) {
+        // Buscar descuentos aplicables por prioridad:
+        // 1. Descuento específico de producto
+        // 2. Descuento por categoría
+        // 3. Descuento general
+
+        // 1. Descuento específico de producto
+        const productDiscount = customerDiscounts.find(d => d.product_id === product.id)
+        if (productDiscount) {
+          bestDiscount = productDiscount.discount_percentage
+        } else {
+          // 2. Descuento por categoría
+          const categoryDiscount = customerDiscounts.find(d => d.category === product.categoria)
+          if (categoryDiscount) {
+            bestDiscount = categoryDiscount.discount_percentage
+          } else {
+            // 3. Descuento general (product_id y category son null)
+            const generalDiscount = customerDiscounts.find(d => !d.product_id && !d.category)
+            if (generalDiscount) {
+              bestDiscount = generalDiscount.discount_percentage
+            }
           }
         }
+      }
 
-        return {
-          ...product,
-          discount_percentage: (priceData as any)?.descuento_aplicado || 0,
-          discounted_price: (priceData as any)?.precio_final || 0,
-          final_price: (priceData as any)?.precio_final || 0,
-          // Campos extra para debug (opcional)
-          precio_compra_promedio: (priceData as any)?.precio_compra_promedio,
-          precio_con_margen: (priceData as any)?.precio_con_margen,
-          margen_aplicado: (priceData as any)?.margen_aplicado
-        }
-      })
-    )
+      // Calcular precio final aplicando descuento
+      const discountAmount = (basePrice * bestDiscount) / 100
+      const finalPrice = Math.max(0, basePrice - discountAmount)
+
+      return {
+        ...product,
+        discount_percentage: bestDiscount,
+        discounted_price: finalPrice,
+        final_price: finalPrice
+      }
+    })
 
     return NextResponse.json({
       success: true,

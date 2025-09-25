@@ -54,12 +54,15 @@ export async function GET(request: NextRequest) {
       throw new Error(`Error obteniendo productos: ${error.message}`)
     }
     
-    return NextResponse.json({ products })
+    return NextResponse.json({
+      success: true,
+      products
+    })
     
   } catch (error) {
     console.error('Error en GET /api/products:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Error interno del servidor' },
+      { success: false, error: error instanceof Error ? error.message : 'Error interno del servidor' },
       { status: 500 }
     )
   }
