@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     
     // Extraer filtros de query params
     const filters: ProductFilters = {

@@ -18,7 +18,7 @@ const productSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const search = searchParams.get('search')
     const categoria = searchParams.get('categoria')
     const limit = parseInt(searchParams.get('limit') || '50')

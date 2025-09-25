@@ -5,7 +5,7 @@ export const runtime = 'nodejs'
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const productId = searchParams.get('product_id')
     const customerId = searchParams.get('customer_id')
 

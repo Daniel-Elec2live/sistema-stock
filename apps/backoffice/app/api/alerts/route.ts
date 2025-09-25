@@ -15,7 +15,7 @@ interface BatchWithProduct {
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const limit = parseInt(searchParams.get('limit') || '10')
     
     const supabase = createSupabaseClient()
