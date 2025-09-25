@@ -9,5 +9,10 @@
     "dev": "npm run dev --workspace=apps/backoffice",
     "build": "npm run build --workspace=apps/backoffice",
     "start": "npm run start --workspace=apps/backoffice"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.17"
   }
 }
