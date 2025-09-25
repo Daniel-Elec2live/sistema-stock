@@ -1,6 +1,6 @@
 // packages/ui/src/tabs.tsx
 import * as React from "react"
-import { cn } from "./utils"
+import { cn } from "@/lib/utils"
 
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultValue?: string

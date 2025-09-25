@@ -1,6 +1,6 @@
 // packages/ui/src/dropdown-menu.tsx
 import * as React from "react"
-import { cn } from "./utils"
+import { cn } from "@/lib/utils"
 
 // Componentes simplificados que no dependen de Radix UI
 // Estos son principalmente para compatibilidad de API - recomendamos usar implementaciones nativas
