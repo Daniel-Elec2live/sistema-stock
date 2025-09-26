@@ -6,6 +6,7 @@ import { updateProductPrice } from '@/lib/pricing'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 // Tipo para producto en la entrada
 interface ProductoEntrada {

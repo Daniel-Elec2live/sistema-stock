@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { createSupabaseClient } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 const productSchema = z.object({
   nombre: z.string().min(1, 'Nombre es requerido'),
