@@ -41,13 +41,13 @@ export function Header() {
 
           {/* Logo */}
           <Link href="/catalogo" className="flex items-center space-x-2 flex-shrink-0">
-            <div className="w-8 h-8 flex items-center justify-center">
+            <div className="w-10 h-10 flex items-center justify-center">
               <Image
                 src="/logo.png"
                 alt="La Traviata 1999"
-                width={32}
-                height={32}
-                className="w-8 h-8 object-contain"
+                width={40}
+                height={40}
+                className="w-10 h-10 object-contain"
               />
             </div>
             <span className="font-bold text-base sm:text-lg text-gray-900 hidden xs:block">
