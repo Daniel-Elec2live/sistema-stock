@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { useRouter, usePathname } from 'next/navigation'
 import { Search, ShoppingCart, User, Menu, X } from 'lucide-react'
 import { useCartStore } from '@/stores/cartStore'
 import { useAuth } from '@/hooks/useAuth'
@@ -13,11 +14,15 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
-  
+  const pathname = usePathname()
+
   const { openCart, getTotalItems } = useCartStore()
   const { user, logout } = useAuth()
-  
+
   const totalItems = getTotalItems()
+
+  // Solo mostrar búsqueda en la página de catálogo
+  const showSearch = pathname === '/catalogo'
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,8 +41,14 @@ export function Header() {
 
           {/* Logo */}
           <Link href="/catalogo" className="flex items-center space-x-2 flex-shrink-0">
-            <div className="w-8 h-8 bg-tomate rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">LT</span>
+            <div className="w-8 h-8 flex items-center justify-center">
+              <Image
+                src="/logo.png"
+                alt="La Traviata 1999"
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain"
+              />
             </div>
             <span className="font-bold text-base sm:text-lg text-gray-900 hidden xs:block">
               La Traviata 1999
@@ -45,18 +56,20 @@ export function Header() {
           </Link>
 
           {/* Búsqueda - Desktop */}
-          <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="text"
-                placeholder="Buscar productos..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 w-full"
-              />
-            </div>
-          </form>
+          {showSearch && (
+            <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-8">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  type="text"
+                  placeholder="Buscar productos..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 w-full"
+                />
+              </div>
+            </form>
+          )}
 
           {/* Navegación - Desktop */}
           <div className="hidden md:flex items-center space-x-6">
@@ -131,18 +144,20 @@ export function Header() {
         </div>
 
         {/* Búsqueda móvil */}
-        <div className="md:hidden px-4 sm:px-6 pb-4">
-          <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              type="text"
-              placeholder="Buscar productos..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 w-full"
-            />
-          </form>
-        </div>
+        {showSearch && (
+          <div className="md:hidden px-4 sm:px-6 pb-4">
+            <form onSubmit={handleSearch} className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                type="text"
+                placeholder="Buscar productos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 w-full"
+              />
+            </form>
+          </div>
+        )}
       </div>
 
       {/* Menú móvil desplegable */}

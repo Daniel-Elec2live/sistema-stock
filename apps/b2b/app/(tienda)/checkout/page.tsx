@@ -132,7 +132,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 sm:pt-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Información del pedido */}
@@ -191,53 +191,88 @@ export default function CheckoutPage() {
             
             <div className="space-y-4">
               {items.map((item) => (
-                <div key={item.product_id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                <div key={item.product_id} className="p-4 bg-gray-50 rounded-lg">
                   
-                  {/* Imagen */}
-                  <div className="w-16 h-16 flex-shrink-0">
-                    <Image
-                      src={item.product.image_url || '/placeholder-product.svg'}
-                      alt={item.product.nombre || 'Producto'}
-                      width={64}
-                      height={64}
-                      className="w-full h-full object-cover rounded-md"
-                    />
-                  </div>
+                  {/* Layout responsive */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-3 sm:space-y-0">
 
-                  {/* Info del producto */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-gray-900 line-clamp-1">
-                      {item.product.nombre}
-                    </h3>
-                    {item.product.brand && (
-                      <p className="text-sm text-gray-600">{item.product.brand}</p>
-                    )}
-                    
-                    {/* Stock warning */}
-                    {item.quantity > item.product.stock_actual && (
-                      <div className="flex items-center mt-1">
-                        <AlertTriangle className="w-4 h-4 text-amber-500 mr-1" />
-                        <span className="text-xs text-amber-600">
-                          Solo {item.product.stock_actual} disponibles
+                    {/* Header móvil: imagen + título */}
+                    <div className="flex items-center space-x-3 sm:flex-shrink-0">
+                      <div className="w-16 h-16 flex-shrink-0">
+                        <Image
+                          src={item.product.image_url || '/placeholder-product.svg'}
+                          alt={item.product.nombre || 'Producto'}
+                          width={64}
+                          height={64}
+                          className="w-full h-full object-cover rounded-md"
+                        />
+                      </div>
+
+                      <div className="flex-1 min-w-0 sm:hidden">
+                        <h3 className="font-medium text-gray-900 line-clamp-2 text-base">
+                          {item.product.nombre}
+                        </h3>
+                        {item.product.brand && (
+                          <p className="text-sm text-gray-600 mt-1">{item.product.brand}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Info del producto - Desktop */}
+                    <div className="hidden sm:block flex-1 min-w-0">
+                      <h3 className="font-medium text-gray-900 line-clamp-1">
+                        {item.product.nombre}
+                      </h3>
+                      {item.product.brand && (
+                        <p className="text-sm text-gray-600">{item.product.brand}</p>
+                      )}
+                    </div>
+
+                    {/* Cantidad y precio - Layout responsive */}
+                    <div className="flex flex-col sm:flex-col sm:items-end sm:text-right space-y-1 sm:space-y-0">
+                      {/* Móvil: Cantidad y precio unitario en línea separada */}
+                      <div className="flex items-center justify-between sm:justify-end sm:mb-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-gray-900">Cantidad:</span>
+                          <span className="text-sm font-bold text-[var(--color-tomate)]">{item.quantity}</span>
+                        </div>
+                        {item.product.discount_percentage > 0 && (
+                          <span className="text-xs font-medium bg-red-100 text-red-600 px-2 py-1 rounded-full">
+                            -{item.product.discount_percentage}%
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Precio unitario */}
+                      <div className="flex items-center justify-between sm:justify-end">
+                        <span className="text-sm text-gray-600 sm:hidden">Precio unitario:</span>
+                        <span className="text-sm text-gray-600 hidden sm:inline">
+                          {item.quantity} × {formatPrice(item.product.final_price)}
+                        </span>
+                        <span className="text-sm font-medium text-gray-900 sm:hidden">
+                          {formatPrice(item.product.final_price)}
                         </span>
                       </div>
-                    )}
+
+                      {/* Total del producto */}
+                      <div className="flex items-center justify-between sm:justify-end pt-1 border-t border-gray-100 sm:border-0 sm:pt-0">
+                        <span className="text-base font-semibold text-gray-900 sm:hidden">Total:</span>
+                        <span className="text-lg font-bold text-[var(--color-tomate)]">
+                          {formatPrice(item.product.final_price * item.quantity)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Cantidad y precio */}
-                  <div className="text-right">
-                    <p className="font-medium text-gray-900">
-                      {item.quantity} × {formatPrice(item.product.final_price)}
-                    </p>
-                    <p className="text-lg font-bold text-[var(--color-tomate)]">
-                      {formatPrice(item.product.final_price * item.quantity)}
-                    </p>
-                    {item.product.discount_percentage > 0 && (
-                      <p className="text-xs text-gray-500">
-                        Descuento: {item.product.discount_percentage}%
-                      </p>
-                    )}
-                  </div>
+                  {/* Stock warning */}
+                  {item.quantity > item.product.stock_actual && (
+                    <div className="flex items-center mt-3 p-2 bg-amber-50 rounded">
+                      <AlertTriangle className="w-4 h-4 text-amber-500 mr-2" />
+                      <span className="text-sm text-amber-600">
+                        Solo {item.product.stock_actual} disponibles
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
