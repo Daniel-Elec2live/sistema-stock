@@ -25,12 +25,22 @@ export async function PUT(
     }
 
     // Actualizar estado de aprobación del cliente
+    const updateData: any = {
+      is_approved: approved,
+      updated_at: new Date().toISOString()
+    }
+
+    // Si se rechaza, agregar timestamp de rechazo
+    // Si se aprueba, limpiar timestamp de rechazo
+    if (approved) {
+      updateData.rejected_at = null
+    } else {
+      updateData.rejected_at = new Date().toISOString()
+    }
+
     const { data, error } = await supabase
       .from('customers')
-      .update({
-        is_approved: approved,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', params.id)
       .select()
       .single()

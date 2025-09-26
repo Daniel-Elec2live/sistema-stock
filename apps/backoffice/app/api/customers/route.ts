@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
         phone,
         address,
         is_approved,
+        rejected_at,
         created_at,
         updated_at
       `)

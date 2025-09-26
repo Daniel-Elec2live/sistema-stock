@@ -26,14 +26,16 @@ interface Customer {
   phone?: string
   address?: string
   is_approved: boolean
+  rejected_at?: string
   created_at: string
   updated_at: string
 }
 
 export default function ClientesPage() {
   const [customers, setCustomers] = useState<Customer[]>([])
+  const [allCustomers, setAllCustomers] = useState<Customer[]>([]) // Para contadores
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState<'all' | 'pending' | 'approved'>('all')
+  const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all')
 
   useEffect(() => {
     fetchCustomers()
@@ -47,7 +49,21 @@ export default function ClientesPage() {
       const data = await response.json()
 
       if (data.success) {
-        setCustomers(data.customers)
+        // Guardar todos los clientes para contadores
+        setAllCustomers(data.customers)
+
+        let filteredCustomers = data.customers
+
+        // Filtrar en frontend para el estado "rejected"
+        if (filter === 'rejected') {
+          filteredCustomers = data.customers.filter((c: Customer) => c.rejected_at)
+        } else if (filter === 'pending') {
+          filteredCustomers = data.customers.filter((c: Customer) => !c.is_approved && !c.rejected_at)
+        } else if (filter === 'approved') {
+          filteredCustomers = data.customers.filter((c: Customer) => c.is_approved)
+        }
+
+        setCustomers(filteredCustomers)
       }
     } catch (error) {
       console.error('Error fetching customers:', error)
@@ -85,8 +101,10 @@ export default function ClientesPage() {
     }
   }
 
-  const pendingCustomers = customers.filter(c => !c.is_approved)
-  const approvedCustomers = customers.filter(c => c.is_approved)
+  // Usar allCustomers para contadores precisos
+  const pendingCustomers = allCustomers.filter(c => !c.is_approved && !c.rejected_at)
+  const approvedCustomers = allCustomers.filter(c => c.is_approved)
+  const rejectedCustomers = allCustomers.filter(c => c.rejected_at)
 
   if (loading) {
     return (
@@ -116,12 +134,12 @@ export default function ClientesPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Clientes</p>
-              <p className="text-2xl font-bold">{customers.length}</p>
+              <p className="text-2xl font-bold">{allCustomers.length}</p>
             </div>
             <Users className="h-8 w-8 text-blue-500" />
           </div>
@@ -146,14 +164,25 @@ export default function ClientesPage() {
             <Check className="h-8 w-8 text-green-500" />
           </div>
         </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Rechazados</p>
+              <p className="text-2xl font-bold text-red-600">{rejectedCustomers.length}</p>
+            </div>
+            <X className="h-8 w-8 text-red-500" />
+          </div>
+        </Card>
       </div>
 
       {/* Tabs */}
       <Tabs value={filter} onValueChange={(value) => setFilter(value as any)}>
         <TabsList className="mb-6">
-          <TabsTrigger value="all">Todos ({customers.length})</TabsTrigger>
+          <TabsTrigger value="all">Todos ({allCustomers.length})</TabsTrigger>
           <TabsTrigger value="pending">Pendientes ({pendingCustomers.length})</TabsTrigger>
           <TabsTrigger value="approved">Aprobados ({approvedCustomers.length})</TabsTrigger>
+          <TabsTrigger value="rejected">Rechazados ({rejectedCustomers.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value={filter}>
@@ -196,10 +225,16 @@ function CustomerCard({
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
             <h3 className="text-lg font-semibold">{customer.name}</h3>
             <Badge
-              variant={customer.is_approved ? "default" : "secondary"}
-              className={customer.is_approved ? "bg-green-100 text-green-800" : "bg-orange-100 text-orange-800"}
+              variant={customer.is_approved ? "default" : customer.rejected_at ? "destructive" : "secondary"}
+              className={
+                customer.is_approved
+                  ? "bg-green-100 text-green-800"
+                  : customer.rejected_at
+                    ? "bg-red-100 text-red-800"
+                    : "bg-orange-100 text-orange-800"
+              }
             >
-              {customer.is_approved ? 'Aprobado' : 'Pendiente'}
+              {customer.is_approved ? 'Aprobado' : customer.rejected_at ? 'Rechazado' : 'Pendiente'}
             </Badge>
           </div>
 
@@ -237,7 +272,35 @@ function CustomerCard({
         </div>
 
         <div className="flex flex-row sm:flex-col gap-2 sm:ml-4">
-          {!customer.is_approved ? (
+          {customer.is_approved ? (
+            // Cliente aprobado - puede ser revocado
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                if (confirm('¿Estás seguro de que quieres revocar la aprobación de este cliente?')) {
+                  onApprove(false)
+                }
+              }}
+              className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50"
+            >
+              <X className="h-4 w-4 mr-1" />
+              <span className="hidden sm:inline">Revocar</span>
+              <span className="sm:hidden">Revoc.</span>
+            </Button>
+          ) : customer.rejected_at ? (
+            // Cliente rechazado - puede ser reactivado a pendiente
+            <Button
+              size="sm"
+              onClick={() => onApprove(true)}
+              className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
+            >
+              <Check className="h-4 w-4 mr-1" />
+              <span className="hidden sm:inline">Reactivar</span>
+              <span className="sm:hidden">React.</span>
+            </Button>
+          ) : (
+            // Cliente pendiente - puede ser aprobado o rechazado
             <>
               <Button
                 size="sm"
@@ -261,23 +324,6 @@ function CustomerCard({
                 <X className="h-4 w-4 mr-1" />
                 <span className="hidden sm:inline">Rechazar</span>
                 <span className="sm:hidden">Rech.</span>
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  if (confirm('¿Estás seguro de que quieres revocar la aprobación de este cliente?')) {
-                    onApprove(false)
-                  }
-                }}
-                className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50"
-              >
-                <X className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Revocar</span>
-                <span className="sm:hidden">Revoc.</span>
               </Button>
             </>
           )}
