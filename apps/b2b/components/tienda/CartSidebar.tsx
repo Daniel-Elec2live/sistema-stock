@@ -139,7 +139,7 @@ export function CartSidebar() {
                               size="sm"
                               onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
-                              className="w-7 h-7 p-0"
+                              className="w-9 h-9 p-0 min-h-[44px] sm:w-7 sm:h-7 sm:min-h-[28px]"
                             >
                               <Minus className="w-3 h-3" />
                             </Button>
@@ -153,7 +153,7 @@ export function CartSidebar() {
                               size="sm"
                               onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
                               disabled={item.quantity >= item.product.stock_actual}
-                              className="w-7 h-7 p-0"
+                              className="w-9 h-9 p-0 min-h-[44px] sm:w-7 sm:h-7 sm:min-h-[28px]"
                             >
                               <Plus className="w-3 h-3" />
                             </Button>
@@ -163,7 +163,7 @@ export function CartSidebar() {
                             variant="ghost"
                             size="sm"
                             onClick={() => removeItem(item.product_id)}
-                            className="text-red-500 hover:text-red-700 w-7 h-7 p-0"
+                            className="text-red-500 hover:text-red-700 w-9 h-9 p-0 min-h-[44px] sm:w-7 sm:h-7 sm:min-h-[28px]"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>

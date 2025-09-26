@@ -266,7 +266,7 @@ function CustomerCard({
             )}
           </div>
 
-          <p className="text-xs text-gray-500">
+          <p className="text-sm sm:text-xs text-gray-500">
             Registrado: {new Date(customer.created_at).toLocaleDateString('es-ES')}
           </p>
         </div>

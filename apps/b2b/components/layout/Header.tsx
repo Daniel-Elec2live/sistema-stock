@@ -31,7 +31,7 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
@@ -131,7 +131,7 @@ export function Header() {
         </div>
 
         {/* Búsqueda móvil */}
-        <div className="md:hidden px-3 sm:px-6 pb-4">
+        <div className="md:hidden px-4 sm:px-6 pb-4">
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
@@ -148,7 +148,7 @@ export function Header() {
       {/* Menú móvil desplegable */}
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="px-3 sm:px-6 py-2 space-y-2">
+          <div className="px-4 sm:px-6 py-3 space-y-3">
             <Link
               href="/catalogo"
               onClick={() => setIsMenuOpen(false)}

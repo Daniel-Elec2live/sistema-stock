@@ -111,7 +111,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
 
                 <div className="flex items-center gap-1">
                   <Link href={`/producto/${product.id}`}>
-                    <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                    <Button variant="outline" size="sm" className="h-9 w-9 p-0 min-h-[44px] sm:h-8 sm:w-8 sm:min-h-[32px]">
                       <Eye className="w-3 h-3" />
                     </Button>
                   </Link>
@@ -120,7 +120,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
                     onClick={handleQuickAdd}
                     disabled={product.stock_actual === 0}
                     size="sm"
-                    className="btn-primary h-8 w-8 p-0"
+                    className="btn-primary h-9 w-9 p-0 min-h-[44px] sm:h-8 sm:w-8 sm:min-h-[32px]"
                   >
                     <ShoppingCart className="w-3 h-3" />
                   </Button>
@@ -251,7 +251,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
                 size="sm"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 disabled={quantity <= 1}
-                className="h-6 w-6 sm:h-8 sm:w-8 p-0 flex-shrink-0"
+                className="h-8 w-8 sm:h-8 sm:w-8 p-0 flex-shrink-0 min-h-[44px] sm:min-h-[32px]"
               >
                 <Minus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
               </Button>
@@ -261,7 +261,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
                 size="sm"
                 onClick={() => setQuantity(Math.min(product.stock_actual, quantity + 1))}
                 disabled={quantity >= product.stock_actual}
-                className="h-6 w-6 sm:h-8 sm:w-8 p-0 flex-shrink-0"
+                className="h-8 w-8 sm:h-8 sm:w-8 p-0 flex-shrink-0 min-h-[44px] sm:min-h-[32px]"
               >
                 <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
               </Button>
@@ -272,7 +272,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           <Button
             onClick={handleAddToCart}
             disabled={product.stock_actual === 0}
-            className="w-full btn-primary h-8 sm:h-10 text-xs sm:text-sm"
+            className="w-full btn-primary h-11 sm:h-10 text-sm sm:text-sm min-h-[44px]"
           >
             <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
             <span className="hidden sm:inline">

@@ -33,14 +33,14 @@ export function KPICard({
 
   return (
     <div className={cn(
-      'bg-white rounded-lg border p-6 transition-all hover:shadow-md',
+      'bg-white rounded-lg border p-4 sm:p-6 transition-all hover:shadow-md',
       variantStyles
     )}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-semibold text-gray-900 mt-1">{value}</p>
-          <p className={cn('text-sm mt-1', trendColor)}>
+          <p className="text-xs sm:text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-xl sm:text-2xl font-semibold text-gray-900 mt-1">{value}</p>
+          <p className={cn('text-xs sm:text-sm mt-1', trendColor)}>
             {change}
           </p>
         </div>

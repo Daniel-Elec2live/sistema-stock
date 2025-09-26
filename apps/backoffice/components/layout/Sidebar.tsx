@@ -92,7 +92,7 @@ export function Sidebar() {
   return (
     <>
       {/* Mobile Header con hamburger menu */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-tomate rounded-lg flex items-center justify-center">
