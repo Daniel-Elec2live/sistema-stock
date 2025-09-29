@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-// Cliente Supabase con service role
+// Cliente Supabase con service role - bypass RLS
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { persistSession: false } }
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false
+    },
+    db: {
+      schema: 'public'
+    }
+  }
 )
 
 export const runtime = 'nodejs'
@@ -70,6 +78,11 @@ export async function PUT(
     }
 
     console.log('[APPROVE] Datos a actualizar:', updateData)
+    console.log('[APPROVE] Supabase config:', {
+      url: process.env.NEXT_PUBLIC_SUPABASE_URL ? 'SET' : 'MISSING',
+      serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'MISSING',
+      serviceKeyLength: process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0
+    })
 
     const { data, error } = await supabase
       .from('customers')
@@ -78,15 +91,53 @@ export async function PUT(
       .select()
       .single()
 
+    console.log('[APPROVE] Raw Supabase response:', {
+      data: data,
+      error: error,
+      errorCode: error?.code,
+      errorMessage: error?.message,
+      errorDetails: error?.details,
+      errorHint: error?.hint
+    })
+
     if (error) {
       console.error('[APPROVE] Error updating customer approval:', error)
       return NextResponse.json(
-        { success: false, error: `Error al actualizar cliente: ${error.message}` },
+        { success: false, error: `Error al actualizar cliente: ${error.message} (Code: ${error.code})` },
+        { status: 500 }
+      )
+    }
+
+    if (!data) {
+      console.error('[APPROVE] No data returned after update - possible RLS issue')
+      return NextResponse.json(
+        { success: false, error: 'Update completed but no data returned - check RLS policies' },
         { status: 500 }
       )
     }
 
     console.log('[APPROVE] Cliente actualizado exitosamente:', data)
+
+    // Verificación independiente para confirmar persistencia
+    setTimeout(async () => {
+      try {
+        const { data: verifyData } = await supabase
+          .from('customers')
+          .select('id, is_approved, rejected_at')
+          .eq('id', params.id)
+          .single()
+
+        console.log('[APPROVE] Verification check:', {
+          customerId: params.id,
+          expectedApproved: approved,
+          actualApproved: verifyData?.is_approved,
+          actualRejectedAt: verifyData?.rejected_at,
+          persistenceOk: verifyData?.is_approved === approved
+        })
+      } catch (verifyError) {
+        console.error('[APPROVE] Verification error:', verifyError)
+      }
+    }, 500)
 
     return NextResponse.json({
       success: true,
