@@ -104,7 +104,8 @@ export async function POST(request: NextRequest) {
         .select('proveedor')
         .not('proveedor', 'is', null)
 
-      const proveedoresUnicos = [...new Set(proveedores?.map(p => p.proveedor) || [])]
+      const proveedoresSet = new Set(proveedores?.map(p => p.proveedor) || [])
+      const proveedoresUnicos = Array.from(proveedoresSet)
 
       // 3. Hacer matching del proveedor
       let proveedorFinal = geminiResult.proveedor
