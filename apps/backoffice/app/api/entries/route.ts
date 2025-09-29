@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createSupabaseClient } from '@/lib/supabase'
 import { updateProductPrice } from '@/lib/pricing'
+import { matchProveedor, normalizeProveedorName } from '@/lib/proveedorMatching'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
@@ -73,53 +74,68 @@ export async function POST(request: NextRequest) {
     const supabase = createSupabaseClient()
     
     if (tipo === 'ocr') {
-      // 1. Crear entrada pendiente en BD
-      const { data: entrada, error: entradaError } = await supabase
-        .from('entries')
-        .insert({
-          tipo: 'ocr',
-          estado: 'processing',
-          documento_url,
-          archivo_nombre,
-          created_at: new Date().toISOString()
-        })
-        .select()
-        .single()
-      
-      if (entradaError) {
-        throw new Error(`Error creando entrada: ${entradaError.message}`)
+      if (!documento_url) {
+        throw new Error('documento_url es requerido para OCR')
       }
-      
-      // 2. Llamar al servicio OCR en Hetzner
-      const ocrResponse = await fetch(`${process.env.OCR_SERVICE_URL}/extract`, {
+
+      // 1. Procesar con Gemini OCR directamente
+      console.log('[ENTRIES] Procesando con Gemini OCR...')
+      const geminiResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/gemini-ocr`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.OCR_SERVICE_TOKEN}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           image_url: documento_url,
-          callback_url: `${process.env.NEXTAUTH_URL}/api/ocr/callback`,
-          entry_id: entrada.id
+          processing_id: crypto.randomUUID()
         })
       })
-      
-      if (!ocrResponse.ok) {
-        // Marcar entrada como error
-        await supabase
-          .from('entries')
-          .update({ estado: 'error' })
-          .eq('id', entrada.id)
-        
-        throw new Error('Error llamando al servicio OCR')
+
+      const geminiResult = await geminiResponse.json()
+
+      if (!geminiResult.success) {
+        console.error('[ENTRIES] Error en Gemini OCR:', geminiResult.error)
+        throw new Error(`Error OCR: ${geminiResult.error}`)
       }
-      
-      return NextResponse.json({
-        id: entrada.id,
-        status: 'processing',
-        message: 'Documento enviado para procesamiento OCR'
-      })
-      
+
+      // 2. Obtener lista de proveedores existentes para matching
+      const { data: proveedores } = await supabase
+        .from('products')
+        .select('proveedor')
+        .not('proveedor', 'is', null)
+
+      const proveedoresUnicos = [...new Set(proveedores?.map(p => p.proveedor) || [])]
+
+      // 3. Hacer matching del proveedor
+      let proveedorFinal = geminiResult.proveedor
+      if (geminiResult.proveedor && proveedoresUnicos.length > 0) {
+        const match = matchProveedor(geminiResult.proveedor, proveedoresUnicos, 0.7)
+        if (match) {
+          console.log(`[ENTRIES] Proveedor matched: "${geminiResult.proveedor}" -> "${match.proveedor}" (${match.similitud.toFixed(2)})`)
+          proveedorFinal = match.proveedor
+        } else {
+          // Normalizar nombre para crear nuevo proveedor
+          proveedorFinal = normalizeProveedorName(geminiResult.proveedor)
+          console.log(`[ENTRIES] Nuevo proveedor normalizado: "${geminiResult.proveedor}" -> "${proveedorFinal}"`)
+        }
+      }
+
+      // 4. Preparar respuesta compatible con frontend existente
+      const ocrResultForFrontend = {
+        id: geminiResult.processing_id,
+        status: 'completed' as const,
+        proveedor: proveedorFinal,
+        fecha: geminiResult.fecha,
+        productos: geminiResult.productos || [],
+        confianza: geminiResult.confianza,
+        tiempo_procesamiento: geminiResult.tiempo_procesamiento,
+        notas: geminiResult.notas
+      }
+
+      console.log(`[ENTRIES] OCR completado exitosamente: ${geminiResult.productos?.length || 0} productos, confianza: ${geminiResult.confianza}`)
+
+      return NextResponse.json(ocrResultForFrontend)
+
     } else {
       // Entrada manual
       const { data: entrada, error: entradaError } = await supabase
