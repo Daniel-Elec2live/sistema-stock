@@ -137,10 +137,12 @@ function sanitizeGeminiResponse(response: any): any {
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
+  let processing_id = 'unknown'
 
   try {
     const body: GeminiOCRRequest = await request.json()
-    const { image_url, processing_id = crypto.randomUUID() } = body
+    const { image_url, processing_id: reqProcessingId = crypto.randomUUID() } = body
+    processing_id = reqProcessingId
 
     if (!image_url) {
       return NextResponse.json(
@@ -248,7 +250,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: false,
       error: errorMessage,
-      processing_id: processing_id || 'unknown',
+      processing_id: processing_id,
       tiempo_procesamiento: processingTime,
       confianza: 0
     }, { status: 500 })
