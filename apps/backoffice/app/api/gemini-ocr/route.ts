@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
     // 2. Procesar con Gemini
     console.log(`[OCR] Procesando con Gemini Vision...`)
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getModel('gemini-1.5-pro')
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' })
 
     const result = await model.generateContent([
       GEMINI_PROMPT,
