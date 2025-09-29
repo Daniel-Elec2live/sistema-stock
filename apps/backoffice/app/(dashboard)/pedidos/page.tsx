@@ -159,11 +159,26 @@ export default function PedidosPage() {
             : order
         ))
 
-        // Luego refrescar desde servidor para asegurar sincronización
-        setTimeout(() => {
-          console.log(`🔄 Frontend - Refreshing orders to verify persistence for ${orderId.slice(0, 8)}`)
-          fetchOrders()
-        }, 500) // Dar tiempo para que la BD se sincronice
+        // Verificar persistencia sin refrescar toda la UI (más sutil)
+        setTimeout(async () => {
+          console.log(`🔄 Frontend - Verifying persistence for ${orderId.slice(0, 8)}`)
+          try {
+            const verifyResponse = await fetch('/api/orders')
+            const verifyData = await verifyResponse.json()
+            if (verifyData.success) {
+              const verifiedOrder = verifyData.data.find((o: any) => o.id === orderId)
+              if (verifiedOrder?.status !== newStatus) {
+                console.warn(`⚠️ Persistence issue detected for ${orderId.slice(0, 8)}: expected ${newStatus}, got ${verifiedOrder?.status}`)
+                // Solo refrescar si hay inconsistencia
+                fetchOrders()
+              } else {
+                console.log(`✅ Persistence confirmed for ${orderId.slice(0, 8)}: ${verifiedOrder.status}`)
+              }
+            }
+          } catch (error) {
+            console.error('Error verifying persistence:', error)
+          }
+        }, 1000) // Dar más tiempo para BD
 
       } else {
         console.error(`❌ Frontend - Error updating order ${orderId.slice(0, 8)}:`, data.error)

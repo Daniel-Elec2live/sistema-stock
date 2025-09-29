@@ -73,30 +73,62 @@ export default function ClientesPage() {
   }
 
   const approveCustomer = async (customerId: string, approved: boolean) => {
+    console.log(`🔄 Frontend - ${approved ? 'Approving' : 'Revoking'} customer ${customerId.slice(0, 8)}`)
+
     try {
-      console.log('Enviando solicitud:', { customerId, approved })
+      const requestBody = { approved }
+      console.log(`📤 Frontend - Sending request:`, { customerId: customerId.slice(0, 8), ...requestBody })
 
       const response = await fetch(`/api/customers/${customerId}/approve`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ approved }),
+        body: JSON.stringify(requestBody),
       })
 
-      console.log('Response status:', response.status)
+      console.log(`📥 Frontend - Response status: ${response.status}`)
       const data = await response.json()
-      console.log('Response data:', data)
+      console.log(`📥 Frontend - Response data for ${customerId.slice(0, 8)}:`, data)
 
       if (response.ok && data.success) {
-        fetchCustomers() // Refresh the list
-        console.log('✅', data.message)
+        console.log(`✅ Frontend - Successfully ${approved ? 'approved' : 'revoked'} customer ${customerId.slice(0, 8)}`)
+
+        // Refrescar la lista inmediatamente
+        fetchCustomers()
+
+        // Verificar persistencia después
+        setTimeout(async () => {
+          console.log(`🔄 Frontend - Verifying customer ${customerId.slice(0, 8)} persistence...`)
+          try {
+            const verifyResponse = await fetch('/api/customers')
+            const verifyData = await verifyResponse.json()
+            if (verifyData.success) {
+              const verifiedCustomer = verifyData.customers.find((c: any) => c.id === customerId)
+              if (verifiedCustomer) {
+                const actualStatus = verifiedCustomer.is_approved
+                if (actualStatus === approved) {
+                  console.log(`✅ Frontend - Persistence confirmed for ${customerId.slice(0, 8)}: is_approved=${actualStatus}`)
+                } else {
+                  console.warn(`⚠️ Frontend - Persistence issue for ${customerId.slice(0, 8)}: expected is_approved=${approved}, got ${actualStatus}`)
+                  // Refrescar de nuevo si hay inconsistencia
+                  fetchCustomers()
+                }
+              } else {
+                console.error(`❌ Frontend - Customer ${customerId.slice(0, 8)} not found in verification`)
+              }
+            }
+          } catch (error) {
+            console.error(`❌ Frontend - Error verifying customer ${customerId.slice(0, 8)}:`, error)
+          }
+        }, 1000)
+
       } else {
-        console.error('❌ Error updating customer:', data.error)
+        console.error(`❌ Frontend - Error updating customer ${customerId.slice(0, 8)}:`, data.error)
         alert(`Error: ${data.error}`)
       }
     } catch (error) {
-      console.error('❌ Error updating customer:', error)
+      console.error(`❌ Frontend - Network error for customer ${customerId.slice(0, 8)}:`, error)
       alert('Error de conexión. Inténtalo de nuevo.')
     }
   }
