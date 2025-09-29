@@ -104,7 +104,13 @@ export default function PedidosPage() {
   const fetchOrders = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/orders')
+      // Aplicar cache busting igual que en clientes
+      const response = await fetch(`/api/orders?_t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      })
       const data = await response.json()
 
       if (data.success) {
@@ -168,7 +174,12 @@ export default function PedidosPage() {
           console.log(`🔄 Frontend - Verifying persistence for ${orderId.slice(0, 8)} (attempt ${verificationAttempt}/${maxAttempts})`)
 
           try {
-            const verifyResponse = await fetch('/api/orders')
+            const verifyResponse = await fetch(`/api/orders?_verify=${Date.now()}`, {
+              headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+              }
+            })
             const verifyData = await verifyResponse.json()
             if (verifyData.success) {
               const verifiedOrder = verifyData.data.find((o: any) => o.id === orderId)
@@ -177,7 +188,8 @@ export default function PedidosPage() {
                 expected: newStatus,
                 actual: verifiedOrder?.status,
                 updated_at: verifiedOrder?.updated_at,
-                attempt: verificationAttempt
+                attempt: verificationAttempt,
+                cacheTimestamp: Date.now()
               })
 
               if (verifiedOrder?.status !== newStatus) {

@@ -126,7 +126,13 @@ export default function OrderDetailsPage() {
   const fetchOrderDetails = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/orders/${orderId}/details`)
+      // Cache busting para sincronización correcta
+      const response = await fetch(`/api/orders/${orderId}/details?_t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      })
       const data = await response.json()
 
       if (data.success) {
@@ -144,6 +150,8 @@ export default function OrderDetailsPage() {
   const updateOrderStatus = async (newStatus: 'confirmed' | 'prepared' | 'delivered') => {
     if (!order) return
 
+    console.log(`🔄 Order Details - Updating ${orderId.slice(0, 8)} to ${newStatus}`)
+
     setUpdating(true)
     try {
       const response = await fetch(`/api/orders/${orderId}/status`, {
@@ -155,12 +163,40 @@ export default function OrderDetailsPage() {
       })
 
       const data = await response.json()
+      console.log(`📥 Order Details - API Response:`, data)
 
       if (data.success) {
+        console.log(`✅ Order Details - Update successful, refreshing details...`)
+
+        // Actualizar estado local inmediatamente
         setOrder(prev => prev ? { ...prev, status: newStatus, updated_at: new Date().toISOString() } : null)
+
+        // Verificar persistencia después de un momento
+        setTimeout(async () => {
+          console.log(`🔄 Order Details - Verifying persistence...`)
+          try {
+            const verifyResponse = await fetch(`/api/orders/${orderId}/details?_verify=${Date.now()}`, {
+              headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+              }
+            })
+            const verifyData = await verifyResponse.json()
+
+            if (verifyData.success && verifyData.data.status === newStatus) {
+              console.log(`✅ Order Details - Persistence confirmed: ${verifyData.data.status}`)
+            } else {
+              console.warn(`⚠️ Order Details - Persistence issue, refreshing...`)
+              fetchOrderDetails() // Refrescar si hay inconsistencia
+            }
+          } catch (error) {
+            console.error('Error verifying persistence:', error)
+          }
+        }, 2000)
+
       } else {
-        console.error('Error updating order status:', data.error)
-        alert('Error al actualizar el estado del pedido')
+        console.error(`❌ Order Details - Update failed:`, data.error)
+        alert(`Error al actualizar el estado del pedido: ${data.error}`)
       }
     } catch (error) {
       console.error('Error updating order status:', error)
