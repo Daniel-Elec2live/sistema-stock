@@ -1,333 +1,345 @@
-Logs backoffice:
-
-11:04:37.602 Running build in Washington, D.C., USA (East) – iad1
-11:04:37.602 Build machine configuration: 2 cores, 8 GB
-11:04:37.640 Cloning github.com/Daniel-Elec2live/sistema-stock (Branch: main, Commit: 4381a5b)
-11:04:37.949 Cloning completed: 309.000ms
-11:04:38.014 Found .vercelignore (repository root)
-11:04:38.035 Removed 22 ignored files defined in .vercelignore
-11:04:38.036   /.env.example
-11:04:38.036   /apps/b2b/.env.example
-11:04:38.036   /apps/b2b/.env.local
-11:04:38.036   /apps/backoffice/.env.local
-11:04:38.036   /database/price-system-migration.sql
-11:04:38.036   /services/ocr/.env.example
-11:04:38.036   /services/ocr/deploy-hetzner.sh
-11:04:38.036   /services/ocr/docker-compose.prod.yml
-11:04:38.036   /services/ocr/docker-compose.yml
-11:04:38.036   /services/ocr/Dockerfile
-11:04:39.401 Restored build cache from previous deployment (EzNFzYAvMUFQQPerEo71kJc3o6x3)
-11:04:39.916 Running "vercel build"
-11:04:40.319 Vercel CLI 48.1.6
-11:04:40.684 Warning: Detected "engines": { "node": ">=18.0.0" } in your `package.json` that will automatically upgrade when a new major Node.js Version is released. Learn More: http://vercel.link/node-version
-11:04:40.696 Running "install" command: `npm ci`...
-11:04:47.596 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
-11:04:48.305 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-11:04:48.523 npm warn deprecated glob@7.1.7: Glob versions prior to v9 are no longer supported
-11:04:48.883 npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
-11:04:49.130 npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
-11:04:49.865 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
-11:04:49.911 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
-11:04:52.375 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
-11:05:00.290 
-11:05:00.291 added 583 packages, and audited 585 packages in 19s
-11:05:00.291 
-11:05:00.292 172 packages are looking for funding
-11:05:00.292   run `npm fund` for details
-11:05:00.366 
-11:05:00.366 3 vulnerabilities (2 moderate, 1 critical)
-11:05:00.367 
-11:05:00.367 To address issues that do not require attention, run:
-11:05:00.367   npm audit fix
-11:05:00.368 
-11:05:00.368 To address all issues, run:
-11:05:00.368   npm audit fix --force
-11:05:00.368 
-11:05:00.368 Run `npm audit` for details.
-11:05:00.429 Detected Next.js version: 14.0.3
-11:05:00.430 Running "npm run build"
-11:05:00.596 
-11:05:00.596 > @sistema-stock/backoffice@0.1.0 build
-11:05:00.596 > next build
-11:05:00.596 
-11:05:01.663    ▲ Next.js 14.0.3
-11:05:01.665 
-11:05:01.666    Creating an optimized production build ...
-11:05:06.947  ✓ Compiled successfully
-11:05:06.948    Linting and checking validity of types ...
-11:05:16.917    Collecting page data ...
-11:05:17.525    Generating static pages (0/23) ...
-11:05:17.580 🔍 COMPARISON API - Starting comparison
-11:05:18.649 📊 CLIENT 1 Results: [
-11:05:18.649   {
-11:05:18.650     id: '2f97bff3',
-11:05:18.650     status: 'delivered',
-11:05:18.650     updated_at: '2025-09-19T08:36:46.121669+00:00'
-11:05:18.650   },
-11:05:18.650   {
-11:05:18.650     id: '34f2d249',
-11:05:18.650     status: 'prepared',
-11:05:18.650     updated_at: '2025-09-19T08:12:54.700798+00:00'
-11:05:18.650   },
-11:05:18.650   {
-11:05:18.650     id: '153606e2',
-11:05:18.650     status: 'delivered',
-11:05:18.650     updated_at: '2025-09-19T08:08:19.098769+00:00'
-11:05:18.651   },
-11:05:18.651   {
-11:05:18.651     id: '0915eecc',
-11:05:18.651     status: 'cancelled',
-11:05:18.651     updated_at: '2025-09-18T08:32:25.94726+00:00'
-11:05:18.651   }
-11:05:18.651 ]
-11:05:18.651 📊 CLIENT 2 Results: [
-11:05:18.651   {
-11:05:18.651     id: '2f97bff3',
-11:05:18.651     status: 'delivered',
-11:05:18.651     updated_at: '2025-09-19T08:36:46.121669+00:00'
-11:05:18.651   },
-11:05:18.651   {
-11:05:18.652     id: '34f2d249',
-11:05:18.652     status: 'prepared',
-11:05:18.652     updated_at: '2025-09-19T08:12:54.700798+00:00'
-11:05:18.652   },
-11:05:18.655   {
-11:05:18.655     id: '153606e2',
-11:05:18.655     status: 'delivered',
-11:05:18.655     updated_at: '2025-09-19T08:08:19.098769+00:00'
-11:05:18.660   },
-11:05:18.660   {
-11:05:18.660     id: '0915eecc',
-11:05:18.661     status: 'cancelled',
-11:05:18.661     updated_at: '2025-09-18T08:32:25.94726+00:00'
-11:05:18.661   }
-11:05:18.661 ]
-11:05:18.661 📋 SPECIFIC ORDER Test: {
-11:05:18.661   id: '153606e2',
-11:05:18.661   status: 'delivered',
-11:05:18.661   updated_at: '2025-09-19T08:08:19.098769+00:00'
-11:05:18.661 }
-11:05:18.908 📋 RAW QUERY Result: null
-11:05:19.627 
-   Generating static pages (5/23) 
-11:05:19.653 🔍 DIRECT DB DEBUG - Connecting to database
-11:05:19.774 ⚠️ RPC no disponible, usando query directa
-11:05:19.847 📊 DB Debug Results: {
-11:05:19.847   directQuery: 4,
-11:05:19.848   freshQuery: 4,
-11:05:19.848   errors: { directError: null, freshError: null }
-11:05:19.848 }
-11:05:19.877 🔍 Backoffice API - Fetching all orders [1758877519857]
-11:05:19.877 🔧 Environment check: {
-11:05:19.877   supabaseUrl: 'https://rnnkgzbhgonmdxtirwhg.s...',
-11:05:19.877   hasServiceKey: true,
-11:05:19.877   timestamp: 1758877519857
-11:05:19.877 }
-11:05:19.988 📊 Raw orders from DB: { count: 4, error: null }
-11:05:20.105 📋 Order 34f2d249: customer=Daniel Vega Hurtado, status=prepared
-11:05:20.105 📋 Order 153606e2: customer=Daniel Vega Hurtado, status=delivered
-11:05:20.105 📋 Order 0915eecc: customer=Daniel Vega Hurtado, status=cancelled
-11:05:20.105 📋 Order 2f97bff3: customer=Daniel Vega Hurtado, status=delivered
-11:05:20.105 ✅ Successfully fetched 4 orders
-11:05:20.105 📊 Sample orders with statuses: [
-11:05:20.105   {
-11:05:20.105     id: '2f97bff3',
-11:05:20.105     status: 'delivered',
-11:05:20.106     customer: 'Daniel Vega Hurtado'
-11:05:20.106   },
-11:05:20.106   {
-11:05:20.106     id: '34f2d249',
-11:05:20.106     status: 'prepared',
-11:05:20.106     customer: 'Daniel Vega Hurtado'
-11:05:20.106   },
-11:05:20.106   {
-11:05:20.106     id: '153606e2',
-11:05:20.106     status: 'delivered',
-11:05:20.106     customer: 'Daniel Vega Hurtado'
-11:05:20.106   }
-11:05:20.106 ]
-11:05:20.332 🔧 Testing Supabase connection...
-11:05:20.354 📊 Found 4 orders in database
-11:05:21.119 📋 Sample orders with detailed status info:
-11:05:21.120   - ID: 34f2d249, Status: "prepared", Created: 2025-09-18T08:47:58.860284+00:00, Updated: 2025-09-19T08:12:54.700798+00:00
-11:05:21.120   - ID: 2f97bff3, Status: "delivered", Created: 2025-09-18T08:33:23.995782+00:00, Updated: 2025-09-19T08:36:46.121669+00:00
-11:05:21.121   - ID: 153606e2, Status: "delivered", Created: 2025-09-18T08:24:35.151916+00:00, Updated: 2025-09-19T08:08:19.098769+00:00
-11:05:21.121   - ID: 0915eecc, Status: "cancelled", Created: 2025-09-17T09:48:54.707444+00:00, Updated: 2025-09-18T08:32:25.94726+00:00
-11:05:21.121 
-   Generating static pages (11/23) 
-11:05:22.721 
-   Generating static pages (17/23) 
-11:05:23.006 
- ✓ Generating static pages (23/23) 
-11:05:23.751    Finalizing page optimization ...
-11:05:23.752    Collecting build traces ...
-11:05:26.290 
-11:05:26.301 Route (app)                              Size     First Load JS
-11:05:26.302 ┌ ○ /                                    3.65 kB         102 kB
-11:05:26.302 ├ ○ /_not-found                          868 B          84.8 kB
-11:05:26.302 ├ ○ /ajustes                             5.09 kB         118 kB
-11:05:26.302 ├ ○ /alertas                             3.67 kB        95.3 kB
-11:05:26.302 ├ λ /api/alerts                          0 B                0 B
-11:05:26.302 ├ ○ /api/compare-orders                  0 B                0 B
-11:05:26.302 ├ λ /api/customers                       0 B                0 B
-11:05:26.302 ├ λ /api/customers/[id]/approve          0 B                0 B
-11:05:26.302 ├ λ /api/customers/[id]/discounts        0 B                0 B
-11:05:26.302 ├ ○ /api/dashboard/alerts                0 B                0 B
-11:05:26.303 ├ ○ /api/dashboard/kpis                  0 B                0 B
-11:05:26.303 ├ ○ /api/debug-db                        0 B                0 B
-11:05:26.303 ├ λ /api/debug-order/[id]                0 B                0 B
-11:05:26.303 ├ λ /api/discounts/[id]                  0 B                0 B
-11:05:26.303 ├ λ /api/entries                         0 B                0 B
-11:05:26.303 ├ λ /api/ocr/callback                    0 B                0 B
-11:05:26.303 ├ ○ /api/orders                          0 B                0 B
-11:05:26.305 ├ λ /api/orders/[id]/details             0 B                0 B
-11:05:26.305 ├ λ /api/orders/[id]/status              0 B                0 B
-11:05:26.305 ├ λ /api/productos                       0 B                0 B
-11:05:26.305 ├ λ /api/products                        0 B                0 B
-11:05:26.305 ├ λ /api/products/[id]                   0 B                0 B
-11:05:26.305 ├ λ /api/products/[id]/historial         0 B                0 B
-11:05:26.305 ├ λ /api/products/generate-reference     0 B                0 B
-11:05:26.305 ├ ○ /api/proveedores                     0 B                0 B
-11:05:26.306 ├ λ /api/stock/adjustment                0 B                0 B
-11:05:26.306 ├ λ /api/stock/adjustments               0 B                0 B
-11:05:26.306 ├ ○ /api/test-orders                     0 B                0 B
-11:05:26.306 ├ λ /api/upload                          0 B                0 B
-11:05:26.306 ├ ○ /clientes                            4.47 kB         103 kB
-11:05:26.306 ├ λ /clientes/[id]/descuentos            5.21 kB         104 kB
-11:05:26.307 ├ ○ /entradas                            5.92 kB         104 kB
-11:05:26.307 ├ ○ /entradas/manual                     3.97 kB         124 kB
-11:05:26.307 ├ ○ /pedidos                             30.2 kB         122 kB
-11:05:26.307 ├ λ /pedidos/[id]                        5.39 kB        97.1 kB
-11:05:26.307 ├ ○ /productos                           6.98 kB         127 kB
-11:05:26.307 ├ λ /productos/[id]                      3.47 kB         102 kB
-11:05:26.307 ├ λ /productos/[id]/editar               1.3 kB          125 kB
-11:05:26.307 └ ○ /productos/nuevo                     819 B           125 kB
-11:05:26.307 + First Load JS shared by all            83.9 kB
-11:05:26.308   ├ chunks/1dd3208c-98773aff6b03e94d.js  53.3 kB
-11:05:26.308   ├ chunks/53-beafc2eda129f83d.js        28.7 kB
-11:05:26.308   ├ chunks/main-app-19db39c956469e7c.js  218 B
-11:05:26.308   └ chunks/webpack-112234827395a241.js   1.69 kB
-11:05:26.308 
-11:05:26.308 
-11:05:26.308 ƒ Middleware                             27.8 kB
-11:05:26.309 
-11:05:26.309 ○  (Static)   prerendered as static content
-11:05:26.309 λ  (Dynamic)  server-rendered on demand using Node.js
-11:05:26.309 
-11:05:26.440 Traced Next.js server files in: 27.603ms
-11:05:26.529 WARNING: Unable to find source file for page /_not-found with extensions: tsx, ts, jsx, js, this can cause functions config from `vercel.json` to not be applied
-11:05:26.589 Created all serverless functions in: 148.605ms
-11:05:26.645 Collected static files (public/, static/, .next/static): 7.102ms
-11:05:26.729 Build Completed in /vercel/output [46s]
-11:05:26.906 Deploying outputs...
-11:05:36.286 Deployment completed
-11:05:37.100 Creating build cache...
-11:05:53.027 Created build cache: 15.924s
-11:05:53.027 Uploading build cache [148.96 MB]
-11:05:54.600 Build cache uploaded: 1.577s
-
-
 Logs b2b:
+10:53:03.698 Running build in Washington, D.C., USA (East) – iad1
+10:53:03.699 Build machine configuration: 2 cores, 8 GB
+10:53:03.714 Cloning github.com/Daniel-Elec2live/sistema-stock (Branch: main, Commit: 01535e8)
+10:53:04.310 Cloning completed: 596.000ms
+10:53:04.480 Found .vercelignore (repository root)
+10:53:04.499 Removed 22 ignored files defined in .vercelignore
+10:53:04.499   /.env.example
+10:53:04.500   /apps/b2b/.env.example
+10:53:04.500   /apps/b2b/.env.local
+10:53:04.500   /apps/backoffice/.env.local
+10:53:04.500   /database/price-system-migration.sql
+10:53:04.500   /services/ocr/.env.example
+10:53:04.500   /services/ocr/deploy-hetzner.sh
+10:53:04.500   /services/ocr/docker-compose.prod.yml
+10:53:04.500   /services/ocr/docker-compose.yml
+10:53:04.500   /services/ocr/Dockerfile
+10:53:05.493 Restored build cache from previous deployment (72RfotHJZmbs5b9fG5xmVENixnvN)
+10:53:06.069 Running "vercel build"
+10:53:06.774 Vercel CLI 48.1.6
+10:53:07.163 Warning: Detected "engines": { "node": ">=18.0.0" } in your `package.json` that will automatically upgrade when a new major Node.js Version is released. Learn More: http://vercel.link/node-version
+10:53:07.175 Running "install" command: `npm ci`...
+10:53:16.069 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+10:53:16.725 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+10:53:16.964 npm warn deprecated glob@7.1.7: Glob versions prior to v9 are no longer supported
+10:53:17.206 npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+10:53:17.422 npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+10:53:18.309 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+10:53:18.361 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+10:53:21.751 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+10:53:33.555 
+10:53:33.556 added 628 packages, and audited 630 packages in 26s
+10:53:33.556 
+10:53:33.556 187 packages are looking for funding
+10:53:33.557   run `npm fund` for details
+10:53:33.568 
+10:53:33.568 2 moderate severity vulnerabilities
+10:53:33.569 
+10:53:33.569 To address all issues, run:
+10:53:33.569   npm audit fix
+10:53:33.569 
+10:53:33.570 Run `npm audit` for details.
+10:53:33.649 Detected Next.js version: 15.5.2
+10:53:33.650 Running "npm run build"
+10:53:33.785 
+10:53:33.785 > @apps/b2b@1.0.0 build
+10:53:33.786 > next build
+10:53:33.786 
+10:53:35.141    ▲ Next.js 15.5.2
+10:53:35.142 
+10:53:35.227    Creating an optimized production build ...
+10:53:43.466  ✓ Compiled successfully in 7.9s
+10:53:43.481    Linting and checking validity of types ...
+10:53:49.018  ⨯ ESLint: context.getScope is not a function Occurred while linting /vercel/path0/apps/b2b/components/auth/AuthGuard.tsx:9 Rule: "@typescript-eslint/no-unsafe-declaration-merging"
+10:53:53.864    Collecting page data ...
+10:53:56.162    Generating static pages (0/17) ...
+10:53:57.032    Generating static pages (4/17) 
+10:53:57.511    Generating static pages (8/17) 
+10:53:57.749    Generating static pages (12/17) 
+10:53:57.750  ✓ Generating static pages (17/17)
+10:53:58.677    Finalizing page optimization ...
+10:53:58.681    Collecting build traces ...
+10:54:06.637 
+10:54:06.640 Route (app)                               Size  First Load JS
+10:54:06.641 ┌ ○ /                                    115 B         228 kB
+10:54:06.641 ├ ○ /_not-found                          187 B         228 kB
+10:54:06.641 ├ ƒ /api/auth/login                      113 B         228 kB
+10:54:06.641 ├ ƒ /api/auth/me                         115 B         228 kB
+10:54:06.641 ├ ƒ /api/auth/register                   115 B         228 kB
+10:54:06.642 ├ ƒ /api/orders                          115 B         228 kB
+10:54:06.642 ├ ƒ /api/orders/[id]                     115 B         228 kB
+10:54:06.642 ├ ƒ /api/orders/[id]/cancel              115 B         228 kB
+10:54:06.642 ├ ƒ /api/products/[id]                   115 B         228 kB
+10:54:06.642 ├ ƒ /api/stock                           115 B         228 kB
+10:54:06.642 ├ ƒ /api/test-prices                     115 B         228 kB
+10:54:06.642 ├ ○ /carrito                           1.88 kB         269 kB
+10:54:06.642 ├ ○ /catalogo                           3.2 kB         270 kB
+10:54:06.642 ├ ○ /checkout                          4.02 kB         271 kB
+10:54:06.643 ├ ƒ /confirmacion/[orderId]            2.51 kB         269 kB
+10:54:06.643 ├ ○ /login                             1.86 kB         269 kB
+10:54:06.643 ├ ○ /pedidos                              4 kB         271 kB
+10:54:06.643 ├ ƒ /pedidos/[id]                      3.26 kB         270 kB
+10:54:06.643 ├ ƒ /producto/[id]                     2.68 kB         269 kB
+10:54:06.643 └ ○ /register                          2.41 kB         269 kB
+10:54:06.643 + First Load JS shared by all           228 kB
+10:54:06.643   ├ chunks/common-7ce15867e008a523.js    23 kB
+10:54:06.643   └ chunks/vendor-2aa23bb9ff7d56be.js   202 kB
+10:54:06.643   └ other shared chunks (total)        2.61 kB
+10:54:06.644 
+10:54:06.644 
+10:54:06.644 ○  (Static)   prerendered as static content
+10:54:06.644 ƒ  (Dynamic)  server-rendered on demand
+10:54:06.644 
+10:54:06.838 Traced Next.js server files in: 89.061ms
+10:54:07.053 Created all serverless functions in: 214.777ms
+10:54:07.072 Collected static files (public/, static/, .next/static): 8.639ms
+10:54:07.159 Build Completed in /vercel/output [1m]
+10:54:07.346 Deploying outputs...
+10:54:21.197 Deployment completed
+10:54:22.000 Creating build cache...
+10:54:46.165 Created build cache: 24.165s
+10:54:46.167 Uploading build cache [189.25 MB]
+10:54:49.401 Build cache uploaded: 3.235s
 
-11:03:25.288 Running build in Washington, D.C., USA (East) – iad1
-11:03:25.296 Build machine configuration: 2 cores, 8 GB
-11:03:25.346 Cloning github.com/Daniel-Elec2live/sistema-stock (Branch: main, Commit: 4381a5b)
-11:03:26.524 Cloning completed: 1.178s
-11:03:27.175 Found .vercelignore (repository root)
-11:03:27.330 Removed 22 ignored files defined in .vercelignore
-11:03:27.330   /.env.example
-11:03:27.330   /apps/b2b/.env.example
-11:03:27.331   /apps/b2b/.env.local
-11:03:27.331   /apps/backoffice/.env.local
-11:03:27.331   /database/price-system-migration.sql
-11:03:27.332   /services/ocr/.env.example
-11:03:27.332   /services/ocr/deploy-hetzner.sh
-11:03:27.332   /services/ocr/docker-compose.prod.yml
-11:03:27.332   /services/ocr/docker-compose.yml
-11:03:27.333   /services/ocr/Dockerfile
-11:03:28.199 Restored build cache from previous deployment (4QM5wnWr4pJhtT7MXUBYznmYBF3g)
-11:03:28.843 Running "vercel build"
-11:03:29.397 Vercel CLI 48.1.6
-11:03:29.716 Warning: Detected "engines": { "node": ">=18.0.0" } in your `package.json` that will automatically upgrade when a new major Node.js Version is released. Learn More: http://vercel.link/node-version
-11:03:29.729 Running "install" command: `npm ci`...
-11:03:36.508 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
-11:03:37.087 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-11:03:37.306 npm warn deprecated glob@7.1.7: Glob versions prior to v9 are no longer supported
-11:03:37.593 npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
-11:03:37.819 npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
-11:03:38.742 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
-11:03:38.835 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
-11:03:42.160 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
-11:03:54.365 
-11:03:54.366 added 628 packages, and audited 630 packages in 24s
-11:03:54.366 
-11:03:54.366 187 packages are looking for funding
-11:03:54.367   run `npm fund` for details
-11:03:54.376 
-11:03:54.376 2 moderate severity vulnerabilities
-11:03:54.376 
-11:03:54.376 To address all issues, run:
-11:03:54.376   npm audit fix
-11:03:54.376 
-11:03:54.376 Run `npm audit` for details.
-11:03:54.521 Detected Next.js version: 15.5.2
-11:03:54.522 Running "npm run build"
-11:03:54.774 
-11:03:54.775 > @apps/b2b@1.0.0 build
-11:03:54.775 > next build
-11:03:54.775 
-11:03:55.826    ▲ Next.js 15.5.2
-11:03:55.827 
-11:03:55.917    Creating an optimized production build ...
-11:04:01.856  ✓ Compiled successfully in 5.4s
-11:04:01.862    Linting and checking validity of types ...
-11:04:07.361  ⨯ ESLint: context.getScope is not a function Occurred while linting /vercel/path0/apps/b2b/components/auth/AuthGuard.tsx:9 Rule: "@typescript-eslint/no-unsafe-declaration-merging"
-11:04:12.086    Collecting page data ...
-11:04:14.384    Generating static pages (0/17) ...
-11:04:15.116    Generating static pages (4/17) 
-11:04:15.297    Generating static pages (8/17) 
-11:04:15.462    Generating static pages (12/17) 
-11:04:15.462  ✓ Generating static pages (17/17)
-11:04:16.385    Finalizing page optimization ...
-11:04:16.388    Collecting build traces ...
-11:04:24.466 
-11:04:24.469 Route (app)                               Size  First Load JS
-11:04:24.470 ┌ ○ /                                    115 B         228 kB
-11:04:24.470 ├ ○ /_not-found                          187 B         228 kB
-11:04:24.471 ├ ƒ /api/auth/login                      113 B         228 kB
-11:04:24.471 ├ ƒ /api/auth/me                         115 B         228 kB
-11:04:24.471 ├ ƒ /api/auth/register                   115 B         228 kB
-11:04:24.471 ├ ƒ /api/orders                          115 B         228 kB
-11:04:24.471 ├ ƒ /api/orders/[id]                     115 B         228 kB
-11:04:24.471 ├ ƒ /api/orders/[id]/cancel              115 B         228 kB
-11:04:24.471 ├ ƒ /api/products/[id]                   115 B         228 kB
-11:04:24.471 ├ ƒ /api/stock                           115 B         228 kB
-11:04:24.472 ├ ƒ /api/test-prices                     115 B         228 kB
-11:04:24.472 ├ ○ /carrito                           1.78 kB         269 kB
-11:04:24.472 ├ ○ /catalogo                          3.16 kB         270 kB
-11:04:24.472 ├ ○ /checkout                          3.78 kB         271 kB
-11:04:24.472 ├ ƒ /confirmacion/[orderId]            2.51 kB         269 kB
-11:04:24.472 ├ ○ /login                             1.86 kB         269 kB
-11:04:24.472 ├ ○ /pedidos                           3.86 kB         271 kB
-11:04:24.472 ├ ƒ /pedidos/[id]                      3.21 kB         270 kB
-11:04:24.472 ├ ƒ /producto/[id]                     2.68 kB         269 kB
-11:04:24.472 └ ○ /register                          2.41 kB         269 kB
-11:04:24.472 + First Load JS shared by all           228 kB
-11:04:24.472   ├ chunks/common-7ce15867e008a523.js    23 kB
-11:04:24.473   └ chunks/vendor-df4d7c74a2d52caf.js   202 kB
-11:04:24.473   └ other shared chunks (total)        2.61 kB
-11:04:24.473 
-11:04:24.473 
-11:04:24.473 ○  (Static)   prerendered as static content
-11:04:24.473 ƒ  (Dynamic)  server-rendered on demand
-11:04:24.473 
-11:04:24.658 Traced Next.js server files in: 90.525ms
-11:04:24.851 Created all serverless functions in: 192.284ms
-11:04:24.869 Collected static files (public/, static/, .next/static): 10.063ms
-11:04:24.958 Build Completed in /vercel/output [55s]
-11:04:25.141 Deploying outputs...
-11:04:37.264 Deployment completed
-11:04:38.096 Creating build cache...
-11:05:02.264 Created build cache: 24.163s
-11:05:02.264 Uploading build cache [187.09 MB]
-11:05:04.968 Build cache uploaded: 2.705s
+
+Logs backoffice:
+10:52:03.068 Running build in Washington, D.C., USA (East) – iad1
+10:52:03.068 Build machine configuration: 2 cores, 8 GB
+10:52:03.112 Cloning github.com/Daniel-Elec2live/sistema-stock (Branch: main, Commit: 01535e8)
+10:52:04.653 Cloning completed: 1.534s
+10:52:05.096 Found .vercelignore (repository root)
+10:52:05.198 Removed 22 ignored files defined in .vercelignore
+10:52:05.198   /.env.example
+10:52:05.198   /apps/b2b/.env.example
+10:52:05.198   /apps/b2b/.env.local
+10:52:05.198   /apps/backoffice/.env.local
+10:52:05.198   /database/price-system-migration.sql
+10:52:05.198   /services/ocr/.env.example
+10:52:05.199   /services/ocr/deploy-hetzner.sh
+10:52:05.199   /services/ocr/docker-compose.prod.yml
+10:52:05.199   /services/ocr/docker-compose.yml
+10:52:05.199   /services/ocr/Dockerfile
+10:52:05.477 Restored build cache from previous deployment (8K2nCWy3C4Njry68emXST2qGze6C)
+10:52:06.111 Running "vercel build"
+10:52:06.506 Vercel CLI 48.1.6
+10:52:06.826 Warning: Detected "engines": { "node": ">=18.0.0" } in your `package.json` that will automatically upgrade when a new major Node.js Version is released. Learn More: http://vercel.link/node-version
+10:52:06.839 Running "install" command: `npm ci`...
+10:52:13.483 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+10:52:13.977 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+10:52:14.151 npm warn deprecated glob@7.1.7: Glob versions prior to v9 are no longer supported
+10:52:14.182 npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+10:52:14.858 npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+10:52:15.629 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+10:52:15.671 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+10:52:17.850 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+10:52:24.468 
+10:52:24.468 added 583 packages, and audited 585 packages in 17s
+10:52:24.468 
+10:52:24.468 172 packages are looking for funding
+10:52:24.468   run `npm fund` for details
+10:52:24.550 
+10:52:24.550 3 vulnerabilities (2 moderate, 1 critical)
+10:52:24.551 
+10:52:24.551 To address issues that do not require attention, run:
+10:52:24.551   npm audit fix
+10:52:24.551 
+10:52:24.552 To address all issues, run:
+10:52:24.552   npm audit fix --force
+10:52:24.552 
+10:52:24.555 Run `npm audit` for details.
+10:52:24.629 Detected Next.js version: 14.0.3
+10:52:24.633 Running "npm run build"
+10:52:24.764 
+10:52:24.765 > @sistema-stock/backoffice@0.1.0 build
+10:52:24.765 > next build
+10:52:24.765 
+10:52:26.402    ▲ Next.js 14.0.3
+10:52:26.403 
+10:52:26.403    Creating an optimized production build ...
+10:52:32.190  ✓ Compiled successfully
+10:52:32.192    Linting and checking validity of types ...
+10:52:42.591    Collecting page data ...
+10:52:43.226    Generating static pages (0/23) ...
+10:52:43.889 🔍 COMPARISON API - Starting comparison
+10:52:44.307 📊 CLIENT 1 Results: [
+10:52:44.308   {
+10:52:44.308     id: '5c5d7eb1',
+10:52:44.308     status: 'pending',
+10:52:44.308     updated_at: '2025-09-29T08:37:14.212246+00:00'
+10:52:44.308   },
+10:52:44.309   {
+10:52:44.309     id: '50601c1c',
+10:52:44.309     status: 'pending',
+10:52:44.309     updated_at: '2025-09-28T13:53:27.196653+00:00'
+10:52:44.309   },
+10:52:44.309   {
+10:52:44.309     id: '2f97bff3',
+10:52:44.309     status: 'delivered',
+10:52:44.309     updated_at: '2025-09-19T08:36:46.121669+00:00'
+10:52:44.309   },
+10:52:44.310   {
+10:52:44.310     id: '34f2d249',
+10:52:44.310     status: 'prepared',
+10:52:44.310     updated_at: '2025-09-19T08:12:54.700798+00:00'
+10:52:44.310   },
+10:52:44.310   {
+10:52:44.310     id: '153606e2',
+10:52:44.310     status: 'delivered',
+10:52:44.310     updated_at: '2025-09-19T08:08:19.098769+00:00'
+10:52:44.310   }
+10:52:44.310 ]
+10:52:44.310 📊 CLIENT 2 Results: [
+10:52:44.310   {
+10:52:44.310     id: '5c5d7eb1',
+10:52:44.310     status: 'pending',
+10:52:44.310     updated_at: '2025-09-29T08:37:14.212246+00:00'
+10:52:44.310   },
+10:52:44.310   {
+10:52:44.310     id: '50601c1c',
+10:52:44.310     status: 'pending',
+10:52:44.310     updated_at: '2025-09-28T13:53:27.196653+00:00'
+10:52:44.315   },
+10:52:44.315   {
+10:52:44.315     id: '2f97bff3',
+10:52:44.315     status: 'delivered',
+10:52:44.315     updated_at: '2025-09-19T08:36:46.121669+00:00'
+10:52:44.315   },
+10:52:44.315   {
+10:52:44.315     id: '34f2d249',
+10:52:44.315     status: 'prepared',
+10:52:44.315     updated_at: '2025-09-19T08:12:54.700798+00:00'
+10:52:44.315   },
+10:52:44.315   {
+10:52:44.315     id: '153606e2',
+10:52:44.316     status: 'delivered',
+10:52:44.316     updated_at: '2025-09-19T08:08:19.098769+00:00'
+10:52:44.316   }
+10:52:44.316 ]
+10:52:44.408 📋 SPECIFIC ORDER Test: {
+10:52:44.408   id: '153606e2',
+10:52:44.408   status: 'delivered',
+10:52:44.408   updated_at: '2025-09-19T08:08:19.098769+00:00'
+10:52:44.408 }
+10:52:44.669 📋 RAW QUERY Result: null
+10:52:45.804 
+   Generating static pages (5/23) 
+10:52:45.815 🔍 DIRECT DB DEBUG - Connecting to database
+10:52:46.135 ⚠️ RPC no disponible, usando query directa
+10:52:46.179 📊 DB Debug Results: {
+10:52:46.179   directQuery: 6,
+10:52:46.180   freshQuery: 6,
+10:52:46.180   errors: { directError: null, freshError: null }
+10:52:46.180 }
+10:52:46.221 🔍 Backoffice API - Fetching all orders [1759135966188]
+10:52:46.221 🔧 Environment check: {
+10:52:46.222   supabaseUrl: 'https://rnnkgzbhgonmdxtirwhg.s...',
+10:52:46.222   hasServiceKey: true,
+10:52:46.222   timestamp: 1759135966188
+10:52:46.222 }
+10:52:46.506 📊 Raw orders from DB: { count: 6, error: null }
+10:52:46.985 📋 Order 50601c1c: customer=Daniel Vega Hurtado, status=pending
+10:52:46.986 📋 Order 2f97bff3: customer=Daniel Vega Hurtado, status=delivered
+10:52:46.986 📋 Order 34f2d249: customer=Daniel Vega Hurtado, status=prepared
+10:52:46.987 📋 Order 153606e2: customer=Daniel Vega Hurtado, status=delivered
+10:52:46.987 📋 Order 0915eecc: customer=Daniel Vega Hurtado, status=cancelled
+10:52:46.987 📋 Order 5c5d7eb1: customer=Daniel Vega Hurtado, status=pending
+10:52:46.987 ✅ Successfully fetched 6 orders
+10:52:46.987 📊 Sample orders with statuses: [
+10:52:46.988   {
+10:52:46.988     id: '5c5d7eb1',
+10:52:46.988     status: 'pending',
+10:52:46.988     customer: 'Daniel Vega Hurtado'
+10:52:46.988   },
+10:52:46.989   {
+10:52:46.989     id: '50601c1c',
+10:52:46.989     status: 'pending',
+10:52:46.989     customer: 'Daniel Vega Hurtado'
+10:52:46.989   },
+10:52:46.989   {
+10:52:46.990     id: '2f97bff3',
+10:52:46.990     status: 'delivered',
+10:52:46.990     customer: 'Daniel Vega Hurtado'
+10:52:46.990   }
+10:52:46.990 ]
+10:52:47.987 🔧 Testing Supabase connection...
+10:52:48.363 📊 Found 6 orders in database
+10:52:48.597 📋 Sample orders with detailed status info:
+10:52:48.598   - ID: 5c5d7eb1, Status: "pending", Created: 2025-09-29T08:37:14.212246+00:00, Updated: 2025-09-29T08:37:14.212246+00:00
+10:52:48.598   - ID: 50601c1c, Status: "pending", Created: 2025-09-28T13:53:27.196653+00:00, Updated: 2025-09-28T13:53:27.196653+00:00
+10:52:48.599   - ID: 34f2d249, Status: "prepared", Created: 2025-09-18T08:47:58.860284+00:00, Updated: 2025-09-19T08:12:54.700798+00:00
+10:52:48.600   - ID: 2f97bff3, Status: "delivered", Created: 2025-09-18T08:33:23.995782+00:00, Updated: 2025-09-19T08:36:46.121669+00:00
+10:52:48.600   - ID: 153606e2, Status: "delivered", Created: 2025-09-18T08:24:35.151916+00:00, Updated: 2025-09-19T08:08:19.098769+00:00
+10:52:48.601   - ID: 0915eecc, Status: "cancelled", Created: 2025-09-17T09:48:54.707444+00:00, Updated: 2025-09-18T08:32:25.94726+00:00
+10:52:48.601 
+   Generating static pages (11/23) 
+10:52:49.062 
+   Generating static pages (17/23) 
+10:52:49.872 
+ ✓ Generating static pages (23/23) 
+10:52:50.066    Finalizing page optimization ...
+10:52:50.067    Collecting build traces ...
+10:52:52.544 
+10:52:52.564 Route (app)                              Size     First Load JS
+10:52:52.565 ┌ ○ /                                    3.66 kB         102 kB
+10:52:52.565 ├ ○ /_not-found                          868 B          84.8 kB
+10:52:52.565 ├ ○ /ajustes                             5.08 kB         118 kB
+10:52:52.565 ├ ○ /alertas                             3.67 kB        95.3 kB
+10:52:52.565 ├ λ /api/alerts                          0 B                0 B
+10:52:52.565 ├ ○ /api/compare-orders                  0 B                0 B
+10:52:52.565 ├ λ /api/customers                       0 B                0 B
+10:52:52.566 ├ λ /api/customers/[id]/approve          0 B                0 B
+10:52:52.567 ├ λ /api/customers/[id]/discounts        0 B                0 B
+10:52:52.567 ├ ○ /api/dashboard/alerts                0 B                0 B
+10:52:52.567 ├ ○ /api/dashboard/kpis                  0 B                0 B
+10:52:52.567 ├ ○ /api/debug-db                        0 B                0 B
+10:52:52.567 ├ λ /api/debug-order/[id]                0 B                0 B
+10:52:52.567 ├ λ /api/discounts/[id]                  0 B                0 B
+10:52:52.567 ├ λ /api/entries                         0 B                0 B
+10:52:52.567 ├ λ /api/ocr/callback                    0 B                0 B
+10:52:52.567 ├ ○ /api/orders                          0 B                0 B
+10:52:52.567 ├ λ /api/orders/[id]/details             0 B                0 B
+10:52:52.568 ├ λ /api/orders/[id]/status              0 B                0 B
+10:52:52.568 ├ λ /api/productos                       0 B                0 B
+10:52:52.568 ├ λ /api/products                        0 B                0 B
+10:52:52.568 ├ λ /api/products/[id]                   0 B                0 B
+10:52:52.568 ├ λ /api/products/[id]/historial         0 B                0 B
+10:52:52.568 ├ λ /api/products/generate-reference     0 B                0 B
+10:52:52.568 ├ ○ /api/proveedores                     0 B                0 B
+10:52:52.568 ├ λ /api/stock/adjustment                0 B                0 B
+10:52:52.568 ├ λ /api/stock/adjustments               0 B                0 B
+10:52:52.568 ├ ○ /api/test-orders                     0 B                0 B
+10:52:52.568 ├ λ /api/upload                          0 B                0 B
+10:52:52.568 ├ ○ /clientes                            4.48 kB         103 kB
+10:52:52.568 ├ λ /clientes/[id]/descuentos            5.21 kB         104 kB
+10:52:52.569 ├ ○ /entradas                            5.92 kB         104 kB
+10:52:52.569 ├ ○ /entradas/manual                     3.97 kB         124 kB
+10:52:52.569 ├ ○ /pedidos                             30.2 kB         122 kB
+10:52:52.569 ├ λ /pedidos/[id]                        5.39 kB        97.1 kB
+10:52:52.569 ├ ○ /productos                           6.98 kB         127 kB
+10:52:52.569 ├ λ /productos/[id]                      3.47 kB         102 kB
+10:52:52.569 ├ λ /productos/[id]/editar               1.3 kB          125 kB
+10:52:52.569 └ ○ /productos/nuevo                     819 B           125 kB
+10:52:52.569 + First Load JS shared by all            83.9 kB
+10:52:52.569   ├ chunks/1dd3208c-98773aff6b03e94d.js  53.3 kB
+10:52:52.569   ├ chunks/53-beafc2eda129f83d.js        28.7 kB
+10:52:52.569   ├ chunks/main-app-19db39c956469e7c.js  218 B
+10:52:52.569   └ chunks/webpack-08fcc75b55e8a8ed.js   1.69 kB
+10:52:52.569 
+10:52:52.569 
+10:52:52.569 ƒ Middleware                             27.8 kB
+10:52:52.569 
+10:52:52.570 ○  (Static)   prerendered as static content
+10:52:52.570 λ  (Dynamic)  server-rendered on demand using Node.js
+10:52:52.570 
+10:52:52.714 Traced Next.js server files in: 30.574ms
+10:52:52.808 WARNING: Unable to find source file for page /_not-found with extensions: tsx, ts, jsx, js, this can cause functions config from `vercel.json` to not be applied
+10:52:52.875 Created all serverless functions in: 160.994ms
+10:52:52.931 Collected static files (public/, static/, .next/static): 7.125ms
+10:52:53.032 Build Completed in /vercel/output [46s]
+10:52:53.207 Deploying outputs...
+10:53:03.244 Deployment completed
+10:53:04.045 Creating build cache...
+10:53:20.580 Created build cache: 16.526s
+10:53:20.580 Uploading build cache [149.83 MB]
+10:53:23.270 Build cache uploaded: 2.697s
