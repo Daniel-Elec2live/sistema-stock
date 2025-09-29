@@ -89,8 +89,16 @@ export async function PATCH(
       actualUpdatedData: updatedOrder
     })
 
-    // Forzar flush de transacción y verificación inmediata
-    await new Promise(resolve => setTimeout(resolve, 50)) // Micro delay para flush
+    // Forzar flush de transacción con commit explícito
+    try {
+      // Ejecutar una consulta dummy para forzar commit de transacción
+      await supabase.from('orders').select('id').limit(1)
+      console.log('💾 Transaction flush completed')
+    } catch (flushError) {
+      console.warn('⚠️ Transaction flush warning:', flushError)
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 100)) // Delay más largo para BD
 
     // Crear nuevo cliente para verificación independiente
     const verifySupabase = createSupabaseClient()

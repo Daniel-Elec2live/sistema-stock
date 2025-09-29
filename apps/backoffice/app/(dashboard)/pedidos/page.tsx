@@ -159,26 +159,50 @@ export default function PedidosPage() {
             : order
         ))
 
-        // Verificar persistencia sin refrescar toda la UI (más sutil)
-        setTimeout(async () => {
-          console.log(`🔄 Frontend - Verifying persistence for ${orderId.slice(0, 8)}`)
+        // Verificar persistencia con múltiples intentos para timing de BD
+        let verificationAttempt = 0
+        const maxAttempts = 3
+
+        const verifyPersistence = async () => {
+          verificationAttempt++
+          console.log(`🔄 Frontend - Verifying persistence for ${orderId.slice(0, 8)} (attempt ${verificationAttempt}/${maxAttempts})`)
+
           try {
             const verifyResponse = await fetch('/api/orders')
             const verifyData = await verifyResponse.json()
             if (verifyData.success) {
               const verifiedOrder = verifyData.data.find((o: any) => o.id === orderId)
+              console.log(`🔍 Frontend - Current order state:`, {
+                orderId: orderId.slice(0, 8),
+                expected: newStatus,
+                actual: verifiedOrder?.status,
+                updated_at: verifiedOrder?.updated_at,
+                attempt: verificationAttempt
+              })
+
               if (verifiedOrder?.status !== newStatus) {
-                console.warn(`⚠️ Persistence issue detected for ${orderId.slice(0, 8)}: expected ${newStatus}, got ${verifiedOrder?.status}`)
-                // Solo refrescar si hay inconsistencia
-                fetchOrders()
+                if (verificationAttempt < maxAttempts) {
+                  console.log(`⏳ Persistence not ready, retrying in ${verificationAttempt * 1000}ms...`)
+                  setTimeout(verifyPersistence, verificationAttempt * 1000)
+                } else {
+                  console.warn(`⚠️ Persistence issue confirmed for ${orderId.slice(0, 8)} after ${maxAttempts} attempts`)
+                  console.warn(`Expected: ${newStatus}, Got: ${verifiedOrder?.status}`)
+                  // Refrescar solo después de múltiples fallos
+                  fetchOrders()
+                }
               } else {
                 console.log(`✅ Persistence confirmed for ${orderId.slice(0, 8)}: ${verifiedOrder.status}`)
               }
             }
           } catch (error) {
-            console.error('Error verifying persistence:', error)
+            console.error(`❌ Error verifying persistence (attempt ${verificationAttempt}):`, error)
+            if (verificationAttempt < maxAttempts) {
+              setTimeout(verifyPersistence, 2000)
+            }
           }
-        }, 1000) // Dar más tiempo para BD
+        }
+
+        setTimeout(verifyPersistence, 1500) // Primer intento después de 1.5s
 
       } else {
         console.error(`❌ Frontend - Error updating order ${orderId.slice(0, 8)}:`, data.error)
