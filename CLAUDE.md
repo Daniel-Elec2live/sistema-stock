@@ -25,7 +25,7 @@ Idioma y tono. Español claro, directo, sin jerga innecesaria. Respuestas breves
 
 Objetivo: Sistema de gestión de stock con Backoffice interno y Tienda B2B pública: entradas/OCR, alertas, y pedidos con stock en tiempo real y descuentos por cliente; Fase 1 sin pagos online. 
 
-Stack y despliegue (en palabras): Monorepo con dos apps Next.js 14 (App Router) desplegables en Vercel; Supabase (Postgres, Auth, Storage) como backend de datos; microservicio OCR en Hetzner (FastAPI + PaddleOCR/docTR) consumido desde Vercel. 
+Stack y despliegue (en palabras): Monorepo con dos apps Next.js 14 (App Router) desplegables en Vercel; Supabase (Postgres, Auth, Storage) como backend de datos; Gemini Vision API para OCR directo desde Vercel (reemplaza PaddleOCR/Hetzner). 
 
 Reglas de datos (verdad única):
 
@@ -37,7 +37,7 @@ Rutas sensibles / permisos (contrato):
 
 B2B: GET /api/stock, POST /api/orders, POST /api/orders/{id}/cancel (incluye reposición automática). Descuentos por cliente integrados en /api/stock o endpoint propio documentado. 
 
-Backoffice: POST /api/entries, POST /api/ocr/callback, POST /api/stock/adjustment, GET /api/alerts. 
+Backoffice: POST /api/entries (con Gemini OCR integrado), POST /api/gemini-ocr (procesamiento OCR), POST /api/stock/adjustment, GET /api/alerts. 
 
 Auth: auto-registro con aprobación interna; JWT 7 días (server-only). Service Role Key solo en server (API Routes). 
 
@@ -151,9 +151,9 @@ Descuentos por cliente: cálculo en servidor (ejemplo vía customer_discounts).
 
 Backoffice:
 
-POST /api/entries (OCR/manual), POST /api/ocr/callback, POST /api/stock/adjustment, GET /api/alerts. 
+POST /api/entries (con OCR Gemini integrado), POST /api/gemini-ocr (procesamiento OCR), POST /api/stock/adjustment, GET /api/alerts.
 
-OCR (Hetzner): POST /extract con URL firmada de Storage; respuesta JSON estandarizada; Vercel recibe en /api/ocr/callback. 
+OCR (Gemini Vision): POST /api/gemini-ocr con URL firmada de Storage; respuesta JSON inmediata desde Vercel; sin callbacks externos. 
 
 5) FLUJOS CLAVE (UX)
 
@@ -163,7 +163,7 @@ Carrito/Pedido: confirmas ⇒ reserva inmediata; si cancelas/rechazas ⇒ reposi
 
 Historial: pedidos por cliente con estados: Pendiente, Preparado, Entregado, Cancelado. 
 
-Entradas (Backoffice): subir albarán/factura → OCR → propuesta → validar → sumar stock; mermas/ajustes con motivo. 
+Entradas (Backoffice): subir albarán/factura → Gemini OCR (1-2s) → propuesta con fuzzy matching proveedores → editar si necesario → validar → sumar stock; mermas/ajustes con motivo. 
 
 6) VARIABLES DE ENTORNO (B2B y Backoffice)
 
@@ -173,10 +173,10 @@ SUPABASE_SERVICE_ROLE_KEY (server-only, nunca en cliente)
 JWT_SECRET
 
 Flags:
-NEXT_PUBLIC_AUTO_APPROVE_CUSTOMERS=true|false (dev puede ir true). 
+NEXT_PUBLIC_AUTO_APPROVE_CUSTOMERS=true|false (dev puede ir true).
 
 OCR (Backoffice):
-OCR_SERVICE_URL, OCR_BASIC_AUTH o OCR_JWT_SECRET. 
+GEMINI_API_KEY (obtener en https://ai.google.dev/ - Google AI Studio). 
 
 7) CHECKLIST RÁPIDO ANTES DE ENVIAR CAMBIOS
 
