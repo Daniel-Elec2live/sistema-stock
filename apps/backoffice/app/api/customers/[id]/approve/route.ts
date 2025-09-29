@@ -84,11 +84,12 @@ export async function PUT(
       serviceKeyLength: process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0
     })
 
+    // Intento 1: Update normal
     const { data, error } = await supabase
       .from('customers')
       .update(updateData)
       .eq('id', params.id)
-      .select()
+      .select('id, is_approved, rejected_at, updated_at')
       .single()
 
     console.log('[APPROVE] Raw Supabase response:', {
@@ -99,6 +100,25 @@ export async function PUT(
       errorDetails: error?.details,
       errorHint: error?.hint
     })
+
+    // Si no hay error, verificar si realmente se actualizó
+    if (!error && data) {
+      console.log('[APPROVE] Update appeared successful, verifying actual change...')
+
+      // Verificación inmediata
+      const { data: immediateCheck } = await supabase
+        .from('customers')
+        .select('is_approved, rejected_at')
+        .eq('id', params.id)
+        .single()
+
+      console.log('[APPROVE] Immediate verification:', {
+        expectedApproved: approved,
+        actualApproved: immediateCheck?.is_approved,
+        actualRejectedAt: immediateCheck?.rejected_at,
+        changeApplied: immediateCheck?.is_approved === approved
+      })
+    }
 
     if (error) {
       console.error('[APPROVE] Error updating customer approval:', error)
