@@ -196,8 +196,8 @@ export async function POST(request: NextRequest) {
     // 3. Parsear respuesta JSON
     let geminiData
     try {
-      // Extraer JSON si está entre ```json y ```
-      const jsonMatch = responseText.match(/```json\s*(.*?)\s*```/s)
+      // Extraer JSON si está entre ```json y ``` (compatible ES5)
+      const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/)
       const jsonText = jsonMatch ? jsonMatch[1] : responseText
 
       geminiData = JSON.parse(jsonText)
