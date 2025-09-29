@@ -54,7 +54,7 @@ export default function PedidosPage() {
 
   if (loading && orders.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 sm:pt-8">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--color-tomate)] mx-auto mb-4"></div>
           <p className="text-gray-600">Cargando tus pedidos...</p>
@@ -64,7 +64,7 @@ export default function PedidosPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 sm:pt-8">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -90,7 +90,7 @@ export default function PedidosPage() {
 
       {/* Estadísticas */}
       {!statsLoading && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Card className="p-4">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -158,25 +158,35 @@ export default function PedidosPage() {
           onValueChange={(value) => setStatusFilter(value as OrderStatus | 'all')}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="all">
-              Todos ({stats.total})
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5 gap-1">
+            <TabsTrigger value="all" className="text-xs sm:text-sm">
+              <span className="hidden sm:inline">Todos</span>
+              <span className="sm:hidden">Todo</span>
+              <span className="ml-1">({stats.total})</span>
             </TabsTrigger>
-            <TabsTrigger value="pending">
-              <Clock className="w-4 h-4 mr-1" />
-              Pendientes ({stats.pending})
+            <TabsTrigger value="pending" className="text-xs sm:text-sm">
+              <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              <span className="hidden lg:inline">Pendientes</span>
+              <span className="lg:hidden">Pend.</span>
+              <span className="ml-1">({stats.pending})</span>
             </TabsTrigger>
-            <TabsTrigger value="prepared">
-              <Package className="w-4 h-4 mr-1" />
-              Preparados ({stats.prepared})
+            <TabsTrigger value="delivered" className="text-xs sm:text-sm">
+              <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              <span className="hidden lg:inline">Entregados</span>
+              <span className="lg:hidden">Entr.</span>
+              <span className="ml-1">({stats.delivered})</span>
             </TabsTrigger>
-            <TabsTrigger value="delivered">
-              <CheckCircle className="w-4 h-4 mr-1" />
-              Entregados ({stats.delivered})
+            <TabsTrigger value="prepared" className="text-xs sm:text-sm hidden lg:flex">
+              <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              <span className="hidden lg:inline">Preparados</span>
+              <span className="lg:hidden">Prep.</span>
+              <span className="ml-1">({stats.prepared})</span>
             </TabsTrigger>
-            <TabsTrigger value="cancelled">
-              <XCircle className="w-4 h-4 mr-1" />
-              Cancelados ({stats.cancelled})
+            <TabsTrigger value="cancelled" className="text-xs sm:text-sm hidden lg:flex">
+              <XCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              <span className="hidden lg:inline">Cancelados</span>
+              <span className="lg:hidden">Canc.</span>
+              <span className="ml-1">({stats.cancelled})</span>
             </TabsTrigger>
           </TabsList>
 

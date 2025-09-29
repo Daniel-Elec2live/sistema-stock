@@ -143,8 +143,8 @@ export function BackorderDialog({
             <label htmlFor="backorder-confirm" className="text-sm text-gray-700">
               <span className="font-medium">Confirmo que entiendo las condiciones:</span>
               <br />
-              Acepto recibir el pedido parcial ahora y el resto cuando haya stock disponible. 
-              Entiendo que solo pagaré por lo que reciba en cada envío.
+              Acepto recibir el pedido parcial ahora y el resto cuando haya stock disponible.
+              Entiendo que solo pagaré por lo que esté disponible en cada recogida.
             </label>
           </div>
 

@@ -262,8 +262,8 @@ export default function ConfirmacionPage() {
                 </div>
                 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Envío</span>
-                  <span className="font-medium text-[var(--color-rucula)]">Gratuito</span>
+                  <span className="text-gray-600">Recogida</span>
+                  <span className="font-medium text-[var(--color-rucula)]">Sin coste</span>
                 </div>
                 
                 <Separator />

@@ -52,7 +52,7 @@ export default function CarritoPage() {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-8 pt-20 sm:pt-8">
+      <div className="max-w-2xl mx-auto px-4 py-8 pt-16 sm:pt-8">
         <div className="text-center py-12">
           <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -73,7 +73,7 @@ export default function CarritoPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 pt-20 sm:pt-8">
+    <div className="max-w-4xl mx-auto px-4 py-8 pt-16 sm:pt-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">
@@ -89,91 +89,113 @@ export default function CarritoPage() {
         <div className="lg:col-span-2 space-y-4">
           {items.map((item) => (
             <Card key={item.product_id} className="p-4">
-              <div className="flex items-center gap-4">
-                {/* Imagen del producto */}
-                <div className="w-20 h-20 flex-shrink-0">
-                  <Image
-                    src={item.product.image_url || '/placeholder-product.svg'}
-                    alt={item.product.nombre}
-                    width={80}
-                    height={80}
-                    className="w-full h-full object-cover rounded-md"
-                  />
-                </div>
-
-                {/* Información del producto */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 line-clamp-2">
-                    {item.product.nombre}
-                  </h3>
-                  {item.product.brand && (
-                    <p className="text-sm text-gray-600">{item.product.brand}</p>
-                  )}
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-sm text-gray-500">
-                      Stock: {item.product.stock_actual}
-                    </span>
-                    {item.product.discount_percentage > 0 && (
-                      <Badge variant="destructive" className="text-xs">
-                        -{item.product.discount_percentage}%
-                      </Badge>
-                    )}
+              {/* Layout para móvil y desktop */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                {/* Fila superior en móvil: imagen + info básica + eliminar */}
+                <div className="flex items-start gap-4">
+                  {/* Imagen del producto */}
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
+                    <Image
+                      src={item.product.image_url || '/placeholder-product.svg'}
+                      alt={item.product.nombre}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover rounded-md"
+                    />
                   </div>
-                </div>
 
-                {/* Controles de cantidad */}
-                <div className="flex items-center gap-2">
+                  {/* Información del producto */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base line-clamp-2">
+                      {item.product.nombre}
+                    </h3>
+                    {item.product.brand && (
+                      <p className="text-xs sm:text-sm text-gray-600">{item.product.brand}</p>
+                    )}
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                      <span className="text-xs sm:text-sm text-gray-500">
+                        Stock: {item.product.stock_actual}
+                      </span>
+                      {item.product.discount_percentage > 0 && (
+                        <Badge variant="destructive" className="text-xs">
+                          -{item.product.discount_percentage}%
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Botón eliminar - solo en móvil */}
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleUpdateQuantity(item.product_id, item.quantity - 1)}
-                    disabled={item.quantity <= 1}
+                    onClick={() => {
+                      removeItem(item.product_id)
+                      showToast.cart.itemRemoved(item.product.nombre)
+                    }}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 sm:hidden"
                   >
-                    <Minus className="w-3 h-3" />
-                  </Button>
-                  <span className="w-12 text-center font-medium">
-                    {item.quantity}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleUpdateQuantity(item.product_id, item.quantity + 1)}
-                    disabled={item.quantity >= item.product.stock_actual}
-                  >
-                    <Plus className="w-3 h-3" />
+                    <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
 
-                {/* Precio */}
-                <div className="text-right min-w-0">
-                  {item.product.discount_percentage > 0 ? (
-                    <>
-                      <p className="text-sm text-gray-500 line-through">
-                        {formatPrice(item.product.precio_promedio || 0)}
-                      </p>
-                      <p className="font-bold text-[var(--color-tomate)]">
+                {/* Fila inferior en móvil: controles + precio */}
+                <div className="flex items-center justify-between sm:gap-4">
+                  {/* Controles de cantidad */}
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleUpdateQuantity(item.product_id, item.quantity - 1)}
+                      disabled={item.quantity <= 1}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Minus className="w-3 h-3" />
+                    </Button>
+                    <span className="w-8 text-center font-medium text-sm">
+                      {item.quantity}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleUpdateQuantity(item.product_id, item.quantity + 1)}
+                      disabled={item.quantity >= item.product.stock_actual}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Plus className="w-3 h-3" />
+                    </Button>
+                  </div>
+
+                  {/* Precio */}
+                  <div className="text-right">
+                    {item.product.discount_percentage > 0 ? (
+                      <>
+                        <p className="text-xs sm:text-sm text-gray-500 line-through">
+                          {formatPrice(item.product.precio_promedio || 0)}
+                        </p>
+                        <p className="font-bold text-sm sm:text-base text-[var(--color-tomate)]">
+                          {formatPrice(item.product.final_price * item.quantity)}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="font-bold text-sm sm:text-base text-gray-900">
                         {formatPrice(item.product.final_price * item.quantity)}
                       </p>
-                    </>
-                  ) : (
-                    <p className="font-bold text-gray-900">
-                      {formatPrice(item.product.final_price * item.quantity)}
-                    </p>
-                  )}
-                </div>
+                    )}
+                  </div>
 
-                {/* Botón eliminar */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    removeItem(item.product_id)
-                    showToast.cart.itemRemoved(item.product.nombre)
-                  }}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                  {/* Botón eliminar - solo en desktop */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      removeItem(item.product_id)
+                      showToast.cart.itemRemoved(item.product.nombre)
+                    }}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 hidden sm:flex"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}
@@ -209,8 +231,8 @@ export default function CarritoPage() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Envío</span>
-                <span className="font-medium text-green-600">Gratuito</span>
+                <span className="text-gray-600">Recogida</span>
+                <span className="font-medium text-green-600">Sin coste</span>
               </div>
               <div className="border-t pt-3">
                 <div className="flex justify-between text-lg font-bold">

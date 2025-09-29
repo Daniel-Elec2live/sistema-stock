@@ -132,7 +132,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 sm:pt-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-16 sm:pt-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Información del pedido */}
@@ -311,8 +311,8 @@ export default function CheckoutPage() {
               </div>
               
               <div className="flex justify-between">
-                <span className="text-gray-600">Envío</span>
-                <span className="font-medium text-[var(--color-rucula)]">Gratuito</span>
+                <span className="text-gray-600">Recogida</span>
+                <span className="font-medium text-[var(--color-rucula)]">Sin coste</span>
               </div>
               
               <Separator />

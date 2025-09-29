@@ -146,7 +146,7 @@ export default function PedidoDetallePage() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20 sm:pt-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--color-tomate)] mx-auto mb-4"></div>
           <p className="text-gray-600">Cargando detalles del pedido...</p>
@@ -157,7 +157,7 @@ export default function PedidoDetallePage() {
 
   if (error || !order) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20 sm:pt-12">
         <div className="text-center">
           <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Pedido no encontrado</h1>
@@ -174,11 +174,11 @@ export default function PedidoDetallePage() {
   const StatusIcon = statusInfo.icon
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 sm:pt-8">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <Link href="/pedidos">
             <Button variant="outline" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -187,10 +187,10 @@ export default function PedidoDetallePage() {
           </Link>
 
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Pedido #{orderId.slice(-8)}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               Creado el {formatDate(order.created_at)}
             </p>
           </div>
@@ -409,8 +409,8 @@ export default function PedidoDetallePage() {
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Envío</span>
-                  <span className="font-medium text-[var(--color-rucula)]">Gratuito</span>
+                  <span className="text-gray-600">Recogida</span>
+                  <span className="font-medium text-[var(--color-rucula)]">Sin coste</span>
                 </div>
 
                 <Separator />
