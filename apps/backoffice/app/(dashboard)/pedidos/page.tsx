@@ -135,6 +135,8 @@ export default function PedidosPage() {
   }
 
   const updateOrderStatus = async (orderId: string, newStatus: 'confirmed' | 'prepared' | 'delivered') => {
+    console.log(`🔄 Frontend - Updating order ${orderId.slice(0, 8)} to status: ${newStatus}`)
+
     try {
       const response = await fetch(`/api/orders/${orderId}/status`, {
         method: 'PATCH',
@@ -145,21 +147,31 @@ export default function PedidosPage() {
       })
 
       const data = await response.json()
+      console.log(`📥 Frontend - API Response for ${orderId.slice(0, 8)}:`, data)
 
       if (data.success) {
-        // Actualizar el pedido localmente
+        console.log(`✅ Frontend - Successfully updated order ${orderId.slice(0, 8)} to ${newStatus}`)
+
+        // Actualizar el pedido localmente PRIMERO para UX inmediata
         setOrders(prev => prev.map(order =>
           order.id === orderId
             ? { ...order, status: newStatus, updated_at: new Date().toISOString() }
             : order
         ))
+
+        // Luego refrescar desde servidor para asegurar sincronización
+        setTimeout(() => {
+          console.log(`🔄 Frontend - Refreshing orders to verify persistence for ${orderId.slice(0, 8)}`)
+          fetchOrders()
+        }, 500) // Dar tiempo para que la BD se sincronice
+
       } else {
-        console.error('Error updating order status:', data.error)
-        alert('Error al actualizar el estado del pedido')
+        console.error(`❌ Frontend - Error updating order ${orderId.slice(0, 8)}:`, data.error)
+        alert(`Error al actualizar el estado del pedido: ${data.error}`)
       }
     } catch (error) {
-      console.error('Error updating order status:', error)
-      alert('Error al actualizar el estado del pedido')
+      console.error(`❌ Frontend - Network error updating order ${orderId.slice(0, 8)}:`, error)
+      alert('Error de conexión al actualizar el estado del pedido')
     }
   }
 
