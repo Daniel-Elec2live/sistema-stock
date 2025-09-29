@@ -17,5 +17,58 @@ page-87feb7a319ba90bb.js:1 Response data: {success: true, customer: {…}, messa
 page-87feb7a319ba90bb.js:1 ✅ Cliente aprobado correctamente
 page-87feb7a319ba90bb.js:1 Enviando solicitud: {customerId: '990e8400-e29b-41d4-a716-446655440002', approved: true}
 page-87feb7a319ba90bb.js:1 Response status: 200
-page-87feb7a319ba90bb.js:1 Response data: {success: true, customer: {…}, message: 'Cliente aprobado correctamente'}
+page-87feb7a319ba90bb.js:1 Responses data: {success: true, customer: {…}, message: 'Cliente aprobado correctamente'}
 page-87feb7a319ba90bb.js:1 ✅ Cliente aprobado correctamente
+
+
+
+
+
+📋 Frontend - Orders received: 6
+page-4f4597a7b7415cab.js:1 📊 Frontend - All order statuses: Array(6)
+page-4f4597a7b7415cab.js:1 🔍 Frontend - Status distribution: Object
+page-4f4597a7b7415cab.js:1 🔄 Frontend - Updating order 50601c1c to status: delivered
+page-4f4597a7b7415cab.js:1 📥 Frontend - API Response for 50601c1c: {success: true, data: {…}}
+page-4f4597a7b7415cab.js:1 ✅ Frontend - Successfully updated order 50601c1c to delivered
+page-4f4597a7b7415cab.js:1 🔄 Frontend - Verifying persistence for 50601c1c
+page-4f4597a7b7415cab.js:1 ⚠️ Persistence issue detected for 50601c1c: expected delivered, got prepared
+(anonymous) @ page-4f4597a7b7415cab.js:1
+setTimeout
+V @ page-4f4597a7b7415cab.js:1
+await in V
+onClick @ page-4f4597a7b7415cab.js:1
+a_ @ 1dd3208c-15a7011b3f148ab1.js:1
+aR @ 1dd3208c-15a7011b3f148ab1.js:1
+(anonymous) @ 1dd3208c-15a7011b3f148ab1.js:1
+sF @ 1dd3208c-15a7011b3f148ab1.js:1
+sM @ 1dd3208c-15a7011b3f148ab1.js:1
+(anonymous) @ 1dd3208c-15a7011b3f148ab1.js:1
+o4 @ 1dd3208c-15a7011b3f148ab1.js:1
+iV @ 1dd3208c-15a7011b3f148ab1.js:1
+sU @ 1dd3208c-15a7011b3f148ab1.js:1
+uR @ 1dd3208c-15a7011b3f148ab1.js:1
+uM @ 1dd3208c-15a7011b3f148ab1.js:1Understand this warning
+page-4f4597a7b7415cab.js:1 📋 Frontend - Orders received: 6
+page-4f4597a7b7415cab.js:1 📊 Frontend - All order statuses: (6) [{…}, {…}, {…}, {…}, {…}, {…}]
+page-4f4597a7b7415cab.js:1 🔍 Frontend - Status distribution: {pending: 0, confirmed: 0, prepared: 1, delivered: 4, cancelled: 1}
+page-b0631aa070b19367.js:1 🔄 Frontend - Revoking customer 990e8400
+page-b0631aa070b19367.js:1 📤 Frontend - Sending request: {customerId: '990e8400', approved: false}
+page-b0631aa070b19367.js:1 📥 Frontend - Response status: 200
+page-b0631aa070b19367.js:1 📥 Frontend - Response data for 990e8400: {success: true, customer: {…}, message: 'Cliente rechazado'}
+page-b0631aa070b19367.js:1 ✅ Frontend - Successfully revoked customer 990e8400
+page-b0631aa070b19367.js:1 🔄 Frontend - Verifying customer 990e8400 persistence...
+page-b0631aa070b19367.js:1 ✅ Frontend - Persistence confirmed for 990e8400: is_approved=false
+🔄 Frontend - Approving customer 8da08d35
+page-b0631aa070b19367.js:1 📤 Frontend - Sending request: {customerId: '8da08d35', approved: true}
+page-b0631aa070b19367.js:1 📥 Frontend - Response status: 200
+page-b0631aa070b19367.js:1 📥 Frontend - Response data for 8da08d35: {success: true, customer: {…}, message: 'Cliente aprobado correctamente'}
+page-b0631aa070b19367.js:1 ✅ Frontend - Successfully approved customer 8da08d35
+page-b0631aa070b19367.js:1 🔄 Frontend - Verifying customer 8da08d35 persistence...
+page-b0631aa070b19367.js:1 ✅ Frontend - Persistence confirmed for 8da08d35: is_approved=true
+page-b0631aa070b19367.js:1 🔄 Frontend - Approving customer 1249c29e
+page-b0631aa070b19367.js:1 📤 Frontend - Sending request: {customerId: '1249c29e', approved: true}
+page-b0631aa070b19367.js:1 📥 Frontend - Response status: 200
+page-b0631aa070b19367.js:1 📥 Frontend - Response data for 1249c29e: {success: true, customer: {…}, message: 'Cliente aprobado correctamente'}
+page-b0631aa070b19367.js:1 ✅ Frontend - Successfully approved customer 1249c29e
+page-b0631aa070b19367.js:1 🔄 Frontend - Verifying customer 1249c29e persistence...
+page-b0631aa070b19367.js:1 ✅ Frontend - Persistence confirmed for 1249c29e: is_approved=true

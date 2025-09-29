@@ -45,7 +45,14 @@ export default function ClientesPage() {
     try {
       setLoading(true)
       const params = filter !== 'all' ? `?status=${filter}` : ''
-      const response = await fetch(`/api/customers${params}`)
+      // Forzar bypass de cache con timestamp
+      const cacheParam = params ? '&' : '?'
+      const response = await fetch(`/api/customers${params}${cacheParam}_t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      })
       const data = await response.json()
 
       if (data.success) {
@@ -97,21 +104,34 @@ export default function ClientesPage() {
         // Refrescar la lista inmediatamente
         fetchCustomers()
 
-        // Verificar persistencia después
+        // Verificar persistencia con cache busting
         setTimeout(async () => {
-          console.log(`🔄 Frontend - Verifying customer ${customerId.slice(0, 8)} persistence...`)
+          console.log(`🔄 Frontend - Verifying customer ${customerId.slice(0, 8)} persistence (with cache bypass)...`)
           try {
-            const verifyResponse = await fetch('/api/customers')
+            const verifyResponse = await fetch(`/api/customers?_verify=${Date.now()}`, {
+              headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+              }
+            })
             const verifyData = await verifyResponse.json()
             if (verifyData.success) {
               const verifiedCustomer = verifyData.customers.find((c: any) => c.id === customerId)
               if (verifiedCustomer) {
                 const actualStatus = verifiedCustomer.is_approved
+                console.log(`🔍 Frontend - Full customer verification:`, {
+                  customerId: customerId.slice(0, 8),
+                  expected: approved,
+                  actual: actualStatus,
+                  rejectedAt: verifiedCustomer.rejected_at,
+                  updatedAt: verifiedCustomer.updated_at
+                })
+
                 if (actualStatus === approved) {
                   console.log(`✅ Frontend - Persistence confirmed for ${customerId.slice(0, 8)}: is_approved=${actualStatus}`)
                 } else {
                   console.warn(`⚠️ Frontend - Persistence issue for ${customerId.slice(0, 8)}: expected is_approved=${approved}, got ${actualStatus}`)
-                  // Refrescar de nuevo si hay inconsistencia
+                  console.log('🔄 Frontend - Refreshing customer list due to persistence issue...')
                   fetchCustomers()
                 }
               } else {
@@ -121,7 +141,7 @@ export default function ClientesPage() {
           } catch (error) {
             console.error(`❌ Frontend - Error verifying customer ${customerId.slice(0, 8)}:`, error)
           }
-        }, 1000)
+        }, 2000) // Más tiempo para que se complete la transacción
 
       } else {
         console.error(`❌ Frontend - Error updating customer ${customerId.slice(0, 8)}:`, data.error)
