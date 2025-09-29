@@ -146,7 +146,7 @@ export default function PedidoDetallePage() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20 sm:pt-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-12 sm:pt-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--color-tomate)] mx-auto mb-4"></div>
           <p className="text-gray-600">Cargando detalles del pedido...</p>
@@ -157,7 +157,7 @@ export default function PedidoDetallePage() {
 
   if (error || !order) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20 sm:pt-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-12 sm:pt-12">
         <div className="text-center">
           <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Pedido no encontrado</h1>
@@ -174,7 +174,7 @@ export default function PedidoDetallePage() {
   const StatusIcon = statusInfo.icon
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 sm:pt-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-12 sm:pt-8">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">

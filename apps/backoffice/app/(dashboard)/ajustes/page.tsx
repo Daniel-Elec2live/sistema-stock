@@ -113,7 +113,7 @@ export default function AjustesPage() {
     try {
       const [productsRes, adjustmentsRes] = await Promise.all([
         fetch('/api/products?limit=100'),
-        fetch('/api/stock/adjustments?limit=20')
+        fetch('/api/stock/adjustments?limit=10')
       ])
       
       if (productsRes.ok) {

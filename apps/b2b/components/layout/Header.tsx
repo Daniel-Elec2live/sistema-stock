@@ -50,7 +50,7 @@ export function Header() {
                 className="w-12 h-12 object-contain"
               />
             </div>
-            <span className="font-bold text-base sm:text-lg text-gray-900 hidden xs:block">
+            <span className="font-bold text-base sm:text-lg text-gray-900">
               La Traviata 1999
             </span>
           </Link>

@@ -7,16 +7,15 @@ import { OrderHistory } from '@/components/tienda/OrderHistory'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  Package, 
-  ShoppingCart, 
-  Clock, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Package,
+  ShoppingCart,
+  Clock,
+  CheckCircle,
+  XCircle,
   AlertTriangle,
   Plus,
-  Filter,
-  Download
+  Filter
 } from 'lucide-react'
 import { OrderStatus } from '@/lib/types'
 
@@ -54,7 +53,7 @@ export default function PedidosPage() {
 
   if (loading && orders.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 sm:pt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-12 sm:pt-8">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--color-tomate)] mx-auto mb-4"></div>
           <p className="text-gray-600">Cargando tus pedidos...</p>
@@ -64,7 +63,7 @@ export default function PedidosPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 sm:pt-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-12 sm:pt-8">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -73,19 +72,12 @@ export default function PedidosPage() {
           <p className="text-gray-600">Historial completo de tus pedidos y su estado</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
-            Exportar
+        <Link href="/catalogo">
+          <Button className="btn-primary">
+            <Plus className="w-4 h-4 mr-2" />
+            Nuevo pedido
           </Button>
-          
-          <Link href="/catalogo">
-            <Button className="btn-primary">
-              <Plus className="w-4 h-4 mr-2" />
-              Nuevo pedido
-            </Button>
-          </Link>
-        </div>
+        </Link>
       </div>
 
       {/* Estadísticas */}

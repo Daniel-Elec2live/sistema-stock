@@ -138,31 +138,33 @@ export function OrderHistory({ orders, loading, error }: OrderHistoryProps) {
               
               {/* Info principal del pedido */}
               <div className="flex-1">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-3">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                     <h3 className="font-semibold text-gray-900">
                       Pedido #{order.id.slice(-8)}
                     </h3>
-                    <Badge className={`border ${getStatusColor(order.status)}`}>
-                      {getStatusIcon(order.status)}
-                      <span className="ml-1">{getStatusLabel(order.status)}</span>
-                    </Badge>
-                    
-                    {order.has_backorder && (
-                      <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200">
-                        <AlertTriangle className="w-3 h-3 mr-1" />
-                        Backorder
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge className={`border ${getStatusColor(order.status)}`}>
+                        {getStatusIcon(order.status)}
+                        <span className="ml-1">{getStatusLabel(order.status)}</span>
                       </Badge>
-                    )}
+
+                      {order.has_backorder && (
+                        <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200">
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          Backorder
+                        </Badge>
+                      )}
+                    </div>
                   </div>
-                  
+
                   <div className="flex items-center text-sm text-gray-500">
                     <Calendar className="w-4 h-4 mr-1" />
                     {formatDate(order.created_at)}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
                   <div className="flex items-center space-x-2">
                     <ShoppingBag className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-600">
@@ -222,31 +224,34 @@ export function OrderHistory({ orders, loading, error }: OrderHistoryProps) {
               </div>
 
               {/* Acciones */}
-              <div className="flex flex-col sm:flex-row gap-2 lg:flex-col">
+              <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0">
                 <Link href={`/pedidos/${order.id}`}>
-                  <Button variant="outline" size="sm" className="w-full">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto">
                     <Eye className="w-4 h-4 mr-2" />
-                    Ver detalles
+                    <span className="sm:hidden">Detalles</span>
+                    <span className="hidden sm:inline">Ver detalles</span>
                   </Button>
                 </Link>
-                
+
                 {order.status === 'pending' && (
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleCancelOrder(order.id)}
                     disabled={cancelingOrder === order.id}
-                    className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="w-full sm:w-auto text-red-600 hover:text-red-700 hover:bg-red-50"
                   >
                     {cancelingOrder === order.id ? (
                       <>
                         <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-red-600 mr-2"></div>
-                        Cancelando...
+                        <span className="sm:hidden">Cancelando...</span>
+                        <span className="hidden sm:inline">Cancelando...</span>
                       </>
                     ) : (
                       <>
                         <XCircle className="w-4 h-4 mr-2" />
-                        Cancelar
+                        <span className="sm:hidden">Cancelar</span>
+                        <span className="hidden sm:inline">Cancelar</span>
                       </>
                     )}
                   </Button>
