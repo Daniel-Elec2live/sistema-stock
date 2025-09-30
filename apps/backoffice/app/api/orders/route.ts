@@ -25,10 +25,8 @@ export async function GET(request: NextRequest) {
       timestamp
     })
 
-    // Obtener todos los pedidos con forzado anti-cache
-    const { data: orders, error } = await supabase
-      .from('orders')
-      .select(`
+    // FORZAR CACHE BUSTING: Usar query diferente cada vez para evitar cache de Postgres
+    const cacheBustQuery = `
         id,
         customer_id,
         status,
@@ -41,8 +39,13 @@ export async function GET(request: NextRequest) {
         cancelled_at,
         cancellation_reason,
         created_at,
-        updated_at
-      `)
+        updated_at,
+        extract(epoch from updated_at) as _cache_bust_${timestamp}
+      `
+
+    const { data: orders, error } = await supabase
+      .from('orders')
+      .select(cacheBustQuery)
       .order('created_at', { ascending: false })
       .limit(1000)
 
