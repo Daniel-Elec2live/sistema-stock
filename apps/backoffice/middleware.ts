@@ -22,5 +22,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api/health|favicon.ico).*)'],
+  // Excluir TODAS las API routes y archivos estáticos del middleware de autenticación
+  // Solo aplicar autenticación básica a las páginas del dashboard
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|logo.png).*)'],
 }
