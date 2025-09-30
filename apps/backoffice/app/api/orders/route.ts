@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       timestamp
     })
 
-    // Obtener todos los pedidos
+    // Obtener todos los pedidos con forzado anti-cache
     const { data: orders, error } = await supabase
       .from('orders')
       .select(`
@@ -45,6 +45,19 @@ export async function GET(request: NextRequest) {
       `)
       .order('created_at', { ascending: false })
       .limit(1000)
+
+    // Forzar una segunda lectura para comparar consistencia
+    const { data: ordersRecheck } = await supabase
+      .from('orders')
+      .select('id, status, updated_at')
+      .in('id', orders?.slice(0,3).map(o => o.id) || [])
+
+    console.log('🔄 CONSISTENCY CHECK - Comparing first 3 orders:', {
+      timestamp: new Date().toISOString(),
+      firstRead: orders?.slice(0,3).map(o => ({ id: o.id.slice(0,8), status: o.status, updated: o.updated_at })),
+      secondRead: ordersRecheck?.map(o => ({ id: o.id.slice(0,8), status: o.status, updated: o.updated_at })),
+      readsMatch: JSON.stringify(orders?.slice(0,3).map(o => o.status)) === JSON.stringify(ordersRecheck?.map(o => o.status))
+    })
 
     console.log('📊 Raw orders from DB:', {
       count: orders?.length,

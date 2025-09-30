@@ -1,226 +1,307 @@
+Logs despliegue:
+12:23:20.115 Running build in Washington, D.C., USA (East) – iad1
+12:23:20.116 Build machine configuration: 2 cores, 8 GB
+12:23:20.133 Cloning github.com/Daniel-Elec2live/sistema-stock (Branch: main, Commit: 2449284)
+12:23:20.489 Cloning completed: 356.000ms
+12:23:20.538 Found .vercelignore (repository root)
+12:23:20.568 Removed 12 ignored files defined in .vercelignore
+12:23:20.568   /.env.example
+12:23:20.568   /apps/b2b/.env.example
+12:23:20.568   /apps/b2b/.env.local
+12:23:20.568   /apps/backoffice/.env.local
+12:23:20.569   /database/price-system-migration.sql
+12:23:20.569   /supabase/01-schema-complete.sql
+12:23:20.569   /supabase/02-functions.sql
+12:23:20.569   /supabase/03-triggers.sql
+12:23:20.569   /supabase/04-rls-policies.sql
+12:23:20.569   /supabase/05-seed-data.sql
+12:23:21.583 Restored build cache from previous deployment (YD214XNFiLmXHVdTSR5vS1EYVrKy)
+12:23:22.115 Running "vercel build"
+12:23:22.505 Vercel CLI 48.1.6
+12:23:22.828 Warning: Detected "engines": { "node": ">=18.0.0" } in your `package.json` that will automatically upgrade when a new major Node.js Version is released. Learn More: http://vercel.link/node-version
+12:23:22.838 Running "install" command: `npm ci`...
+12:23:29.814 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+12:23:30.350 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+12:23:30.696 npm warn deprecated glob@7.1.7: Glob versions prior to v9 are no longer supported
+12:23:31.013 npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+12:23:31.269 npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+12:23:31.906 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+12:23:31.980 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+12:23:34.555 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+12:23:40.126 
+12:23:40.127 added 585 packages, and audited 587 packages in 17s
+12:23:40.127 
+12:23:40.127 174 packages are looking for funding
+12:23:40.127   run `npm fund` for details
+12:23:40.148 
+12:23:40.148 4 moderate severity vulnerabilities
+12:23:40.148 
+12:23:40.149 To address all issues (including breaking changes), run:
+12:23:40.149   npm audit fix --force
+12:23:40.149 
+12:23:40.150 Run `npm audit` for details.
+12:23:40.226 Detected Next.js version: 14.2.33
+12:23:40.227 Running "npm run build"
+12:23:40.363 
+12:23:40.363 > @sistema-stock/backoffice@0.1.0 build
+12:23:40.363 > next build
+12:23:40.363 
+12:23:41.994   ▲ Next.js 14.2.33
+12:23:41.995 
+12:23:42.052    Creating an optimized production build ...
+12:23:51.199  ✓ Compiled successfully
+12:23:51.200    Linting and checking validity of types ...
+12:24:01.498    Collecting page data ...
+12:24:02.227    Generating static pages (0/21) ...
+12:24:03.339    Generating static pages (5/21) 
+12:24:03.922    Generating static pages (10/21) 
+12:24:04.226    Generating static pages (15/21) 
+12:24:04.244 🔍 COMPARISON API - Starting comparison
+12:24:04.678 📊 CLIENT 1 Results: [
+12:24:04.678   {
+12:24:04.678     id: 'f4391d1a',
+12:24:04.678     status: 'delivered',
+12:24:04.678     updated_at: '2025-09-30T10:20:15.493359+00:00'
+12:24:04.678   },
+12:24:04.678   {
+12:24:04.678     id: 'bb584e1b',
+12:24:04.678     status: 'delivered',
+12:24:04.678     updated_at: '2025-09-30T10:10:58.232733+00:00'
+12:24:04.678   },
+12:24:04.678   {
+12:24:04.678     id: '601b2b47',
+12:24:04.678     status: 'delivered',
+12:24:04.678     updated_at: '2025-09-30T10:10:46.228914+00:00'
+12:24:04.678   },
+12:24:04.679   {
+12:24:04.679     id: '5c5d7eb1',
+12:24:04.679     status: 'delivered',
+12:24:04.679     updated_at: '2025-09-30T08:02:43.566263+00:00'
+12:24:04.679   },
+12:24:04.679   {
+12:24:04.679     id: '50601c1c',
+12:24:04.679     status: 'delivered',
+12:24:04.679     updated_at: '2025-09-29T12:50:55.425574+00:00'
+12:24:04.679   }
+12:24:04.679 ]
+12:24:04.704 📊 CLIENT 2 Results: [
+12:24:04.704   {
+12:24:04.704     id: 'f4391d1a',
+12:24:04.704     status: 'delivered',
+12:24:04.704     updated_at: '2025-09-30T10:20:15.493359+00:00'
+12:24:04.705   },
+12:24:04.705   {
+12:24:04.705     id: 'bb584e1b',
+12:24:04.705     status: 'delivered',
+12:24:04.705     updated_at: '2025-09-30T10:10:58.232733+00:00'
+12:24:04.705   },
+12:24:04.705   {
+12:24:04.705     id: '601b2b47',
+12:24:04.706     status: 'delivered',
+12:24:04.706     updated_at: '2025-09-30T10:10:46.228914+00:00'
+12:24:04.706   },
+12:24:04.706   {
+12:24:04.706     id: '5c5d7eb1',
+12:24:04.706     status: 'delivered',
+12:24:04.706     updated_at: '2025-09-30T08:02:43.566263+00:00'
+12:24:04.706   },
+12:24:04.706   {
+12:24:04.707     id: '50601c1c',
+12:24:04.707     status: 'delivered',
+12:24:04.707     updated_at: '2025-09-29T12:50:55.425574+00:00'
+12:24:04.707   }
+12:24:04.707 ]
+12:24:04.810 📋 SPECIFIC ORDER Test: {
+12:24:04.810   id: '153606e2',
+12:24:04.811   status: 'delivered',
+12:24:04.811   updated_at: '2025-09-19T08:08:19.098769+00:00'
+12:24:04.811 }
+12:24:05.092 📋 RAW QUERY Result: null
+12:24:05.342 🔍 DIRECT DB DEBUG - Connecting to database
+12:24:05.715 ⚠️ RPC no disponible, usando query directa
+12:24:05.715 📊 DB Debug Results: {
+12:24:05.715   directQuery: 9,
+12:24:05.716   freshQuery: 9,
+12:24:05.716   errors: { directError: null, freshError: null }
+12:24:05.716 }
+12:24:06.364 🔧 Testing Supabase connection...
+12:24:06.608 📊 Found 9 orders in database
+12:24:06.723 📋 Sample orders with detailed status info:
+12:24:06.726   - ID: bb584e1b, Status: "delivered", Created: 2025-09-30T08:38:12.622479+00:00, Updated: 2025-09-30T10:10:58.232733+00:00
+12:24:06.726   - ID: 601b2b47, Status: "delivered", Created: 2025-09-30T08:04:10.528025+00:00, Updated: 2025-09-30T10:10:46.228914+00:00
+12:24:06.726   - ID: f4391d1a, Status: "delivered", Created: 2025-09-29T12:59:06.340219+00:00, Updated: 2025-09-30T10:20:15.493359+00:00
+12:24:06.727   - ID: 5c5d7eb1, Status: "delivered", Created: 2025-09-29T08:37:14.212246+00:00, Updated: 2025-09-30T08:02:43.566263+00:00
+12:24:06.727   - ID: 50601c1c, Status: "delivered", Created: 2025-09-28T13:53:27.196653+00:00, Updated: 2025-09-29T12:50:55.425574+00:00
+12:24:06.727   - ID: 34f2d249, Status: "delivered", Created: 2025-09-18T08:47:58.860284+00:00, Updated: 2025-09-29T11:46:33.723714+00:00
+12:24:06.727   - ID: 2f97bff3, Status: "delivered", Created: 2025-09-18T08:33:23.995782+00:00, Updated: 2025-09-19T08:36:46.121669+00:00
+12:24:06.727   - ID: 153606e2, Status: "delivered", Created: 2025-09-18T08:24:35.151916+00:00, Updated: 2025-09-19T08:08:19.098769+00:00
+12:24:06.727   - ID: 0915eecc, Status: "cancelled", Created: 2025-09-17T09:48:54.707444+00:00, Updated: 2025-09-18T08:32:25.94726+00:00
+12:24:06.727  ✓ Generating static pages (21/21)
+12:24:06.913    Finalizing page optimization ...
+12:24:06.913    Collecting build traces ...
+12:24:09.429 
+12:24:09.444 Route (app)                              Size     First Load JS
+12:24:09.445 ┌ ○ /                                    3.67 kB         107 kB
+12:24:09.445 ├ ○ /_not-found                          138 B          87.4 kB
+12:24:09.445 ├ ○ /ajustes                             5.07 kB         121 kB
+12:24:09.446 ├ ○ /alertas                             3.66 kB        98.3 kB
+12:24:09.446 ├ ƒ /api/alerts                          0 B                0 B
+12:24:09.446 ├ ○ /api/compare-orders                  0 B                0 B
+12:24:09.446 ├ ƒ /api/customers                       0 B                0 B
+12:24:09.446 ├ ƒ /api/customers/[id]/approve          0 B                0 B
+12:24:09.447 ├ ƒ /api/customers/[id]/discounts        0 B                0 B
+12:24:09.447 ├ ○ /api/dashboard/alerts                0 B                0 B
+12:24:09.447 ├ ○ /api/dashboard/kpis                  0 B                0 B
+12:24:09.447 ├ ○ /api/debug-db                        0 B                0 B
+12:24:09.449 ├ ƒ /api/debug-order/[id]                0 B                0 B
+12:24:09.449 ├ ƒ /api/debug/orders                    0 B                0 B
+12:24:09.450 ├ ƒ /api/discounts/[id]                  0 B                0 B
+12:24:09.450 ├ ƒ /api/entries                         0 B                0 B
+12:24:09.450 ├ ƒ /api/gemini-ocr                      0 B                0 B
+12:24:09.450 ├ ƒ /api/orders                          0 B                0 B
+12:24:09.453 ├ ƒ /api/orders/[id]/details             0 B                0 B
+12:24:09.453 ├ ƒ /api/orders/[id]/status              0 B                0 B
+12:24:09.453 ├ ƒ /api/productos                       0 B                0 B
+12:24:09.453 ├ ƒ /api/products                        0 B                0 B
+12:24:09.453 ├ ƒ /api/products/[id]                   0 B                0 B
+12:24:09.453 ├ ƒ /api/products/[id]/historial         0 B                0 B
+12:24:09.453 ├ ƒ /api/products/generate-reference     0 B                0 B
+12:24:09.453 ├ ○ /api/proveedores                     0 B                0 B
+12:24:09.453 ├ ƒ /api/stock/adjustment                0 B                0 B
+12:24:09.453 ├ ƒ /api/stock/adjustments               0 B                0 B
+12:24:09.453 ├ ○ /api/test-orders                     0 B                0 B
+12:24:09.453 ├ ƒ /api/upload                          0 B                0 B
+12:24:09.454 ├ ○ /clientes                            4.93 kB         108 kB
+12:24:09.454 ├ ƒ /clientes/[id]/descuentos            5.27 kB         109 kB
+12:24:09.454 ├ ○ /entradas                            5.93 kB         109 kB
+12:24:09.454 ├ ○ /entradas/manual                     4.03 kB         129 kB
+12:24:09.454 ├ ○ /pedidos                             31 kB           126 kB
+12:24:09.454 ├ ƒ /pedidos/[id]                        5.67 kB         100 kB
+12:24:09.454 ├ ○ /productos                           6.99 kB         132 kB
+12:24:09.454 ├ ƒ /productos/[id]                      3.53 kB         107 kB
+12:24:09.454 ├ ƒ /productos/[id]/editar               1.3 kB          130 kB
+12:24:09.454 └ ○ /productos/nuevo                     816 B           130 kB
+12:24:09.454 + First Load JS shared by all            87.2 kB
+12:24:09.454   ├ chunks/1dd3208c-15a7011b3f148ab1.js  53.6 kB
+12:24:09.454   ├ chunks/528-aeef1ab259f29ee9.js       31.7 kB
+12:24:09.454   └ other shared chunks (total)          1.9 kB
+12:24:09.454 
+12:24:09.454 
+12:24:09.454 ƒ Middleware                             26.6 kB
+12:24:09.454 
+12:24:09.454 ○  (Static)   prerendered as static content
+12:24:09.454 ƒ  (Dynamic)  server-rendered on demand
+12:24:09.454 
+12:24:09.578 Traced Next.js server files in: 31.21ms
+12:24:09.723 Created all serverless functions in: 144.817ms
+12:24:09.785 Collected static files (public/, static/, .next/static): 6.567ms
+12:24:09.901 Build Completed in /vercel/output [47s]
+12:24:10.093 Deploying outputs...
+12:24:21.137 Deployment completed
+12:24:21.987 Creating build cache...
+12:24:38.173 Created build cache: 16.180s
+12:24:38.174 Uploading build cache [152.66 MB]
+12:24:41.000 Build cache uploaded: 2.834s
+
+
+
 Logs consola backoffice:
 📋 Frontend - Orders received: 9
 page-ef6bdf3d6e6c35c6.js:1 📊 Frontend - All order statuses: Array(9)
 page-ef6bdf3d6e6c35c6.js:1 🔍 Frontend - Status distribution: Object
-page-ef6bdf3d6e6c35c6.js:1 🔄 Frontend - Updating order f4391d1a to status: delivered
-page-ef6bdf3d6e6c35c6.js:1 📥 Frontend - API Response for f4391d1a: Object
-page-ef6bdf3d6e6c35c6.js:1 ✅ Frontend - Successfully updated order f4391d1a to delivered
-page-ef6bdf3d6e6c35c6.js:1 ✅ Frontend - Order f4391d1a updated locally to delivered
 page-ef6bdf3d6e6c35c6.js:1 🔄 Frontend - Updating order 601b2b47 to status: delivered
 page-ef6bdf3d6e6c35c6.js:1 📥 Frontend - API Response for 601b2b47: Object
 page-ef6bdf3d6e6c35c6.js:1 ✅ Frontend - Successfully updated order 601b2b47 to delivered
 page-ef6bdf3d6e6c35c6.js:1 ✅ Frontend - Order 601b2b47 updated locally to delivered
-page-ef6bdf3d6e6c35c6.js:1 📋 Frontend - Orders received: 9
-page-ef6bdf3d6e6c35c6.js:1 📊 Frontend - All order statuses: Array(9)
-page-ef6bdf3d6e6c35c6.js:1 🔍 Frontend - Status distribution: Object
+page-ef6bdf3d6e6c35c6.js:1 🔄 Frontend - Updating order bb584e1b to status: confirmed
+page-ef6bdf3d6e6c35c6.js:1 📥 Frontend - API Response for bb584e1b: Object
+page-ef6bdf3d6e6c35c6.js:1 ✅ Frontend - Successfully updated order bb584e1b to confirmed
+page-ef6bdf3d6e6c35c6.js:1 ✅ Frontend - Order bb584e1b updated locally to confirmed
 page-534c2b40ddb876a6.js:1 🔄 Order Details - Updating bb584e1b to delivered
-page-534c2b40ddb876a6.js:1 📥 Order Details - API Response: {success: true, data: {…}}
+page-534c2b40ddb876a6.js:1 📥 Order Details - API Response: Object
 page-534c2b40ddb876a6.js:1 ✅ Order Details - Update successful, refreshing details...
 page-534c2b40ddb876a6.js:1 ✅ Order Details - Status updated to delivered
 page-ef6bdf3d6e6c35c6.js:1 📋 Frontend - Orders received: 9
 page-ef6bdf3d6e6c35c6.js:1 📊 Frontend - All order statuses: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
 page-ef6bdf3d6e6c35c6.js:1 🔍 Frontend - Status distribution: {pending: 1, confirmed: 0, prepared: 2, delivered: 5, cancelled: 1}
+page-ef6bdf3d6e6c35c6.js:1 🔄 Frontend - Updating order 601b2b47 to status: delivered
+page-ef6bdf3d6e6c35c6.js:1 📥 Frontend - API Response for 601b2b47: {success: true, data: {…}}
+page-ef6bdf3d6e6c35c6.js:1 ✅ Frontend - Successfully updated order 601b2b47 to delivered
+page-ef6bdf3d6e6c35c6.js:1 ✅ Frontend - Order 601b2b47 updated locally to delivered
+page-ef6bdf3d6e6c35c6.js:1 📋 Frontend - Orders received: 9
+page-ef6bdf3d6e6c35c6.js:1 📊 Frontend - All order statuses: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+page-ef6bdf3d6e6c35c6.js:1 🔍 Frontend - Status distribution: {pending: 1, confirmed: 0, prepared: 2, delivered: 5, cancelled: 1}
+
+
 
 Logs vercel backoffice:
-Sep 30 12:11:04.76
+[{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990977,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📊 Sample orders with statuses: [\n  {\n    id: 'bb584e1b',\n    status: 'pending',\n    customer: 'Daniel Vega Hurtado'\n  },\n  {\n    id: '601b2b47',\n    status: 'prepared',\n    customer: 'Daniel Vega Hurtado'\n  },\n  {\n    id: 'f4391d1a',\n    status: 'prepared',\n    customer: 'Daniel Vega Hurtado'\n  }\n]","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Successfully fetched 9 orders","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order bb584e1b: customer=Daniel Vega Hurtado, status=pending","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 0915eecc: customer=Daniel Vega Hurtado, status=cancelled","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 153606e2: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 2f97bff3: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 34f2d249: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 50601c1c: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 5c5d7eb1: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order f4391d1a: customer=Daniel Vega Hurtado, status=prepared","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990976,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 601b2b47: customer=Daniel Vega Hurtado, status=prepared","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990962,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📊 Raw orders from DB: {\n  count: 9,\n  error: null,\n  firstOrderStatus: 'pending',\n  firstOrderId: 'bb584e1b',\n  firstOrderCreated: '2025-09-30T08:38:12.622479+00:00'\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990950,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔧 Environment check: {\n  supabaseUrl: 'https://rnnkgzbhgonmdxtirwhg.s...',\n  hasServiceKey: true,\n  timestamp: 1759227990949\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990949,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":-1,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔍 Backoffice API - Fetching all orders [1759227990949]","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990932,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":200,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":37,"region":"fra1","maxMemoryUsed":124,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMWM82VAFCJXPF4CJGDH","instanceId":"JaCf6GvYottI","concurrency":1},{"TimeUTC":"2025-09-30 10:26:30","timestampInMs":1759227990901,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227992147","responseStatusCode":200,"requestId":"pbs8c-1759227990882-ba4c5e4a5e49","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HMVNVWR6851Q0XTRZQM7","instanceId":"q2aACFav7mVg","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:28","timestampInMs":1759227988099,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/601b2b47-0ad1-4b41-bb6e-1193177eb4c3/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227988974&_r=0.4013547242720419","responseStatusCode":-1,"requestId":"wrstd-1759227987749-7b22509a1f7d","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order status update completed successfully","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HHVXXGCKSRCQPHC9DVN1","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:28","timestampInMs":1759227988099,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/601b2b47-0ad1-4b41-bb6e-1193177eb4c3/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227988974&_r=0.4013547242720419","responseStatusCode":-1,"requestId":"wrstd-1759227987749-7b22509a1f7d","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔍 IMMEDIATE VERIFICATION after update: {\n  orderId: '601b2b47-0ad1-4b41-bb6e-1193177eb4c3',\n  expectedStatus: 'delivered',\n  actualStatus: 'delivered',\n  actualUpdated: '2025-09-30T10:26:28.003322+00:00',\n  verifyError: undefined,\n  updateWasSuccessful: true,\n  verificationMatches: true\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HHVXXGCKSRCQPHC9DVN1","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:28","timestampInMs":1759227988025,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/601b2b47-0ad1-4b41-bb6e-1193177eb4c3/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227988974&_r=0.4013547242720419","responseStatusCode":-1,"requestId":"wrstd-1759227987749-7b22509a1f7d","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order status updated successfully: {\n  orderId: '601b2b47-0ad1-4b41-bb6e-1193177eb4c3',\n  oldStatus: 'delivered',\n  newStatus: 'delivered',\n  actualUpdatedData: {\n    id: '601b2b47-0ad1-4b41-bb6e-1193177eb4c3',\n    customer_id: '1249c29e-059c-4fa5-8431-0686859bacd1',\n    status: 'delivered',\n    order_number: '20250930-0001',\n    total_amount: 7.19,\n    total_items: 5,\n    notes: null,\n    has_backorder: false,\n    backorder_items: null,\n    delivery_date: null,\n    cancelled_at: null,\n    cancellation_reason: null,\n    created_at: '2025-09-30T08:04:10.528025+00:00',\n    updated_at: '2025-09-30T10:26:28.003322+00:00'\n  }\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HHVXXGCKSRCQPHC9DVN1","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:27","timestampInMs":1759227987854,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/601b2b47-0ad1-4b41-bb6e-1193177eb4c3/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227988974&_r=0.4013547242720419","responseStatusCode":-1,"requestId":"wrstd-1759227987749-7b22509a1f7d","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔄 Backoffice API - Updating order status: {\n  orderId: '601b2b47-0ad1-4b41-bb6e-1193177eb4c3',\n  newStatus: 'delivered',\n  timestamp: '2025-09-30T10:26:27.853Z',\n  hasServiceKey: true,\n  supabaseUrl: 'https://rnnkgzbhgonmdxtirwhg.s...'\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HHVXXGCKSRCQPHC9DVN1","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:27","timestampInMs":1759227987837,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/601b2b47-0ad1-4b41-bb6e-1193177eb4c3/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227988974&_r=0.4013547242720419","responseStatusCode":200,"requestId":"wrstd-1759227987749-7b22509a1f7d","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":258,"region":"fra1","maxMemoryUsed":124,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HHVXXGCKSRCQPHC9DVN1","instanceId":"JaCf6GvYottI","concurrency":1},{"TimeUTC":"2025-09-30 10:26:27","timestampInMs":1759227987794,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/601b2b47-0ad1-4b41-bb6e-1193177eb4c3/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227988974&_r=0.4013547242720419","responseStatusCode":200,"requestId":"wrstd-1759227987749-7b22509a1f7d","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"[orders] / status=200","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HHTJMVYAC0AYZ3KRKER9","instanceId":"q2aACFav7mVg","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984365,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📊 Sample orders with statuses: [\n  {\n    id: 'bb584e1b',\n    status: 'pending',\n    customer: 'Daniel Vega Hurtado'\n  },\n  {\n    id: '601b2b47',\n    status: 'prepared',\n    customer: 'Daniel Vega Hurtado'\n  },\n  {\n    id: 'f4391d1a',\n    status: 'prepared',\n    customer: 'Daniel Vega Hurtado'\n  }\n]","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Successfully fetched 9 orders","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order bb584e1b: customer=Daniel Vega Hurtado, status=pending","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 0915eecc: customer=Daniel Vega Hurtado, status=cancelled","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 153606e2: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 2f97bff3: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 34f2d249: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 50601c1c: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 5c5d7eb1: customer=Daniel Vega Hurtado, status=delivered","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order f4391d1a: customer=Daniel Vega Hurtado, status=prepared","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984364,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order 601b2b47: customer=Daniel Vega Hurtado, status=prepared","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984357,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📊 Raw orders from DB: {\n  count: 9,\n  error: null,\n  firstOrderStatus: 'pending',\n  firstOrderId: 'bb584e1b',\n  firstOrderCreated: '2025-09-30T08:38:12.622479+00:00'\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984352,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔧 Environment check: {\n  supabaseUrl: 'https://rnnkgzbhgonmdxtirwhg.s...',\n  hasServiceKey: true,\n  timestamp: 1759227984351\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984352,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":-1,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔍 Backoffice API - Fetching all orders [1759227984351]","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984334,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":200,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":22,"region":"fra1","maxMemoryUsed":124,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEEEVVKSH18KZ4J6M1WX","instanceId":"JaCf6GvYottI","concurrency":1},{"TimeUTC":"2025-09-30 10:26:24","timestampInMs":1759227984304,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders","requestMethod":"GET","requestQueryString":"_t=1759227985523","responseStatusCode":200,"requestId":"m45x9-1759227984293-f535db4f61d6","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HEDG14VV89CNVBPXQR1D","instanceId":"q2aACFav7mVg","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:22","timestampInMs":1759227982661,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227983837","responseStatusCode":-1,"requestId":"9pg8b-1759227982575-fb6a4c8b5d9e","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order details compiled successfully","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HCRWX03P8614GW5K2H31","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:22","timestampInMs":1759227982661,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227983837","responseStatusCode":-1,"requestId":"9pg8b-1759227982575-fb6a4c8b5d9e","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📦 Order items: 1","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HCRWX03P8614GW5K2H31","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:22","timestampInMs":1759227982648,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227983837","responseStatusCode":-1,"requestId":"9pg8b-1759227982575-fb6a4c8b5d9e","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order found: bb584e1b","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HCRWX03P8614GW5K2H31","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:22","timestampInMs":1759227982637,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227983837","responseStatusCode":-1,"requestId":"9pg8b-1759227982575-fb6a4c8b5d9e","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔍 Backoffice API - Fetching order details for: bb584e1b-33b1-46ff-9151-ba28f2ebc17a","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HCRWX03P8614GW5K2H31","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:22","timestampInMs":1759227982620,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227983837","responseStatusCode":200,"requestId":"9pg8b-1759227982575-fb6a4c8b5d9e","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":35,"region":"fra1","maxMemoryUsed":124,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HCRWX03P8614GW5K2H31","instanceId":"JaCf6GvYottI","concurrency":1},{"TimeUTC":"2025-09-30 10:26:22","timestampInMs":1759227982585,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227983837","responseStatusCode":200,"requestId":"9pg8b-1759227982575-fb6a4c8b5d9e","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"[orders] / status=200","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2HCQTMBRCTAS4HSBA5ZZ1","instanceId":"q2aACFav7mVg","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:16","timestampInMs":1759227976920,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227978105","responseStatusCode":-1,"requestId":"pxqfm-1759227976833-9ab3fb52764b","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order details compiled successfully","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H75ED3FGF5PG39DZRSHY","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:16","timestampInMs":1759227976920,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227978105","responseStatusCode":-1,"requestId":"pxqfm-1759227976833-9ab3fb52764b","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📦 Order items: 1","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H75ED3FGF5PG39DZRSHY","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:16","timestampInMs":1759227976899,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227978105","responseStatusCode":-1,"requestId":"pxqfm-1759227976833-9ab3fb52764b","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order found: bb584e1b","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H75ED3FGF5PG39DZRSHY","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:16","timestampInMs":1759227976894,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227978105","responseStatusCode":-1,"requestId":"pxqfm-1759227976833-9ab3fb52764b","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔍 Backoffice API - Fetching order details for: bb584e1b-33b1-46ff-9151-ba28f2ebc17a","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H75ED3FGF5PG39DZRSHY","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:16","timestampInMs":1759227976878,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227978105","responseStatusCode":200,"requestId":"pxqfm-1759227976833-9ab3fb52764b","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":35,"region":"fra1","maxMemoryUsed":124,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H75ED3FGF5PG39DZRSHY","instanceId":"JaCf6GvYottI","concurrency":1},{"TimeUTC":"2025-09-30 10:26:16","timestampInMs":1759227976845,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227978105","responseStatusCode":200,"requestId":"pxqfm-1759227976833-9ab3fb52764b","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"[orders] / status=200","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H74DWFGMXKQXVQK1PZWP","instanceId":"q2aACFav7mVg","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:14","timestampInMs":1759227974574,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227975580&_r=0.5437271890732979","responseStatusCode":-1,"requestId":"pxqfm-1759227974305-90197d3aeb31","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order status update completed successfully","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H4PSG4WN7QCZ36F9M5RQ","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:14","timestampInMs":1759227974574,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227975580&_r=0.5437271890732979","responseStatusCode":-1,"requestId":"pxqfm-1759227974305-90197d3aeb31","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔍 IMMEDIATE VERIFICATION after update: {\n  orderId: 'bb584e1b-33b1-46ff-9151-ba28f2ebc17a',\n  expectedStatus: 'delivered',\n  actualStatus: 'delivered',\n  actualUpdated: '2025-09-30T10:26:14.48433+00:00',\n  verifyError: undefined,\n  updateWasSuccessful: true,\n  verificationMatches: true\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H4PSG4WN7QCZ36F9M5RQ","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:14","timestampInMs":1759227974514,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227975580&_r=0.5437271890732979","responseStatusCode":-1,"requestId":"pxqfm-1759227974305-90197d3aeb31","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order status updated successfully: {\n  orderId: 'bb584e1b-33b1-46ff-9151-ba28f2ebc17a',\n  oldStatus: 'confirmed',\n  newStatus: 'delivered',\n  actualUpdatedData: {\n    id: 'bb584e1b-33b1-46ff-9151-ba28f2ebc17a',\n    customer_id: '1249c29e-059c-4fa5-8431-0686859bacd1',\n    status: 'delivered',\n    order_number: '20250930-0002',\n    total_amount: 1.61,\n    total_items: 1,\n    notes: null,\n    has_backorder: false,\n    backorder_items: null,\n    delivery_date: null,\n    cancelled_at: null,\n    cancellation_reason: null,\n    created_at: '2025-09-30T08:38:12.622479+00:00',\n    updated_at: '2025-09-30T10:26:14.48433+00:00'\n  }\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H4PSG4WN7QCZ36F9M5RQ","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:14","timestampInMs":1759227974385,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227975580&_r=0.5437271890732979","responseStatusCode":-1,"requestId":"pxqfm-1759227974305-90197d3aeb31","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔄 Backoffice API - Updating order status: {\n  orderId: 'bb584e1b-33b1-46ff-9151-ba28f2ebc17a',\n  newStatus: 'delivered',\n  timestamp: '2025-09-30T10:26:14.382Z',\n  hasServiceKey: true,\n  supabaseUrl: 'https://rnnkgzbhgonmdxtirwhg.s...'\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H4PSG4WN7QCZ36F9M5RQ","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:14","timestampInMs":1759227974360,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227975580&_r=0.5437271890732979","responseStatusCode":200,"requestId":"pxqfm-1759227974305-90197d3aeb31","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":202,"region":"fra1","maxMemoryUsed":124,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H4PSG4WN7QCZ36F9M5RQ","instanceId":"JaCf6GvYottI","concurrency":1},{"TimeUTC":"2025-09-30 10:26:14","timestampInMs":1759227974312,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227975580&_r=0.5437271890732979","responseStatusCode":200,"requestId":"pxqfm-1759227974305-90197d3aeb31","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"[orders] / status=200","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H4N8T5Y46TWA2EP5G0BX","instanceId":"q2aACFav7mVg","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:13","timestampInMs":1759227973436,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227974428","responseStatusCode":-1,"requestId":"pqz58-1759227973218-cbad3b3c8cd3","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order details compiled successfully","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H3R1EBR7PHR3823ZBD66","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:13","timestampInMs":1759227973436,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227974428","responseStatusCode":-1,"requestId":"pqz58-1759227973218-cbad3b3c8cd3","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📦 Order items: 1","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H3R1EBR7PHR3823ZBD66","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:13","timestampInMs":1759227973420,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227974428","responseStatusCode":-1,"requestId":"pqz58-1759227973218-cbad3b3c8cd3","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"📋 Order found: bb584e1b","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H3R1EBR7PHR3823ZBD66","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:13","timestampInMs":1759227973401,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227974428","responseStatusCode":-1,"requestId":"pqz58-1759227973218-cbad3b3c8cd3","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔍 Backoffice API - Fetching order details for: bb584e1b-33b1-46ff-9151-ba28f2ebc17a","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H3R1EBR7PHR3823ZBD66","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:13","timestampInMs":1759227973377,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227974428","responseStatusCode":200,"requestId":"pqz58-1759227973218-cbad3b3c8cd3","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/details","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":47,"region":"fra1","maxMemoryUsed":124,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H3R1EBR7PHR3823ZBD66","instanceId":"JaCf6GvYottI","concurrency":1},{"TimeUTC":"2025-09-30 10:26:13","timestampInMs":1759227973225,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details","requestMethod":"GET","requestQueryString":"_t=1759227974428","responseStatusCode":200,"requestId":"pqz58-1759227973218-cbad3b3c8cd3","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"[orders] / status=200","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H3K9T8NS73MBTXBZ8XS7","instanceId":"q2aACFav7mVg","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:12","timestampInMs":1759227972931,"requestPath":"sistema-stock-backoffice.vercel.app/pedidos/bb584e1b-33b1-46ff-9151-ba28f2ebc17a","requestMethod":"GET","requestQueryString":"","responseStatusCode":200,"requestId":"pqz58-1759227972750-cfcb08bcf57d","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/pedidos/[id]","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":239,"region":"fra1","maxMemoryUsed":112,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H3A4922ZB5RA8EBVHTMD","instanceId":"NUUygwvLOzTK","concurrency":1},{"TimeUTC":"2025-09-30 10:26:12","timestampInMs":1759227972779,"requestPath":"sistema-stock-backoffice.vercel.app/pedidos/bb584e1b-33b1-46ff-9151-ba28f2ebc17a","requestMethod":"GET","requestQueryString":"","responseStatusCode":200,"requestId":"pqz58-1759227972750-cfcb08bcf57d","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H35B862FXG75GPVFX6RN","instanceId":"q2aACFav7mVg","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:12","timestampInMs":1759227972280,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227973184&_r=0.6206879733279741","responseStatusCode":-1,"requestId":"n848x-1759227971971-89418e0dd7ef","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order status update completed successfully","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H2DY10A9GFN2VTPME7H7","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:12","timestampInMs":1759227972280,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227973184&_r=0.6206879733279741","responseStatusCode":-1,"requestId":"n848x-1759227971971-89418e0dd7ef","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔍 IMMEDIATE VERIFICATION after update: {\n  orderId: 'bb584e1b-33b1-46ff-9151-ba28f2ebc17a',\n  expectedStatus: 'confirmed',\n  actualStatus: 'confirmed',\n  actualUpdated: '2025-09-30T10:26:12.187661+00:00',\n  verifyError: undefined,\n  updateWasSuccessful: true,\n  verificationMatches: true\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H2DY10A9GFN2VTPME7H7","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:12","timestampInMs":1759227972220,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227973184&_r=0.6206879733279741","responseStatusCode":-1,"requestId":"n848x-1759227971971-89418e0dd7ef","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"✅ Order status updated successfully: {\n  orderId: 'bb584e1b-33b1-46ff-9151-ba28f2ebc17a',\n  oldStatus: 'delivered',\n  newStatus: 'confirmed',\n  actualUpdatedData: {\n    id: 'bb584e1b-33b1-46ff-9151-ba28f2ebc17a',\n    customer_id: '1249c29e-059c-4fa5-8431-0686859bacd1',\n    status: 'confirmed',\n    order_number: '20250930-0002',\n    total_amount: 1.61,\n    total_items: 1,\n    notes: null,\n    has_backorder: false,\n    backorder_items: null,\n    delivery_date: null,\n    cancelled_at: null,\n    cancellation_reason: null,\n    created_at: '2025-09-30T08:38:12.622479+00:00',\n    updated_at: '2025-09-30T10:26:12.187661+00:00'\n  }\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H2DY10A9GFN2VTPME7H7","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:12","timestampInMs":1759227972054,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227973184&_r=0.6206879733279741","responseStatusCode":-1,"requestId":"n848x-1759227971971-89418e0dd7ef","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"fra1","maxMemoryUsed":-1,"memorySize":-1,"message":"🔄 Backoffice API - Updating order status: {\n  orderId: 'bb584e1b-33b1-46ff-9151-ba28f2ebc17a',\n  newStatus: 'confirmed',\n  timestamp: '2025-09-30T10:26:12.053Z',\n  hasServiceKey: true,\n  supabaseUrl: 'https://rnnkgzbhgonmdxtirwhg.s...'\n}","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H2DY10A9GFN2VTPME7H7","instanceId":"","concurrency":-1},{"TimeUTC":"2025-09-30 10:26:12","timestampInMs":1759227972029,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227973184&_r=0.6206879733279741","responseStatusCode":200,"requestId":"n848x-1759227971971-89418e0dd7ef","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"lambda","function":"/api/orders/[id]/status","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":239,"region":"fra1","maxMemoryUsed":124,"memorySize":2048,"message":"","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H2DY10A9GFN2VTPME7H7","instanceId":"JaCf6GvYottI","concurrency":1},{"TimeUTC":"2025-09-30 10:26:11","timestampInMs":1759227971990,"requestPath":"sistema-stock-backoffice.vercel.app/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status","requestMethod":"PATCH","requestQueryString":"_patch=1759227973184&_r=0.6206879733279741","responseStatusCode":200,"requestId":"n848x-1759227971971-89418e0dd7ef","requestUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","level":"info","environment":"production","branch":"main","vercelCache":"","type":"edge-middleware","function":"/middleware","host":"sistema-stock-backoffice.vercel.app","deploymentDomain":"sistema-stock-backoffice.vercel.app","deploymentId":"dpl_CUPf2vegKG18LwLyqFKehKTfDsHm","durationMs":-1,"region":"lhr1","maxMemoryUsed":-1,"memorySize":-1,"message":"[orders] / status=200","projectId":"prj_5YV5roHjNv8V6MxXq4b0ndryFE1t","traceId":"","sessionId":"","invocationId":"01K6D2H2CP3VMJ16EGABNX87VC","instanceId":"q2aACFav7mVg","concurrency":-1}]
+
+Sep 30 12:26:30.88
 GET
 200
 sistema-stock-backoffice.vercel.app
 /api/orders
 14
 📊 Sample orders with statuses: [ { id: 'bb584e1b', status: 'pending', customer: 'Daniel Vega Hurtado' }, { id: '601b2b47', status: 'prepared', customer: 'Daniel Vega Hurtado' }, { id: 'f4391d1a', status: 'prepared', customer: 'Daniel Vega Hurtado' } ]
-Sep 30 12:11:02.03
-GET
-200
-sistema-stock-backoffice.vercel.app
-/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details
-5
-✅ Order details compiled successfully
-Sep 30 12:10:58.01
-PATCH
-200
-sistema-stock-backoffice.vercel.app
-/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status
-5
-✅ Order status update completed successfully
-Sep 30 12:10:54.03
-GET
-200
-sistema-stock-backoffice.vercel.app
-/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details
-5
-✅ Order details compiled successfully
-Sep 30 12:10:53.54
-GET
-200
-sistema-stock-backoffice.vercel.app
-/pedidos/bb584e1b-33b1-46ff-9151-ba28f2ebc17a
-Sep 30 12:10:51.18
-GET
-200
-sistema-stock-backoffice.vercel.app
-/_next/image
-Sep 30 12:10:48.16
-GET
-200
-sistema-stock-backoffice.vercel.app
-/api/orders
-14
-📊 Sample orders with statuses: [ { id: 'bb584e1b', status: 'pending', customer: 'Daniel Vega Hurtado' }, { id: '601b2b47', status: 'prepared', customer: 'Daniel Vega Hurtado' }, { id: 'f4391d1a', status: 'prepared', customer: 'Daniel Vega Hurtado' } ]
-Sep 30 12:10:46.08
+Sep 30 12:26:27.74
 PATCH
 200
 sistema-stock-backoffice.vercel.app
 /api/orders/601b2b47-0ad1-4b41-bb6e-1193177eb4c3/status
 5
 ✅ Order status update completed successfully
-Sep 30 12:10:44.92
+Sep 30 12:26:24.29
+GET
+200
+sistema-stock-backoffice.vercel.app
+/api/orders
+14
+📊 Sample orders with statuses: [ { id: 'bb584e1b', status: 'pending', customer: 'Daniel Vega Hurtado' }, { id: '601b2b47', status: 'prepared', customer: 'Daniel Vega Hurtado' }, { id: 'f4391d1a', status: 'prepared', customer: 'Daniel Vega Hurtado' } ]
+Sep 30 12:26:22.57
+GET
+200
+sistema-stock-backoffice.vercel.app
+/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details
+5
+✅ Order details compiled successfully
+Sep 30 12:26:16.83
+GET
+200
+sistema-stock-backoffice.vercel.app
+/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details
+5
+✅ Order details compiled successfully
+Sep 30 12:26:14.30
 PATCH
 200
 sistema-stock-backoffice.vercel.app
-/api/orders/f4391d1a-2750-44fe-8deb-b4e88c3a2fef/status
+/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status
 5
 ✅ Order status update completed successfully
-Sep 30 12:10:43.09
+Sep 30 12:26:13.21
 GET
 200
 sistema-stock-backoffice.vercel.app
-/productos/nuevo
-Sep 30 12:10:43.09
+/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/details
+5
+✅ Order details compiled successfully
+Sep 30 12:26:12.75
 GET
 200
 sistema-stock-backoffice.vercel.app
-/ajustes
-Sep 30 12:10:42.95
-GET
-200
-sistema-stock-backoffice.vercel.app
-/alertas
-Sep 30 12:10:42.95
-GET
-200
-sistema-stock-backoffice.vercel.app
-/
-Sep 30 12:10:42.95
-GET
-200
-sistema-stock-backoffice.vercel.app
-/productos
-Sep 30 12:10:42.95
-GET
-200
-sistema-stock-backoffice.vercel.app
-/entradas
-Sep 30 12:10:42.95
-GET
-200
-sistema-stock-backoffice.vercel.app
-/clientes
-Sep 30 12:10:42.81
-GET
-200
-sistema-stock-backoffice.vercel.app
-/api/orders
-14
-📊 Sample orders with statuses: [ { id: 'bb584e1b', status: 'pending', customer: 'Daniel Vega Hurtado' }, { id: '601b2b47', status: 'prepared', customer: 'Daniel Vega Hurtado' }, { id: 'f4391d1a', status: 'prepared', customer: 'Daniel Vega Hurtado' } ]
-Sep 30 12:10:42.81
-GET
-200
-sistema-stock-backoffice.vercel.app
-/_next/image
-Sep 30 12:10:42.68
-GET
-200
-sistema-stock-backoffice.vercel.app
-/pedidos
-Sep 30 12:10:38.30
+/pedidos/bb584e1b-33b1-46ff-9151-ba28f2ebc17a
+Sep 30 12:26:11.97
 PATCH
 200
 sistema-stock-backoffice.vercel.app
-/api/orders/f4391d1a-2750-44fe-8deb-b4e88c3a2fef/status
+/api/orders/bb584e1b-33b1-46ff-9151-ba28f2ebc17a/status
 5
 ✅ Order status update completed successfully
-Sep 30 12:10:34.90
-GET
+Sep 30 12:25:55.39
+PATCH
 200
 sistema-stock-backoffice.vercel.app
-/productos/nuevo
-Sep 30 12:10:34.83
-GET
-200
-sistema-stock-backoffice.vercel.app
-/ajustes
-Sep 30 12:10:34.51
-GET
-200
-sistema-stock-backoffice.vercel.app
-/entradas
-Sep 30 12:10:34.51
-GET
-200
-sistema-stock-backoffice.vercel.app
-/alertas
-Sep 30 12:10:34.50
-GET
-200
-sistema-stock-backoffice.vercel.app
-/
-Sep 30 12:10:34.50
-GET
-200
-sistema-stock-backoffice.vercel.app
-/productos
-Sep 30 12:10:34.50
-GET
-200
-sistema-stock-backoffice.vercel.app
-/clientes
-Sep 30 12:10:34.50
-GET
-200
-sistema-stock-backoffice.vercel.app
-/api/orders
-14
-📊 Sample orders with statuses: [ { id: 'bb584e1b', status: 'pending', customer: 'Daniel Vega Hurtado' }, { id: '601b2b47', status: 'prepared', customer: 'Daniel Vega Hurtado' }, { id: 'f4391d1a', status: 'prepared', customer: 'Daniel Vega Hurtado' } ]
-Sep 30 12:10:34.48
-GET
-200
-sistema-stock-backoffice.vercel.app
-/_next/image
-Sep 30 12:10:33.87
-GET
-200
-sistema-stock-backoffice.vercel.app
-/pedidos
-Sep 30 12:09:27.52
-GET
-401
-sistema-stock-backoffice-16mlcuou9-daniel-elec2lives-projects.vercel.app
-/
-Sep 30 12:09:11.38
-GET
-200
-sistema-stock-backoffice.vercel.app
-/api/orders
-14
-📊 Sample orders with statuses: [ { id: 'bb584e1b', status: 'pending', customer: 'Daniel Vega Hurtado' }, { id: '601b2b47', status: 'prepared', customer: 'Daniel Vega Hurtado' }, { id: 'f4391d1a', status: 'prepared', customer: 'Daniel Vega Hurtado' } ]
-Sep 30 12:07:52.81
-GET
-401
-sistema-stock-backoffice-16mlcuou9-daniel-elec2lives-projects.vercel.app
-/
-Sep 30 12:07:52.75
-GET
-401
-sistema-stock-backoffice-16mlcuou9-daniel-elec2lives-projects.vercel.app
-/
-Sep 30 12:07:52.52
-GET
-401
-sistema-stock-backoffice-16mlcuou9-daniel-elec2lives-projects.vercel.app
-/
-Sep 30 12:07:52.51
-GET
-401
-sistema-stock-backoffice-16mlcuou9-daniel-elec2lives-projects.vercel.app
-/
+/api/orders/601b2b47-0ad1-4b41-bb6e-1193177eb4c3/status
+5
+✅ Order status update completed successfully
