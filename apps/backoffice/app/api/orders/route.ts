@@ -10,11 +10,14 @@ export async function GET(request: NextRequest) {
     const timestamp = Date.now()
     console.log(`🔍 Backoffice API - Fetching all orders [${timestamp}]`)
 
-    // Añadir headers anti-cache explícitos
+    // Headers anti-cache AGRESIVOS para resolver problemas de estados
     const headers = {
-      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0, private',
       'Pragma': 'no-cache',
-      'Expires': '0'
+      'Expires': '0',
+      'Last-Modified': new Date().toUTCString(),
+      'ETag': `"${timestamp}-${Math.random()}"`,
+      'Vary': 'Accept-Encoding, User-Agent'
     }
 
     const supabase = createSupabaseClient()
@@ -25,8 +28,10 @@ export async function GET(request: NextRequest) {
       timestamp
     })
 
-    // FORZAR CACHE BUSTING: Añadir parámetro único a la query para invalidar cache
-    const cacheBustQuery = `
+    // Obtener todos los pedidos - SIMPLIFICADO SIN CACHE BUSTING
+    const { data: orders, error } = await supabase
+      .from('orders')
+      .select(`
         id,
         customer_id,
         status,
@@ -40,18 +45,11 @@ export async function GET(request: NextRequest) {
         cancellation_reason,
         created_at,
         updated_at
-      `
-
-    // Cache busting usando filtro dinámico que siempre es verdadero
-    const { data: orders, error } = await supabase
-      .from('orders')
-      .select(cacheBustQuery)
-      .gte('created_at', '1900-01-01') // Filtro que siempre es verdadero pero único por timestamp
+      `)
       .order('created_at', { ascending: false })
       .limit(1000)
 
-    // TODO: Consistency check temporarily disabled due to TypeScript issues
-    console.log('🔄 CACHE BUSTING APPLIED - Query includes timestamp field for cache invalidation')
+    console.log('🔄 Simplified query - no cache busting to avoid SQL errors')
 
     console.log('📊 Raw orders from DB:', {
       count: orders?.length || 0,
