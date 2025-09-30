@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    if (!orders || orders.length === 0) {
+    if (!orders || !Array.isArray(orders) || orders.length === 0) {
       console.log('📋 No orders found in database')
       return NextResponse.json({
         success: true,
@@ -74,9 +74,12 @@ export async function GET(request: NextRequest) {
       }, { headers })
     }
 
+    // Type guard: En este punto sabemos que orders es un array válido
+    const validOrders = orders as any[]
+
     // Obtener información de clientes y backorder items para cada pedido
     const ordersWithDetails = await Promise.all(
-      orders.map(async (order) => {
+      validOrders.map(async (order) => {
         // Obtener información del cliente
         const { data: customer } = await supabase
           .from('customers')
