@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createSupabaseClient } from '@/lib/supabase'
 import { z } from 'zod'
 
-// Cliente Supabase con service role
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { persistSession: false } }
-)
-
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 const UpdateDiscountSchema = z.object({
   discount_percentage: z.number().min(0).max(100).optional(),
@@ -24,6 +18,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = createSupabaseClient()
     const body = await request.json()
     const validatedData = UpdateDiscountSchema.parse(body)
 
@@ -80,6 +75,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = createSupabaseClient()
     const { error } = await supabase
       .from('customer_discounts')
       .delete()

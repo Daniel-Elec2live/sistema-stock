@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createSupabaseClient } from '@/lib/supabase'
 import { z } from 'zod'
 
-// Cliente Supabase con service role
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { persistSession: false } }
-)
-
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 const DiscountSchema = z.object({
   product_id: z.string().nullable().optional(),
@@ -26,6 +20,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = createSupabaseClient()
     const { data: discounts, error } = await supabase
       .from('customer_discounts')
       .select(`
@@ -74,6 +69,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = createSupabaseClient()
     const body = await request.json()
     const validatedData = DiscountSchema.parse(body)
 
