@@ -83,6 +83,7 @@ export default function PedidosPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-ES', {
@@ -130,6 +131,7 @@ export default function PedidosPage() {
           cancelled: data.data.filter((o: any) => o.status === 'cancelled').length,
         })
         setOrders(data.data)
+        setLastUpdated(new Date())
       } else {
         console.error('Error fetching orders:', data.error)
       }
@@ -228,6 +230,14 @@ export default function PedidosPage() {
 
   useEffect(() => {
     fetchOrders()
+
+    // Polling automático cada 30 segundos para nuevos pedidos
+    const interval = setInterval(() => {
+      console.log('🔄 Auto-refresh: Checking for new orders...')
+      fetchOrders()
+    }, 30000) // 30 segundos
+
+    return () => clearInterval(interval)
   }, [])
 
   // Filtrar pedidos
@@ -284,7 +294,7 @@ export default function PedidosPage() {
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col items-end gap-2">
           <Button
             onClick={fetchOrders}
             variant="outline"
@@ -293,6 +303,11 @@ export default function PedidosPage() {
             <RefreshCw className="w-4 h-4 mr-2" />
             Actualizar
           </Button>
+          {lastUpdated && (
+            <p className="text-xs text-gray-500">
+              Última actualización: {lastUpdated.toLocaleTimeString('es-ES')}
+            </p>
+          )}
         </div>
       </div>
 

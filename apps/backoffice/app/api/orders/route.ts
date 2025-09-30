@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
-      .order('updated_at', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(1000)
 
     console.log('📊 Raw orders from DB:', { count: orders?.length, error })

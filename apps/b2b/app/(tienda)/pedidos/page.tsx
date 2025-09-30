@@ -82,7 +82,7 @@ export default function PedidosPage() {
 
       {/* Estadísticas */}
       {!statsLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           <Card className="p-4">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -115,18 +115,6 @@ export default function PedidosPage() {
               <div>
                 <p className="text-sm text-gray-600">Entregados</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.delivered}</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-[var(--color-tomate)]/10 rounded-lg flex items-center justify-center">
-                <Package className="w-5 h-5 text-[var(--color-tomate)]" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total gastado</p>
-                <p className="text-2xl font-bold text-gray-900">{formatPrice(stats.totalAmount)}</p>
               </div>
             </div>
           </Card>
