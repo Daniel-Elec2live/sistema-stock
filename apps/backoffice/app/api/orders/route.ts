@@ -57,6 +57,17 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString()
     })
 
+    // LOG CRÍTICO: Ver EXACTAMENTE qué devuelve Supabase para orden 601b2b47
+    const order601 = orders?.find(o => o.id.startsWith('601b2b47'))
+    if (order601) {
+      console.log('🔍 DEBUG - Order 601b2b47 RAW from Supabase:', {
+        id: order601.id,
+        status: order601.status,
+        updated_at: order601.updated_at,
+        rawObject: order601
+      })
+    }
+
     if (error) {
       console.error('❌ Database error:', error)
       return NextResponse.json(
