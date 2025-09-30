@@ -24,7 +24,7 @@ Ejecuta los archivos **en orden** en el SQL Editor de tu proyecto Supabase:
 -- Pegar contenido de: 01-schema-complete.sql
 
 -- 2. Funciones de negocio
--- Pegar contenido de: 02-functions.sql  
+-- Pegar contenido de: 02-functions.sql
 
 -- 3. Triggers automáticos
 -- Pegar contenido de: 03-triggers.sql
@@ -34,7 +34,16 @@ Ejecuta los archivos **en orden** en el SQL Editor de tu proyecto Supabase:
 
 -- 5. Datos iniciales
 -- Pegar contenido de: 05-seed-data.sql
+
+-- 6. Migración: Simplificar proveedores
+-- Pegar contenido de: 06-remove-suppliers-migration.sql
+
+-- 7. ⏳ PENDIENTE: Migración estado de pago
+-- Pegar contenido de: 07-add-payment-status.sql
 ```
+
+> ⚠️ **IMPORTANTE:** El archivo `07-add-payment-status.sql` está pendiente de aplicar.
+> Añade campos para gestionar estado de pago en pedidos (pending/paid/partial/overdue).
 
 ### 2. Configurar Storage (Manual en Dashboard)
 
