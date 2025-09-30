@@ -50,7 +50,8 @@ export function ProductForm({
       stock_maximo: initialData?.stock_maximo || undefined,
       categoria: initialData?.categoria || '',
       proveedor: initialData?.proveedor || '',
-      referencia: initialData?.referencia || ''
+      referencia: initialData?.referencia || '',
+      image_url: initialData?.image_url || ''
     }
   })
 
@@ -257,7 +258,7 @@ export function ProductForm({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Referencia *
             </label>
-            <Input 
+            <Input
               {...register('referencia')}
               placeholder={isEditing ? "Referencia del producto" : "Se genera automáticamente"}
               readOnly={!isEditing}
@@ -274,6 +275,23 @@ export function ProductForm({
                 Formato: 3 letras del proveedor + 25 + número correlativo (ej: MAK25001)
               </p>
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              URL de Imagen (opcional)
+            </label>
+            <Input
+              {...register('image_url')}
+              placeholder="https://ejemplo.com/imagen.jpg"
+              className="h-12 lg:h-10"
+            />
+            {errors.image_url && (
+              <p className="text-red-600 text-sm mt-1">{errors.image_url.message}</p>
+            )}
+            <p className="text-xs text-gray-500 mt-1">
+              Introduce la URL de una imagen del producto
+            </p>
           </div>
         </div>
       </Card>

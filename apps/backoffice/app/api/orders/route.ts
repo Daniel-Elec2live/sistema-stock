@@ -22,12 +22,6 @@ export async function GET(request: NextRequest) {
 
     const supabase = createSupabaseClient()
 
-    console.log('🔧 Environment check:', {
-      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30) + '...',
-      hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-      timestamp
-    })
-
     // Obtener todos los pedidos con cache-busting a nivel de query
     // El problema: cada Lambda tiene su propia conexión pooled que cachea queries
     // Solución: añadir filtro que siempre sea true pero único por timestamp
@@ -53,24 +47,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .limit(1000)
 
-    console.log(`🔧 Cache buster applied: ${cacheBuster}`)
-
-    console.log('🔄 Simplified query - no cache busting to avoid SQL errors')
-
-    console.log('📊 Raw orders from DB:', {
-      count: orders?.length || 0,
-      hasError: !!error,
-      timestamp: new Date().toISOString()
-    })
-
-    // LOG EXTREMO: Ver TODOS los pedidos RAW de Supabase con status y updated_at
-    console.log('🔍🔍🔍 EXTREME DEBUG - ALL ORDERS RAW FROM SUPABASE:', JSON.stringify(
-      orders?.map((o: any) => ({
-        id: o.id.slice(0, 8),
-        status: o.status,
-        updated_at: o.updated_at
-      }))
-    ))
+    console.log(`🔧 Query executed with cache buster for ${orders?.length || 0} orders`)
 
     if (error) {
       console.error('❌ Database error:', error)
@@ -101,8 +78,6 @@ export async function GET(request: NextRequest) {
           .eq('id', order.customer_id)
           .single()
 
-        console.log(`📋 Processing order: ${order.id.slice(0, 8)}`)
-
         return {
           id: order.id,
           customer_name: customer?.name || 'Cliente desconocido',
@@ -124,16 +99,6 @@ export async function GET(request: NextRequest) {
       })
     )
 
-    console.log(`✅ Successfully fetched ${ordersWithDetails.length} orders`)
-
-    // Debug: Log first few orders with their statuses
-    console.log('📊 Sample orders with statuses:',
-      ordersWithDetails.slice(0, 3).map(o => ({
-        id: o.id.slice(0, 8),
-        status: o.status,
-        customer: o.customer_name
-      }))
-    )
 
     return NextResponse.json({
       success: true,

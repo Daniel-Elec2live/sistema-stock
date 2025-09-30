@@ -11,6 +11,7 @@ export interface Product {
   proveedor: string // Campo simplificado obligatorio
   referencia: string
   precio_promedio?: number
+  image_url?: string
   created_at: string
   updated_at: string
 }

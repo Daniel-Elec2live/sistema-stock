@@ -9,7 +9,8 @@ export const productSchema = z.object({
   stock_maximo: z.number().min(0, 'Stock máximo debe ser mayor o igual a 0').optional(),
   categoria: z.string().min(1, 'Categoría es requerida').max(50, 'Categoría muy larga'),
   proveedor: z.string().min(1, 'Proveedor es requerido').max(100, 'Proveedor muy largo'),
-  referencia: z.string().min(1, 'Referencia es requerida').max(20, 'Referencia muy larga')
+  referencia: z.string().min(1, 'Referencia es requerida').max(20, 'Referencia muy larga'),
+  image_url: z.string().url('URL de imagen inválida').optional()
 })
 
 export const entryProductSchema = z.object({

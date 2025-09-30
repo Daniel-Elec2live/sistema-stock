@@ -124,37 +124,9 @@ export async function PATCH(
       .eq('id', orderId)
       .single()
 
-    console.log('🔍 IMMEDIATE VERIFICATION after update:', {
-      orderId,
-      expectedStatus: status,
-      actualStatus: verifyOrder?.status,
-      actualUpdated: verifyOrder?.updated_at,
-      verifyError: verifyError?.message,
-      updateWasSuccessful: !updateError,
-      verificationMatches: verifyOrder?.status === status
-    })
-
     if (verifyOrder?.status !== status) {
-      console.error('🚨 CRITICAL: Update appeared successful but verification failed!')
-      console.error('🚨 This indicates RLS policies or transaction rollback issues')
+      console.error('🚨 CRITICAL: Update verification failed - expected:', status, 'got:', verifyOrder?.status)
     }
-
-    // SIMULACIÓN: Ver qué devolverá el endpoint GET /api/orders inmediatamente después
-    const { data: simulateGetAll, error: simError } = await supabase
-      .from('orders')
-      .select('id, status, updated_at')
-      .order('created_at', { ascending: false })
-      .limit(10)
-
-    console.log('🎭 SIMULATION - What GET /api/orders will return RIGHT NOW:', JSON.stringify(
-      simulateGetAll?.map((o: any) => ({
-        id: o.id.slice(0, 8),
-        status: o.status,
-        updated_at: o.updated_at
-      }))
-    ))
-
-    console.log('✅ Order status update completed successfully')
 
     return NextResponse.json({
       success: true,
