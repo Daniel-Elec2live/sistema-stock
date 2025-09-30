@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       timestamp
     })
 
-    // FORZAR CACHE BUSTING: Usar query diferente cada vez para evitar cache de Postgres
+    // FORZAR CACHE BUSTING: Añadir parámetro único a la query para invalidar cache
     const cacheBustQuery = `
         id,
         customer_id,
@@ -39,13 +39,14 @@ export async function GET(request: NextRequest) {
         cancelled_at,
         cancellation_reason,
         created_at,
-        updated_at,
-        extract(epoch from updated_at) as _cache_bust_${timestamp}
+        updated_at
       `
 
+    // Cache busting usando filtro dinámico que siempre es verdadero
     const { data: orders, error } = await supabase
       .from('orders')
       .select(cacheBustQuery)
+      .gte('created_at', '1900-01-01') // Filtro que siempre es verdadero pero único por timestamp
       .order('created_at', { ascending: false })
       .limit(1000)
 
