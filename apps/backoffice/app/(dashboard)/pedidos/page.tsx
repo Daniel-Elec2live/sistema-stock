@@ -143,10 +143,15 @@ export default function PedidosPage() {
   }
 
   const updateOrderStatus = async (orderId: string, newStatus: 'confirmed' | 'prepared' | 'delivered') => {
+    const timestamp = Date.now()
+    const url = `/api/orders/${orderId}/status?_patch=${timestamp}&_r=${Math.random()}`
+
     console.log(`🔄 Frontend - Updating order ${orderId.slice(0, 8)} to status: ${newStatus}`)
+    console.log(`🔄 Frontend - PATCH URL: ${url}`)
+    console.log(`🔄 Frontend - Timestamp: ${timestamp}`)
 
     try {
-      const response = await fetch(`/api/orders/${orderId}/status?_patch=${Date.now()}&_r=${Math.random()}`, {
+      const response = await fetch(url, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -157,6 +162,9 @@ export default function PedidosPage() {
         },
         body: JSON.stringify({ status: newStatus })
       })
+
+      console.log(`📥 Frontend - Raw response status: ${response.status}`)
+      console.log(`📥 Frontend - Raw response ok: ${response.ok}`)
 
       const data = await response.json()
       console.log(`📥 Frontend - API Response for ${orderId.slice(0, 8)}:`, data)
@@ -172,6 +180,12 @@ export default function PedidosPage() {
         ))
 
         console.log(`✅ Frontend - Order ${orderId.slice(0, 8)} updated locally to ${newStatus}`)
+
+        // FORZAR REFRESH DE DATOS desde servidor para ver estado real
+        setTimeout(() => {
+          console.log('🔄 Frontend - Forcing data refresh from server...')
+          fetchOrders()
+        }, 1000)
 
       } else {
         console.error(`❌ Frontend - Error updating order ${orderId.slice(0, 8)}:`, data.error)
