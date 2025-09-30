@@ -154,10 +154,14 @@ export default function OrderDetailsPage() {
 
     setUpdating(true)
     try {
-      const response = await fetch(`/api/orders/${orderId}/status`, {
+      const response = await fetch(`/api/orders/${orderId}/status?_patch=${Date.now()}&_r=${Math.random()}`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'X-Timestamp': Date.now().toString()
         },
         body: JSON.stringify({ status: newStatus })
       })
