@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseClient } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export async function PATCH(
   request: NextRequest,

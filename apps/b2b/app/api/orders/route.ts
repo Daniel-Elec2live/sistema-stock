@@ -4,6 +4,9 @@ import { supabase } from '@/lib/supabase'
 import { verifyAuth } from '@/lib/auth'
 import { BackorderItem } from '@/lib/types'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 // Esquema de validación para crear pedido
 const CreateOrderSchema = z.object({
   items: z.array(z.object({
