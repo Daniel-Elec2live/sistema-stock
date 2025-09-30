@@ -58,10 +58,13 @@ export async function GET(request: NextRequest) {
     })
 
     // LOG EXTREMO: Ver TODOS los pedidos RAW de Supabase con status y updated_at
-    console.log('🔍🔍🔍 EXTREME DEBUG - ALL ORDERS RAW FROM SUPABASE:')
-    orders?.forEach((order: any) => {
-      console.log(`  ORDER ${order.id.slice(0, 8)}: status="${order.status}" updated_at="${order.updated_at}" created_at="${order.created_at}"`)
-    })
+    console.log('🔍🔍🔍 EXTREME DEBUG - ALL ORDERS RAW FROM SUPABASE:', JSON.stringify(
+      orders?.map((o: any) => ({
+        id: o.id.slice(0, 8),
+        status: o.status,
+        updated_at: o.updated_at
+      }))
+    ))
 
     if (error) {
       console.error('❌ Database error:', error)
