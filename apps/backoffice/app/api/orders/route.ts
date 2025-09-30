@@ -9,6 +9,13 @@ export async function GET(request: NextRequest) {
     const timestamp = Date.now()
     console.log(`🔍 Backoffice API - Fetching all orders [${timestamp}]`)
 
+    // Añadir headers anti-cache explícitos
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+
     const supabase = createSupabaseClient()
 
     console.log('🔧 Environment check:', {
@@ -38,13 +45,19 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .limit(1000)
 
-    console.log('📊 Raw orders from DB:', { count: orders?.length, error })
+    console.log('📊 Raw orders from DB:', {
+      count: orders?.length,
+      error,
+      firstOrderStatus: orders?.[0]?.status,
+      firstOrderId: orders?.[0]?.id?.slice(0, 8),
+      firstOrderCreated: orders?.[0]?.created_at
+    })
 
     if (error) {
       console.error('❌ Database error:', error)
       return NextResponse.json(
         { success: false, error: 'Error al obtener pedidos' },
-        { status: 500 }
+        { status: 500, headers }
       )
     }
 
@@ -53,7 +66,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         success: true,
         data: []
-      })
+      }, { headers })
     }
 
     // Obtener información de clientes y backorder items para cada pedido
@@ -103,13 +116,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: ordersWithDetails
-    })
+    }, { headers })
 
   } catch (error) {
     console.error('Backoffice Orders API Error:', error)
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
     return NextResponse.json(
       { success: false, error: 'Error interno del servidor' },
-      { status: 500 }
+      { status: 500, headers }
     )
   }
 }

@@ -239,12 +239,20 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (orderError) {
-      console.error('Error creating order:', orderError)
+      console.error('❌ B2B Error creating order:', orderError)
       return NextResponse.json(
         { success: false, error: 'Error al crear el pedido' },
         { status: 500 }
       )
     }
+
+    console.log('✅ B2B Order created successfully:', {
+      id: order.id.slice(0, 8),
+      customer_id: user.customer?.id?.slice(0, 8),
+      status: order.status,
+      total_amount: order.total_amount,
+      has_backorder: order.has_backorder
+    })
 
     // Crear items del pedido
     const { error: itemsError } = await supabase

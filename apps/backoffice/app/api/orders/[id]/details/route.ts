@@ -12,10 +12,17 @@ export async function GET(
     const resolvedParams = await params
     const orderId = resolvedParams.id
 
+    // Headers anti-cache
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+
     if (!orderId) {
       return NextResponse.json(
         { success: false, error: 'ID de pedido requerido' },
-        { status: 400 }
+        { status: 400, headers }
       )
     }
 
@@ -46,7 +53,7 @@ export async function GET(
       console.error('❌ Order not found:', orderError)
       return NextResponse.json(
         { success: false, error: 'Pedido no encontrado' },
-        { status: 404 }
+        { status: 404, headers }
       )
     }
 
@@ -108,13 +115,18 @@ export async function GET(
     return NextResponse.json({
       success: true,
       data: orderDetails
-    })
+    }, { headers })
 
   } catch (error) {
     console.error('Backoffice Order Details API Error:', error)
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
     return NextResponse.json(
       { success: false, error: 'Error interno del servidor' },
-      { status: 500 }
+      { status: 500, headers }
     )
   }
 }

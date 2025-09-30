@@ -12,20 +12,27 @@ export async function PATCH(
     const resolvedParams = await params
     const orderId = resolvedParams.id
 
+    // Headers anti-cache
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+
     const body = await request.json()
     const { status } = body
 
     if (!orderId) {
       return NextResponse.json(
         { success: false, error: 'ID de pedido requerido' },
-        { status: 400 }
+        { status: 400, headers }
       )
     }
 
     if (!status || !['pending', 'confirmed', 'prepared', 'delivered', 'cancelled'].includes(status)) {
       return NextResponse.json(
         { success: false, error: 'Estado de pedido inválido' },
-        { status: 400 }
+        { status: 400, headers }
       )
     }
 
@@ -46,7 +53,7 @@ export async function PATCH(
       console.error('❌ Order not found:', fetchError)
       return NextResponse.json(
         { success: false, error: 'Pedido no encontrado' },
-        { status: 404 }
+        { status: 404, headers }
       )
     }
 
@@ -78,7 +85,7 @@ export async function PATCH(
       console.error('❌ Update error:', updateError)
       return NextResponse.json(
         { success: false, error: 'Error al actualizar el pedido' },
-        { status: 500 }
+        { status: 500, headers }
       )
     }
 
@@ -124,13 +131,18 @@ export async function PATCH(
         new_status: status,
         updated_at: updateData.updated_at
       }
-    })
+    }, { headers })
 
   } catch (error) {
     console.error('Backoffice Order Status Update API Error:', error)
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
     return NextResponse.json(
       { success: false, error: 'Error interno del servidor' },
-      { status: 500 }
+      { status: 500, headers }
     )
   }
 }
