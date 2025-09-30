@@ -181,11 +181,12 @@ export default function PedidosPage() {
 
         console.log(`✅ Frontend - Order ${orderId.slice(0, 8)} updated locally to ${newStatus}`)
 
-        // FORZAR REFRESH DE DATOS desde servidor para ver estado real
+        // FORZAR REFRESH DE DATOS con DELAY para permitir replicación de Supabase
+        // Supabase usa read replicas con lag asíncrono - necesitamos esperar ~2s para consistencia
         setTimeout(() => {
-          console.log('🔄 Frontend - Forcing data refresh from server...')
+          console.log('🔄 Frontend - Forcing data refresh from server (after replication delay)...')
           fetchOrders()
-        }, 1000)
+        }, 2000)
 
       } else {
         console.error(`❌ Frontend - Error updating order ${orderId.slice(0, 8)}:`, data.error)
