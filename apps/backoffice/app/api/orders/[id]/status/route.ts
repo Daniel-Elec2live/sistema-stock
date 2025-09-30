@@ -40,7 +40,9 @@ export async function PATCH(
     console.log('🔄 Backoffice API - Updating order status:', {
       orderId,
       newStatus: status,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30) + '...'
     })
 
     // Verificar que el pedido existe
@@ -84,6 +86,12 @@ export async function PATCH(
 
     if (updateError) {
       console.error('❌ Update error:', updateError)
+      console.error('❌ Update error details:', {
+        message: updateError.message,
+        details: updateError.details,
+        hint: updateError.hint,
+        code: updateError.code
+      })
       return NextResponse.json(
         { success: false, error: 'Error al actualizar el pedido' },
         { status: 500, headers }
@@ -96,6 +104,28 @@ export async function PATCH(
       newStatus: status,
       actualUpdatedData: updatedOrder
     })
+
+    // VERIFICACIÓN INMEDIATA: Comprobar si el update realmente se persistió
+    const { data: verifyOrder, error: verifyError } = await supabase
+      .from('orders')
+      .select('id, status, updated_at')
+      .eq('id', orderId)
+      .single()
+
+    console.log('🔍 IMMEDIATE VERIFICATION after update:', {
+      orderId,
+      expectedStatus: status,
+      actualStatus: verifyOrder?.status,
+      actualUpdated: verifyOrder?.updated_at,
+      verifyError: verifyError?.message,
+      updateWasSuccessful: !updateError,
+      verificationMatches: verifyOrder?.status === status
+    })
+
+    if (verifyOrder?.status !== status) {
+      console.error('🚨 CRITICAL: Update appeared successful but verification failed!')
+      console.error('🚨 This indicates RLS policies or transaction rollback issues')
+    }
 
     console.log('✅ Order status update completed successfully')
 
