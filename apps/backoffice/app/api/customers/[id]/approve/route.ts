@@ -1,28 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
-// Cliente Supabase con service role - bypass RLS
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false
-    },
-    db: {
-      schema: 'public'
-    }
-  }
-)
+import { createSupabaseClient } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    // CRÍTICO: Crear cliente fresh en cada request, no reutilizar instancia global
+    const supabase = createSupabaseClient()
+
     console.log('[APPROVE] Iniciando solicitud para cliente:', params.id)
 
     const body = await request.json()
