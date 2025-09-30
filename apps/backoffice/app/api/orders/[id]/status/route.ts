@@ -96,32 +96,7 @@ export async function PATCH(
       actualUpdatedData: updatedOrder
     })
 
-    // Forzar flush de transacción con commit explícito
-    try {
-      // Ejecutar una consulta dummy para forzar commit de transacción
-      await supabase.from('orders').select('id').limit(1)
-      console.log('💾 Transaction flush completed')
-    } catch (flushError) {
-      console.warn('⚠️ Transaction flush warning:', flushError)
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 100)) // Delay más largo para BD
-
-    // Crear nuevo cliente para verificación independiente
-    const verifySupabase = createSupabaseClient()
-    const { data: verificationOrder, error: verifyError } = await verifySupabase
-      .from('orders')
-      .select('id, status, updated_at')
-      .eq('id', orderId)
-      .single()
-
-    console.log('🔍 VERIFICATION - Order status after update:', {
-      orderId,
-      verificationStatus: verificationOrder?.status,
-      verificationError: verifyError,
-      expectedStatus: status,
-      verificationTimestamp: new Date().toISOString()
-    })
+    console.log('✅ Order status update completed successfully')
 
     return NextResponse.json({
       success: true,

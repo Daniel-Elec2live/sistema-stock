@@ -160,63 +160,14 @@ export default function PedidosPage() {
       if (data.success) {
         console.log(`✅ Frontend - Successfully updated order ${orderId.slice(0, 8)} to ${newStatus}`)
 
-        // Actualizar el pedido localmente PRIMERO para UX inmediata
+        // Actualizar el estado local inmediatamente para UX
         setOrders(prev => prev.map(order =>
           order.id === orderId
             ? { ...order, status: newStatus, updated_at: new Date().toISOString() }
             : order
         ))
 
-        // Verificar persistencia con múltiples intentos para timing de BD
-        let verificationAttempt = 0
-        const maxAttempts = 3
-
-        const verifyPersistence = async () => {
-          verificationAttempt++
-          console.log(`🔄 Frontend - Verifying persistence for ${orderId.slice(0, 8)} (attempt ${verificationAttempt}/${maxAttempts})`)
-
-          try {
-            const verifyResponse = await fetch(`/api/orders?_verify=${Date.now()}`, {
-              headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache'
-              }
-            })
-            const verifyData = await verifyResponse.json()
-            if (verifyData.success) {
-              const verifiedOrder = verifyData.data.find((o: any) => o.id === orderId)
-              console.log(`🔍 Frontend - Current order state:`, {
-                orderId: orderId.slice(0, 8),
-                expected: newStatus,
-                actual: verifiedOrder?.status,
-                updated_at: verifiedOrder?.updated_at,
-                attempt: verificationAttempt,
-                cacheTimestamp: Date.now()
-              })
-
-              if (verifiedOrder?.status !== newStatus) {
-                if (verificationAttempt < maxAttempts) {
-                  console.log(`⏳ Persistence not ready, retrying in ${verificationAttempt * 1000}ms...`)
-                  setTimeout(verifyPersistence, verificationAttempt * 1000)
-                } else {
-                  console.warn(`⚠️ Persistence issue confirmed for ${orderId.slice(0, 8)} after ${maxAttempts} attempts`)
-                  console.warn(`Expected: ${newStatus}, Got: ${verifiedOrder?.status}`)
-                  // Refrescar solo después de múltiples fallos
-                  fetchOrders()
-                }
-              } else {
-                console.log(`✅ Persistence confirmed for ${orderId.slice(0, 8)}: ${verifiedOrder.status}`)
-              }
-            }
-          } catch (error) {
-            console.error(`❌ Error verifying persistence (attempt ${verificationAttempt}):`, error)
-            if (verificationAttempt < maxAttempts) {
-              setTimeout(verifyPersistence, 2000)
-            }
-          }
-        }
-
-        setTimeout(verifyPersistence, 1500) // Primer intento después de 1.5s
+        console.log(`✅ Frontend - Order ${orderId.slice(0, 8)} updated locally to ${newStatus}`)
 
       } else {
         console.error(`❌ Frontend - Error updating order ${orderId.slice(0, 8)}:`, data.error)
@@ -231,11 +182,11 @@ export default function PedidosPage() {
   useEffect(() => {
     fetchOrders()
 
-    // Polling automático cada 30 segundos para nuevos pedidos
+    // Polling automático cada 2 minutos para nuevos pedidos (menos agresivo)
     const interval = setInterval(() => {
       console.log('🔄 Auto-refresh: Checking for new orders...')
       fetchOrders()
-    }, 30000) // 30 segundos
+    }, 120000) // 2 minutos
 
     return () => clearInterval(interval)
   }, [])

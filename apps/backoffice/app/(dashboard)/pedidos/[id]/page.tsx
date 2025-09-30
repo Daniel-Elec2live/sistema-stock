@@ -171,28 +171,7 @@ export default function OrderDetailsPage() {
         // Actualizar estado local inmediatamente
         setOrder(prev => prev ? { ...prev, status: newStatus, updated_at: new Date().toISOString() } : null)
 
-        // Verificar persistencia después de un momento
-        setTimeout(async () => {
-          console.log(`🔄 Order Details - Verifying persistence...`)
-          try {
-            const verifyResponse = await fetch(`/api/orders/${orderId}/details?_verify=${Date.now()}`, {
-              headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache'
-              }
-            })
-            const verifyData = await verifyResponse.json()
-
-            if (verifyData.success && verifyData.data.status === newStatus) {
-              console.log(`✅ Order Details - Persistence confirmed: ${verifyData.data.status}`)
-            } else {
-              console.warn(`⚠️ Order Details - Persistence issue, refreshing...`)
-              fetchOrderDetails() // Refrescar si hay inconsistencia
-            }
-          } catch (error) {
-            console.error('Error verifying persistence:', error)
-          }
-        }, 2000)
+        console.log(`✅ Order Details - Status updated to ${newStatus}`)
 
       } else {
         console.error(`❌ Order Details - Update failed:`, data.error)
