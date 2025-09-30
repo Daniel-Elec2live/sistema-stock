@@ -327,6 +327,7 @@ function CustomerCard({
           {customer.is_approved ? (
             // Cliente aprobado - puede ser revocado
             <Button
+              type="button"
               size="sm"
               variant="outline"
               onClick={() => {
@@ -343,6 +344,7 @@ function CustomerCard({
           ) : customer.rejected_at ? (
             // Cliente rechazado - puede ser reactivado a pendiente
             <Button
+              type="button"
               size="sm"
               onClick={() => onApprove(true)}
               className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
@@ -355,6 +357,7 @@ function CustomerCard({
             // Cliente pendiente - puede ser aprobado o rechazado
             <>
               <Button
+                type="button"
                 size="sm"
                 onClick={() => onApprove(true)}
                 className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
@@ -364,6 +367,7 @@ function CustomerCard({
                 <span className="sm:hidden">Aprov.</span>
               </Button>
               <Button
+                type="button"
                 size="sm"
                 variant="outline"
                 onClick={() => {
