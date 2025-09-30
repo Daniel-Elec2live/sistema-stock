@@ -12,7 +12,8 @@
       "Bash(npm install)",
       "WebSearch",
       "Bash(git log:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Read(//c/Users/comer/Downloads/**)"
     ],
     "deny": [],
     "ask": []

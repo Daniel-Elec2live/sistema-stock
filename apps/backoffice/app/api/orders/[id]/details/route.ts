@@ -29,7 +29,7 @@ export async function GET(
 
     console.log('🔍 Backoffice API - Fetching order details for:', orderId)
 
-    // Obtener el pedido básico
+    // Obtener el pedido básico con cache-busting
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .select(`
@@ -48,6 +48,7 @@ export async function GET(
         updated_at
       `)
       .eq('id', orderId)
+      .gte('created_at', '2000-01-01') // Cache buster
       .single()
 
     if (orderError || !order) {

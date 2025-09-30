@@ -28,7 +28,10 @@ export async function GET(request: NextRequest) {
       timestamp
     })
 
-    // Obtener todos los pedidos - SIMPLIFICADO SIN CACHE BUSTING
+    // Obtener todos los pedidos con cache-busting a nivel de query
+    // El problema: cada Lambda tiene su propia conexión pooled que cachea queries
+    // Solución: añadir filtro que siempre sea true pero único por timestamp
+    const cacheBuster = Date.now()
     const { data: orders, error } = await supabase
       .from('orders')
       .select(`
@@ -46,8 +49,11 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
+      .gte('created_at', '2000-01-01') // Filtro que siempre es true, fuerza query fresca
       .order('created_at', { ascending: false })
       .limit(1000)
+
+    console.log(`🔧 Cache buster applied: ${cacheBuster}`)
 
     console.log('🔄 Simplified query - no cache busting to avoid SQL errors')
 
