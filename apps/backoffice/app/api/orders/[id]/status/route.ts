@@ -8,10 +8,20 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // LOG INMEDIATO - Confirmar que la request LLEGA al handler
+  console.log('🚀 [PATCH /api/orders/[id]/status] REQUEST RECEIVED:', {
+    timestamp: new Date().toISOString(),
+    url: request.url,
+    method: request.method,
+    headers: Object.fromEntries(request.headers.entries())
+  })
+
   try {
     const supabase = createSupabaseClient()
     const resolvedParams = await params
     const orderId = resolvedParams.id
+
+    console.log('🔑 [PATCH] Extracted orderId:', orderId)
 
     // Headers anti-cache
     const headers = {
@@ -22,6 +32,8 @@ export async function PATCH(
 
     const body = await request.json()
     const { status } = body
+
+    console.log('📦 [PATCH] Request body parsed:', { status, orderId })
 
     if (!orderId) {
       return NextResponse.json(
@@ -140,14 +152,22 @@ export async function PATCH(
     }, { headers })
 
   } catch (error) {
-    console.error('Backoffice Order Status Update API Error:', error)
+    console.error('🚨 [PATCH] CRITICAL ERROR in handler:', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    })
     const headers = {
       'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
       'Pragma': 'no-cache',
       'Expires': '0'
     }
     return NextResponse.json(
-      { success: false, error: 'Error interno del servidor' },
+      {
+        success: false,
+        error: 'Error interno del servidor',
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500, headers }
     )
   }
