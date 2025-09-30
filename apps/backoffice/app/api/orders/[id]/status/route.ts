@@ -139,6 +139,19 @@ export async function PATCH(
       console.error('🚨 This indicates RLS policies or transaction rollback issues')
     }
 
+    // SIMULACIÓN: Ver qué devolverá el endpoint GET /api/orders inmediatamente después
+    const { data: simulateGetAll, error: simError } = await supabase
+      .from('orders')
+      .select('id, status, updated_at')
+      .order('created_at', { ascending: false })
+      .limit(10)
+
+    console.log('🎭 SIMULATION - What GET /api/orders will return RIGHT NOW:')
+    simulateGetAll?.forEach((o: any) => {
+      console.log(`  ORDER ${o.id.slice(0, 8)}: status="${o.status}" updated_at="${o.updated_at}"`)
+    })
+    console.log('🎭 END SIMULATION')
+
     console.log('✅ Order status update completed successfully')
 
     return NextResponse.json({
