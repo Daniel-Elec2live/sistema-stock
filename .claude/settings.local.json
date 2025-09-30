@@ -13,7 +13,9 @@
       "WebSearch",
       "Bash(git log:*)",
       "Bash(python:*)",
-      "Read(//c/Users/comer/Downloads/**)"
+      "Read(//c/Users/comer/Downloads/**)",
+      "Bash(dir /b \"C:\\Users\\comer\\sistema-stock\\apps\\backoffice\\lib\")",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

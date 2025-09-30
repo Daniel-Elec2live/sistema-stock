@@ -80,9 +80,12 @@ export default function ClientesPage() {
   }
 
   const approveCustomer = async (customerId: string, approved: boolean) => {
+    console.log(`🎯 approveCustomer CALLED - Start of function`)
+    console.log(`🎯 Customer ID:`, customerId.slice(0, 8), `Approved:`, approved)
     console.log(`🔄 Frontend - ${approved ? 'Approving' : 'Revoking'} customer ${customerId.slice(0, 8)}`)
 
     try {
+      console.log(`🎯 Entering try block`)
       const requestBody = { approved }
       console.log(`📤 Frontend - Sending request:`, { customerId: customerId.slice(0, 8), ...requestBody })
 

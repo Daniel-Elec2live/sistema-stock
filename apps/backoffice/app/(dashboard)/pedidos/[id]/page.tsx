@@ -151,11 +151,20 @@ export default function OrderDetailsPage() {
   }
 
   const updateOrderStatus = async (newStatus: 'confirmed' | 'prepared' | 'delivered') => {
-    if (!order) return
+    console.log(`🎯 updateOrderStatus CALLED - Start of function`)
+    console.log(`🎯 Current updating state:`, updating)
+    console.log(`🎯 Order exists:`, !!order)
+
+    if (!order) {
+      console.log(`⛔ updateOrderStatus ABORTED - No order`)
+      return
+    }
 
     console.log(`🔄 Order Details - Updating ${orderId.slice(0, 8)} to ${newStatus}`)
+    console.log(`🎯 About to setUpdating(true)`)
 
     setUpdating(true)
+    console.log(`🎯 setUpdating(true) called`)
     try {
       const response = await fetch(`/api/orders/${orderId}/status?_patch=${Date.now()}&_r=${Math.random()}`, {
         method: 'PATCH',
