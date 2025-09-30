@@ -51,6 +51,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Eliminar trigger si existe y recrear (para que sea idempotente)
+DROP TRIGGER IF EXISTS trigger_update_paid_at ON orders;
+
 CREATE TRIGGER trigger_update_paid_at
   BEFORE UPDATE ON orders
   FOR EACH ROW
