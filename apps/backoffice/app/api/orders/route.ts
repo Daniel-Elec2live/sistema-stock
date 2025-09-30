@@ -50,19 +50,21 @@ export async function GET(request: NextRequest) {
       .limit(1000)
 
     // Forzar una segunda lectura para comparar consistencia (solo si hay orders válidas)
-    const firstThreeIds = (orders && !error) ? orders.slice(0,3).map(o => o.id) : []
-    const { data: ordersRecheck } = firstThreeIds.length > 0
-      ? await supabase
-          .from('orders')
-          .select('id, status, updated_at')
-          .in('id', firstThreeIds)
-      : { data: [] }
+    let ordersRecheck: any[] = []
+    if (orders && Array.isArray(orders) && !error && orders.length > 0) {
+      const firstThreeIds = orders.slice(0, 3).map(o => o.id)
+      const recheckResult = await supabase
+        .from('orders')
+        .select('id, status, updated_at')
+        .in('id', firstThreeIds)
+      ordersRecheck = recheckResult.data || []
+    }
 
     console.log('🔄 CONSISTENCY CHECK - Comparing first 3 orders:', {
       timestamp: new Date().toISOString(),
-      firstRead: (orders && !error) ? orders.slice(0,3).map(o => ({ id: o.id.slice(0,8), status: o.status, updated: o.updated_at })) : [],
-      secondRead: ordersRecheck?.map(o => ({ id: o.id.slice(0,8), status: o.status, updated: o.updated_at })) || [],
-      readsMatch: (orders && !error && ordersRecheck) ? JSON.stringify(orders.slice(0,3).map(o => o.status)) === JSON.stringify(ordersRecheck.map(o => o.status)) : null
+      firstRead: (orders && Array.isArray(orders)) ? orders.slice(0,3).map(o => ({ id: o.id.slice(0,8), status: o.status, updated: o.updated_at })) : [],
+      secondRead: ordersRecheck.map(o => ({ id: o.id.slice(0,8), status: o.status, updated: o.updated_at })),
+      readsMatch: (orders && Array.isArray(orders) && ordersRecheck.length > 0) ? JSON.stringify(orders.slice(0,3).map(o => o.status)) === JSON.stringify(ordersRecheck.map(o => o.status)) : null
     })
 
     console.log('📊 Raw orders from DB:', {
