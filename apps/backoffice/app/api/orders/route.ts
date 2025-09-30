@@ -49,11 +49,14 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .limit(1000)
 
-    // Forzar una segunda lectura para comparar consistencia
-    const { data: ordersRecheck } = await supabase
-      .from('orders')
-      .select('id, status, updated_at')
-      .in('id', orders?.slice(0,3).map(o => o.id) || [])
+    // Forzar una segunda lectura para comparar consistencia (solo si hay orders)
+    const firstThreeIds = orders?.slice(0,3).map(o => o.id) || []
+    const { data: ordersRecheck } = firstThreeIds.length > 0
+      ? await supabase
+          .from('orders')
+          .select('id, status, updated_at')
+          .in('id', firstThreeIds)
+      : { data: [] }
 
     console.log('🔄 CONSISTENCY CHECK - Comparing first 3 orders:', {
       timestamp: new Date().toISOString(),
