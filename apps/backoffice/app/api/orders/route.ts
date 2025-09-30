@@ -53,11 +53,9 @@ export async function GET(request: NextRequest) {
     console.log('🔄 CACHE BUSTING APPLIED - Query includes timestamp field for cache invalidation')
 
     console.log('📊 Raw orders from DB:', {
-      count: orders?.length,
-      error,
-      firstOrderStatus: orders?.[0]?.status,
-      firstOrderId: orders?.[0]?.id?.slice(0, 8),
-      firstOrderCreated: orders?.[0]?.created_at
+      count: orders?.length || 0,
+      hasError: !!error,
+      timestamp: new Date().toISOString()
     })
 
     if (error) {
@@ -86,7 +84,7 @@ export async function GET(request: NextRequest) {
           .eq('id', order.customer_id)
           .single()
 
-        console.log(`📋 Order ${order.id.slice(0, 8)}: customer=${customer?.name}, status=${order.status}`)
+        console.log(`📋 Processing order: ${order.id.slice(0, 8)}`)
 
         return {
           id: order.id,
