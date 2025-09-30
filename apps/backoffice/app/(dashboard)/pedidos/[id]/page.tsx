@@ -126,11 +126,14 @@ export default function OrderDetailsPage() {
   const fetchOrderDetails = async () => {
     setLoading(true)
     try {
-      // Cache busting para sincronización correcta
+      // CRÍTICO: cache: 'no-store' deshabilita el Router Cache de Next.js (lado cliente)
       const response = await fetch(`/api/orders/${orderId}/details?_t=${Date.now()}`, {
+        method: 'GET',
+        cache: 'no-store',
         headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
         }
       })
       const data = await response.json()
@@ -172,10 +175,14 @@ export default function OrderDetailsPage() {
       if (data.success) {
         console.log(`✅ Order Details - Update successful, refreshing details...`)
 
-        // Actualizar estado local inmediatamente
+        // Actualizar estado local inmediatamente para UX
         setOrder(prev => prev ? { ...prev, status: newStatus, updated_at: new Date().toISOString() } : null)
 
         console.log(`✅ Order Details - Status updated to ${newStatus}`)
+
+        // REFRESCAR DATOS desde el servidor para sincronización
+        console.log('🔄 Detail view - Fetching fresh data from server')
+        fetchOrderDetails()
 
       } else {
         console.error(`❌ Order Details - Update failed:`, data.error)

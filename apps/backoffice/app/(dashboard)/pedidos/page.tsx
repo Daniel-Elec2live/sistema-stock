@@ -105,11 +105,14 @@ export default function PedidosPage() {
   const fetchOrders = async () => {
     setLoading(true)
     try {
-      // Aplicar cache busting igual que en clientes
+      // CRÍTICO: cache: 'no-store' deshabilita el Router Cache de Next.js (lado cliente)
       const response = await fetch(`/api/orders?_t=${Date.now()}`, {
+        method: 'GET',
+        cache: 'no-store',
         headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
         }
       })
       const data = await response.json()
@@ -181,12 +184,10 @@ export default function PedidosPage() {
 
         console.log(`✅ Frontend - Order ${orderId.slice(0, 8)} updated locally to ${newStatus}`)
 
-        // FORZAR REFRESH DE DATOS con DELAY para permitir replicación de Supabase
-        // Supabase usa read replicas con lag asíncrono - necesitamos esperar ~2s para consistencia
-        setTimeout(() => {
-          console.log('🔄 Frontend - Forcing data refresh from server (after replication delay)...')
-          fetchOrders()
-        }, 2000)
+        // REFRESCAR DATOS desde el servidor - La verificación en el endpoint PATCH
+        // confirma que el update se persiste inmediatamente, no hay lag de replicación
+        console.log('🔄 List view - Fetching fresh data from server')
+        fetchOrders()
 
       } else {
         console.error(`❌ Frontend - Error updating order ${orderId.slice(0, 8)}:`, data.error)
