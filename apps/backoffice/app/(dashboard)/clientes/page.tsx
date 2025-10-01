@@ -102,50 +102,10 @@ export default function ClientesPage() {
       console.log(`📥 Frontend - Response data for ${customerId.slice(0, 8)}:`, data)
 
       if (response.ok && data.success) {
-        console.log(`✅ Frontend - Successfully ${approved ? 'approved' : 'revoked'} customer ${customerId.slice(0, 8)}`)
+        console.log(`✅ Frontend - ${approved ? 'Approved' : 'Revoked'} customer ${customerId.slice(0, 8)}`)
 
-        // Refrescar la lista inmediatamente
-        fetchCustomers()
-
-        // Verificar persistencia con cache busting
-        setTimeout(async () => {
-          console.log(`🔄 Frontend - Verifying customer ${customerId.slice(0, 8)} persistence (with cache bypass)...`)
-          try {
-            const verifyResponse = await fetch(`/api/customers?_verify=${Date.now()}`, {
-              headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache'
-              }
-            })
-            const verifyData = await verifyResponse.json()
-            if (verifyData.success) {
-              const verifiedCustomer = verifyData.customers.find((c: any) => c.id === customerId)
-              if (verifiedCustomer) {
-                const actualStatus = verifiedCustomer.is_approved
-                console.log(`🔍 Frontend - Full customer verification:`, {
-                  customerId: customerId.slice(0, 8),
-                  expected: approved,
-                  actual: actualStatus,
-                  rejectedAt: verifiedCustomer.rejected_at,
-                  updatedAt: verifiedCustomer.updated_at
-                })
-
-                if (actualStatus === approved) {
-                  console.log(`✅ Frontend - Persistence confirmed for ${customerId.slice(0, 8)}: is_approved=${actualStatus}`)
-                } else {
-                  console.warn(`⚠️ Frontend - Persistence issue for ${customerId.slice(0, 8)}: expected is_approved=${approved}, got ${actualStatus}`)
-                  console.log('🔄 Frontend - Refreshing customer list due to persistence issue...')
-                  fetchCustomers()
-                }
-              } else {
-                console.error(`❌ Frontend - Customer ${customerId.slice(0, 8)} not found in verification`)
-              }
-            }
-          } catch (error) {
-            console.error(`❌ Frontend - Error verifying customer ${customerId.slice(0, 8)}:`, error)
-          }
-        }, 2000) // Más tiempo para que se complete la transacción
-
+        // Actualizar lista inmediatamente - confiar en la respuesta del servidor
+        await fetchCustomers()
       } else {
         console.error(`❌ Frontend - Error updating customer ${customerId.slice(0, 8)}:`, data.error)
         alert(`Error: ${data.error}`)

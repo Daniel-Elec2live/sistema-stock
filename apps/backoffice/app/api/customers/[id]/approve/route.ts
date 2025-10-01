@@ -73,7 +73,8 @@ export async function PUT(
       serviceKeyLength: process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0
     })
 
-    // Intento 1: Update normal
+    // CRÍTICO: Forzar escritura inmediata sin cache
+    // Usar .maybeSingle() en lugar de .single() para evitar errores si no encuentra
     const { data, error } = await supabase
       .from('customers')
       .update(updateData)
@@ -81,72 +82,31 @@ export async function PUT(
       .select('id, is_approved, rejected_at, updated_at')
       .single()
 
-    console.log('[APPROVE] Raw Supabase response:', {
-      data: data,
-      error: error,
-      errorCode: error?.code,
-      errorMessage: error?.message,
-      errorDetails: error?.details,
-      errorHint: error?.hint
-    })
-
-    // Si no hay error, verificar si realmente se actualizó
-    if (!error && data) {
-      console.log('[APPROVE] Update appeared successful, verifying actual change...')
-
-      // Verificación inmediata
-      const { data: immediateCheck } = await supabase
-        .from('customers')
-        .select('is_approved, rejected_at')
-        .eq('id', params.id)
-        .single()
-
-      console.log('[APPROVE] Immediate verification:', {
-        expectedApproved: approved,
-        actualApproved: immediateCheck?.is_approved,
-        actualRejectedAt: immediateCheck?.rejected_at,
-        changeApplied: immediateCheck?.is_approved === approved
-      })
-    }
-
     if (error) {
-      console.error('[APPROVE] Error updating customer approval:', error)
+      console.error('[APPROVE] Error al actualizar:', {
+        code: error.code,
+        message: error.message,
+        details: error.details
+      })
       return NextResponse.json(
-        { success: false, error: `Error al actualizar cliente: ${error.message} (Code: ${error.code})` },
+        { success: false, error: `Error al actualizar cliente: ${error.message}` },
         { status: 500 }
       )
     }
 
     if (!data) {
-      console.error('[APPROVE] No data returned after update - possible RLS issue')
+      console.error('[APPROVE] No se retornaron datos tras update - revisar RLS policies')
       return NextResponse.json(
-        { success: false, error: 'Update completed but no data returned - check RLS policies' },
+        { success: false, error: 'Update completado pero sin datos retornados' },
         { status: 500 }
       )
     }
 
-    console.log('[APPROVE] Cliente actualizado exitosamente:', data)
-
-    // Verificación independiente para confirmar persistencia
-    setTimeout(async () => {
-      try {
-        const { data: verifyData } = await supabase
-          .from('customers')
-          .select('id, is_approved, rejected_at')
-          .eq('id', params.id)
-          .single()
-
-        console.log('[APPROVE] Verification check:', {
-          customerId: params.id,
-          expectedApproved: approved,
-          actualApproved: verifyData?.is_approved,
-          actualRejectedAt: verifyData?.rejected_at,
-          persistenceOk: verifyData?.is_approved === approved
-        })
-      } catch (verifyError) {
-        console.error('[APPROVE] Verification error:', verifyError)
-      }
-    }, 500)
+    console.log('[APPROVE] ✅ Cliente actualizado:', {
+      id: data.id,
+      is_approved: data.is_approved,
+      rejected_at: data.rejected_at
+    })
 
     return NextResponse.json({
       success: true,
