@@ -114,6 +114,7 @@ Si lo era 100% dejalo todo listo para produccion retocando todo lo que hemos mod
 **Falta añadir un margen del 20% al precio de forma generica a todos los productos que se compran, es decir, si se compra a 1€ se vende a 1,2€. La logica de la media ponderada se sigue aplicando, y a ese resultado ponderado le añadimos el margen del 20%.
 **En nuevos productos hay que añadir el campo opcional de añadir imagenes.
 **Hace falta añadir la opcion de marcar los pedidos como pagados o pendientes de pago.
+**Añadir notificaciones de confirmacion de pedido, actualizaciones del estado del pedido... Para el cliente y para el dueño del almacen.
 
 
 Luego despliega
@@ -204,63 +205,3 @@ Globpattern: "**/ProductForm.tsx"
 ⎿
 Found 1 file
 Session limit reached ∙ resets 10pm
-
-
-
-
-Logs:
-📋 Frontend - Orders received: 11
-page-2cb171628bf13a99.js:1 📊 Frontend - All order statuses: Array(11)
-page-2cb171628bf13a99.js:1 🔍 Frontend - Status distribution: Object
-page-2cb171628bf13a99.js:1 🔄 Frontend - Updating order 71996b03 to status: prepared
-page-2cb171628bf13a99.js:1 📥 Frontend - Response status: 200
-page-2cb171628bf13a99.js:1 ✅ Frontend - Successfully updated order 71996b03 to prepared
-page-2cb171628bf13a99.js:1 🔄 List view - Fetching fresh data from server
-page-2cb171628bf13a99.js:1 📋 Frontend - Orders received: 11
-page-2cb171628bf13a99.js:1 📊 Frontend - All order statuses: Array(11)
-page-2cb171628bf13a99.js:1 🔍 Frontend - Status distribution: Object
-page-2cb171628bf13a99.js:1 🔄 Frontend - Updating order fd52d1ac to status: prepared
-page-2cb171628bf13a99.js:1 📥 Frontend - Response status: 200
-page-2cb171628bf13a99.js:1 ✅ Frontend - Successfully updated order fd52d1ac to prepared
-page-2cb171628bf13a99.js:1 🔄 List view - Fetching fresh data from server
-page-2cb171628bf13a99.js:1 📋 Frontend - Orders received: 11
-page-2cb171628bf13a99.js:1 📊 Frontend - All order statuses: Array(11)
-page-2cb171628bf13a99.js:1 🔍 Frontend - Status distribution: Object
-page-0dbff5536144def6.js:1 🎯 updateOrderStatus CALLED - Start of function
-page-0dbff5536144def6.js:1 🎯 Current updating state: false
-page-0dbff5536144def6.js:1 🎯 Order exists: true
-page-0dbff5536144def6.js:1 🔄 Order Details - Updating 71996b03 to delivered
-page-0dbff5536144def6.js:1 🎯 About to setUpdating(true)
-page-0dbff5536144def6.js:1 🎯 setUpdating(true) called
-page-0dbff5536144def6.js:1 📥 Order Details - API Response: Object
-page-0dbff5536144def6.js:1 ✅ Order Details - Update successful, refreshing details...
-page-0dbff5536144def6.js:1 ✅ Order Details - Status updated to delivered
-page-0dbff5536144def6.js:1 🔄 Detail view - Fetching fresh data from server
-page-0dbff5536144def6.js:1 🎯 updateOrderStatus CALLED - Start of function
-page-0dbff5536144def6.js:1 🎯 Current updating state: false
-page-0dbff5536144def6.js:1 🎯 Order exists: true
-page-0dbff5536144def6.js:1 🔄 Order Details - Updating 71996b03 to delivered
-page-0dbff5536144def6.js:1 🎯 About to setUpdating(true)
-page-0dbff5536144def6.js:1 🎯 setUpdating(true) called
-page-0dbff5536144def6.js:1 📥 Order Details - API Response: Object
-page-0dbff5536144def6.js:1 ✅ Order Details - Update successful, refreshing details...
-page-0dbff5536144def6.js:1 ✅ Order Details - Status updated to delivered
-page-0dbff5536144def6.js:1 🔄 Detail view - Fetching fresh data from server
-page-2cb171628bf13a99.js:1 📋 Frontend - Orders received: 11
-page-2cb171628bf13a99.js:1 📊 Frontend - All order statuses: Array(11)
-page-2cb171628bf13a99.js:1 🔍 Frontend - Status distribution: Object
-page-4f5f705f7151ccd0.js:1 🎯 approveCustomer CALLED - Start of function
-page-4f5f705f7151ccd0.js:1 🎯 Customer ID: 8da08d35 Approved: true
-page-4f5f705f7151ccd0.js:1 📤 Frontend - Sending request: Object
-page-4f5f705f7151ccd0.js:1 📥 Frontend - Response status: 200
-page-4f5f705f7151ccd0.js:1 ✅ Frontend - Approved customer 8da08d35
-page-4f5f705f7151ccd0.js:1 🎯 approveCustomer CALLED - Start of function
-page-4f5f705f7151ccd0.js:1 🎯 Customer ID: 1249c29e Approved: true
-page-4f5f705f7151ccd0.js:1 📤 Frontend - Sending request: Object
-page-4f5f705f7151ccd0.js:1 📥 Frontend - Response status: 200
-page-4f5f705f7151ccd0.js:1 ✅ Frontend - Approved customer 1249c29e
-page-4f5f705f7151ccd0.js:1 🎯 approveCustomer CALLED - Start of function
-page-4f5f705f7151ccd0.js:1 🎯 Customer ID: 990e8400 Approved: false
-page-4f5f705f7151ccd0.js:1 📤 Frontend - Sending request: Object
-page-4f5f705f7151ccd0.js:1 📥 Frontend - Response status: 200
-page-4f5f705f7151ccd0.js:1 ✅ Frontend - Revoked customer 990e8400
