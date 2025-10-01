@@ -16,13 +16,16 @@ export function AuthGuard({ children, requireApproval = false }: AuthGuardProps)
   const router = useRouter()
 
   useEffect(() => {
+    console.log('🛡️ AuthGuard - loading:', loading, 'user:', user ? 'exists' : 'null')
     if (!loading && !user) {
+      console.log('🔄 AuthGuard - Redirigiendo a /login')
       router.push('/login')
     }
   }, [user, loading, router])
 
   // Mostrar spinner mientras carga
   if (loading) {
+    console.log('⏳ AuthGuard - Loading state (showing spinner)')
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -35,11 +38,15 @@ export function AuthGuard({ children, requireApproval = false }: AuthGuardProps)
 
   // Redirigir si no está autenticado
   if (!user) {
+    console.log('❌ AuthGuard - No user, returning null')
     return null // El useEffect se encarga de la redirección
   }
 
+  console.log('✅ AuthGuard - User authenticated:', { email: user.email, isApproved: user.customer?.is_approved })
+
   // Verificar aprobación del cliente si es requerida
   if (requireApproval && user.customer && !user.customer.is_approved) {
+    console.log('⏸️ AuthGuard - User not approved, showing pending screen')
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
@@ -110,6 +117,7 @@ export function AuthGuard({ children, requireApproval = false }: AuthGuardProps)
   }
 
   // Usuario autenticado y aprobado (o no se requiere aprobación)
+  console.log('✅ AuthGuard - Rendering children (user approved or no approval required)')
   return <>{children}</>
 }
 

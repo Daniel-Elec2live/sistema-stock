@@ -19,13 +19,17 @@ export function useProducts(filters?: ProductFilters): UseProductsReturn {
   const { token } = useAuth()
 
   const fetchProducts = useCallback(async () => {
+    console.log('🔍 useProducts - fetchProducts called, token:', token ? 'exists' : 'null')
+
     if (!token) {
+      console.log('❌ useProducts - No token, setting error')
       setError('No hay token de autenticación')
       setLoading(false)
       return
     }
 
     try {
+      console.log('⏳ useProducts - Starting fetch...')
       setLoading(true)
       setError(null)
 
@@ -41,7 +45,8 @@ export function useProducts(filters?: ProductFilters): UseProductsReturn {
       if (filters?.orden) params.append('orden', filters.orden)
 
       const url = `/api/stock${params.toString() ? `?${params.toString()}` : ''}`
-      
+      console.log('📡 useProducts - Fetching:', url)
+
       const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -49,13 +54,17 @@ export function useProducts(filters?: ProductFilters): UseProductsReturn {
         }
       })
 
+      console.log('📥 useProducts - Response status:', response.status, response.ok ? 'OK' : 'ERROR')
+
       if (!response.ok) {
         const errorData = await response.json()
+        console.log('❌ useProducts - Error response:', errorData)
         throw new Error(errorData.error || 'Error al cargar productos')
       }
 
       const data = await response.json()
-      
+      console.log('✅ useProducts - Data received:', { success: data.success, productsCount: data.data?.length || 0 })
+
       if (data.success) {
         setProducts(data.data)
       } else {
@@ -63,10 +72,11 @@ export function useProducts(filters?: ProductFilters): UseProductsReturn {
       }
 
     } catch (err) {
-      console.error('Error fetching products:', err)
+      console.error('❌ useProducts - Error fetching products:', err)
       setError(err instanceof Error ? err.message : 'Error al cargar productos')
     } finally {
       setLoading(false)
+      console.log('✅ useProducts - Fetch completed')
     }
   }, [token, filters])
 
