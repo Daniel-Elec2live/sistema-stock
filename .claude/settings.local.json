@@ -20,7 +20,8 @@
       "Bash(npm install:*)",
       "Bash(dir /b \"C:\\Users\\comer\\sistema-stock\\apps\\backoffice\\app\\api\\customers\")",
       "Bash(dir /b \"C:\\Users\\comer\\sistema-stock\\apps\\backoffice\\app\\api\\orders\")",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(tail:*)"
     ],
     "deny": [],
     "ask": []

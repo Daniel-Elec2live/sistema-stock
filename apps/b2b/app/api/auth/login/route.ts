@@ -45,13 +45,18 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    console.log('👤 User found:', { id: user.id, email: user.email, hasCustomers: user.customers?.length || 0 })
+    console.log('👤 User found:', {
+      id: user.id,
+      email: user.email,
+      hasCustomers: user.customers?.length || 0,
+      customersData: user.customers
+    })
 
     // Verificar contraseña
     console.log('🔐 Verifying password...')
     const isValidPassword = await bcrypt.compare(password, user.password_hash)
     console.log('🔐 Password valid:', isValidPassword)
-    
+
     if (!isValidPassword) {
       console.log('❌ Invalid password')
       return NextResponse.json(
@@ -61,14 +66,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar que el usuario tenga un perfil de cliente
-    if (!user.customers || user.customers.length === 0) {
+    console.log('🔍 Checking customers data:', {
+      isArray: Array.isArray(user.customers),
+      type: typeof user.customers,
+      value: user.customers
+    })
+
+    if (!user.customers || !Array.isArray(user.customers) || user.customers.length === 0) {
+      console.log('❌ No customer profile found for user')
       return NextResponse.json(
-        { success: false, error: 'Perfil de cliente no encontrado' },
+        { success: false, error: 'Perfil de cliente no encontrado. Por favor contacta al administrador.' },
         { status: 403 }
       )
     }
 
     const customer = user.customers[0]
+    console.log('✅ Customer profile found:', { id: customer?.id, name: customer?.name })
 
     // Generar JWT token
     const jwtSecret = process.env.JWT_SECRET
