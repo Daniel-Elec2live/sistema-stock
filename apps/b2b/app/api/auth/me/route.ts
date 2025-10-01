@@ -3,9 +3,14 @@ import { verifyAuth } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('🔍 /api/auth/me - Verifying auth from HTTP-only cookie...')
+
     const authResult = await verifyAuth(request)
-    
+
+    console.log('🔐 /api/auth/me - Auth result:', authResult.success ? 'Valid' : 'Invalid')
+
     if (!authResult.success || !authResult.user) {
+      console.log('❌ /api/auth/me - No valid session')
       return NextResponse.json(
         { success: false, error: authResult.error ?? 'Sesión no válida' },
         { status: 401 }
@@ -13,6 +18,11 @@ export async function GET(request: NextRequest) {
     }
 
     const user = authResult.user
+
+    // Obtener token de la cookie para devolverlo al cliente
+    const token = request.cookies.get('auth_token')?.value
+
+    console.log('✅ /api/auth/me - Returning user:', { email: user.email, hasToken: !!token })
 
     return NextResponse.json({
       success: true,
@@ -30,7 +40,8 @@ export async function GET(request: NextRequest) {
             created_at: user.customer.created_at,
             updated_at: user.customer.updated_at
           } : null
-        }
+        },
+        token: token // Devolver token para uso en otros endpoints desde cliente
       }
     })
 

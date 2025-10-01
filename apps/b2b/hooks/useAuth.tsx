@@ -32,61 +32,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null)
   const router = useRouter()
 
-  // Cargar token y usuario desde localStorage/cookies al iniciar
+  // Cargar usuario desde cookie HTTP-only al iniciar
   useEffect(() => {
-    let savedToken = localStorage.getItem('auth_token')
-
-    // Si no hay token en localStorage, intentar obtenerlo de las cookies
-    if (!savedToken) {
-      const cookies = document.cookie.split(';')
-      const authCookie = cookies.find(cookie => cookie.trim().startsWith('auth_token='))
-      if (authCookie) {
-        savedToken = authCookie.split('=')[1]
-        // Sincronizar a localStorage para futuras sesiones
-        localStorage.setItem('auth_token', savedToken)
-      }
-    }
-
-    if (savedToken) {
-      setToken(savedToken)
-      fetchUser(savedToken)
-    } else {
-      setLoading(false)
-    }
+    console.log('🔄 useAuth - Initial load, fetching user from HTTP-only cookie...')
+    fetchUser()
   }, [])
 
-  const fetchUser = async (authToken: string) => {
+  const fetchUser = async () => {
     try {
+      console.log('📡 useAuth - Calling /api/auth/me (cookie enviada automáticamente)')
+
+      // La cookie HTTP-only se envía automáticamente con el request
+      // NO necesitamos leerla desde JavaScript ni pasarla en headers
       const response = await fetch('/api/auth/me', {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json'
-        }
+        },
+        credentials: 'include' // Importante: incluir cookies en el request
       })
+
+      console.log('📥 useAuth - /api/auth/me response:', response.status, response.ok ? 'OK' : 'ERROR')
 
       if (response.ok) {
         const data = await response.json()
+        console.log('✅ useAuth - User data received:', data.success ? 'success' : 'failed')
+
         if (data.success) {
           setUser(data.data.user)
+          // Guardar token en localStorage solo para uso en otros endpoints
+          // (la autenticación real viene de la cookie HTTP-only)
+          if (data.data.token) {
+            localStorage.setItem('auth_token', data.data.token)
+            setToken(data.data.token)
+          }
         } else {
-          // Token inválido
-          localStorage.removeItem('auth_token')
-          document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+          console.log('❌ useAuth - Session invalid')
           setToken(null)
+          setUser(null)
         }
       } else {
-        // Error de servidor o token inválido
-        localStorage.removeItem('auth_token')
-        document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        console.log('❌ useAuth - No valid session (no cookie or expired)')
         setToken(null)
+        setUser(null)
       }
     } catch (error) {
-      console.error('Error fetching user:', error)
-      localStorage.removeItem('auth_token')
-      document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      console.error('❌ useAuth - Error fetching user:', error)
       setToken(null)
+      setUser(null)
     } finally {
       setLoading(false)
+      console.log('✅ useAuth - Initial load completed')
     }
   }
 
@@ -162,18 +157,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem('auth_token')
-    // Limpiar cookie también
-    document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    // Nota: No podemos limpiar cookie HTTP-only desde JavaScript
+    // El servidor debe tener un endpoint /api/auth/logout para invalidarla
     setToken(null)
     setUser(null)
     router.push('/login')
   }, [router])
 
   const refreshUser = useCallback(async () => {
-    if (token) {
-      await fetchUser(token)
-    }
-  }, [token])
+    await fetchUser()
+  }, [])
 
   const value: AuthContextType = {
     user,
