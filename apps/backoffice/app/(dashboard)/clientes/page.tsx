@@ -36,6 +36,7 @@ export default function ClientesPage() {
   const [allCustomers, setAllCustomers] = useState<Customer[]>([]) // Para contadores
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all')
+  const [processingCustomerId, setProcessingCustomerId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchCustomers(true) // Initial load - show spinner
@@ -83,26 +84,30 @@ export default function ClientesPage() {
   }
 
   const approveCustomer = async (customerId: string, approved: boolean) => {
+    // Prevenir múltiples ejecuciones simultáneas
+    if (processingCustomerId === customerId) {
+      console.log(`⚠️ Already processing customer ${customerId.slice(0, 8)} - ignoring duplicate call`)
+      return
+    }
+
     console.log(`🎯 approveCustomer CALLED - Start of function`)
     console.log(`🎯 Customer ID:`, customerId.slice(0, 8), `Approved:`, approved)
-    console.log(`🔄 Frontend - ${approved ? 'Approving' : 'Revoking'} customer ${customerId.slice(0, 8)}`)
+
+    setProcessingCustomerId(customerId)
 
     try {
-      console.log(`🎯 Entering try block`)
-      const requestBody = { approved }
-      console.log(`📤 Frontend - Sending request:`, { customerId: customerId.slice(0, 8), ...requestBody })
+      console.log(`📤 Frontend - Sending request:`, { customerId: customerId.slice(0, 8), approved })
 
       const response = await fetch(`/api/customers/${customerId}/approve`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({ approved }),
       })
 
       console.log(`📥 Frontend - Response status: ${response.status}`)
       const data = await response.json()
-      console.log(`📥 Frontend - Response data for ${customerId.slice(0, 8)}:`, data)
 
       if (response.ok && data.success) {
         console.log(`✅ Frontend - ${approved ? 'Approved' : 'Revoked'} customer ${customerId.slice(0, 8)}`)
@@ -113,12 +118,14 @@ export default function ClientesPage() {
         // Actualizar lista - ahora el servidor debería tener el cambio propagado
         await fetchCustomers()
       } else {
-        console.error(`❌ Frontend - Error updating customer ${customerId.slice(0, 8)}:`, data.error)
+        console.error(`❌ Frontend - Error updating customer:`, data.error)
         alert(`Error: ${data.error}`)
       }
     } catch (error) {
-      console.error(`❌ Frontend - Network error for customer ${customerId.slice(0, 8)}:`, error)
+      console.error(`❌ Frontend - Network error:`, error)
       alert('Error de conexión. Inténtalo de nuevo.')
+    } finally {
+      setProcessingCustomerId(null)
     }
   }
 
@@ -222,6 +229,7 @@ export default function ClientesPage() {
                   key={customer.id}
                   customer={customer}
                   onApprove={(approved) => approveCustomer(customer.id, approved)}
+                  isProcessing={processingCustomerId === customer.id}
                 />
               ))}
             </div>
@@ -234,10 +242,12 @@ export default function ClientesPage() {
 
 function CustomerCard({
   customer,
-  onApprove
+  onApprove,
+  isProcessing
 }: {
   customer: Customer
   onApprove: (approved: boolean) => void
+  isProcessing: boolean
 }) {
   return (
     <Card className="p-4 sm:p-6">
@@ -304,11 +314,16 @@ function CustomerCard({
                   onApprove(false)
                 }
               }}
-              className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50"
+              disabled={isProcessing}
+              className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <X className="h-4 w-4 mr-1" />
-              <span className="hidden sm:inline">Revocar</span>
-              <span className="sm:hidden">Revoc.</span>
+              {isProcessing ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600 mr-1"></div>
+              ) : (
+                <X className="h-4 w-4 mr-1" />
+              )}
+              <span className="hidden sm:inline">{isProcessing ? 'Procesando...' : 'Revocar'}</span>
+              <span className="sm:hidden">{isProcessing ? '...' : 'Revoc.'}</span>
             </Button>
           ) : customer.rejected_at ? (
             // Cliente rechazado - puede ser reactivado a pendiente
@@ -316,11 +331,16 @@ function CustomerCard({
               type="button"
               size="sm"
               onClick={() => onApprove(true)}
-              className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
+              disabled={isProcessing}
+              className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Check className="h-4 w-4 mr-1" />
-              <span className="hidden sm:inline">Reactivar</span>
-              <span className="sm:hidden">React.</span>
+              {isProcessing ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-1"></div>
+              ) : (
+                <Check className="h-4 w-4 mr-1" />
+              )}
+              <span className="hidden sm:inline">{isProcessing ? 'Procesando...' : 'Reactivar'}</span>
+              <span className="sm:hidden">{isProcessing ? '...' : 'React.'}</span>
             </Button>
           ) : (
             // Cliente pendiente - puede ser aprobado o rechazado
@@ -329,11 +349,16 @@ function CustomerCard({
                 type="button"
                 size="sm"
                 onClick={() => onApprove(true)}
-                className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
+                disabled={isProcessing}
+                className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Check className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Aprobar</span>
-                <span className="sm:hidden">Aprov.</span>
+                {isProcessing ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-1"></div>
+                ) : (
+                  <Check className="h-4 w-4 mr-1" />
+                )}
+                <span className="hidden sm:inline">{isProcessing ? 'Procesando...' : 'Aprobar'}</span>
+                <span className="sm:hidden">{isProcessing ? '...' : 'Aprov.'}</span>
               </Button>
               <Button
                 type="button"
@@ -344,11 +369,16 @@ function CustomerCard({
                     onApprove(false)
                   }
                 }}
-                className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50"
+                disabled={isProcessing}
+                className="flex-1 sm:flex-none text-red-600 border-red-200 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <X className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Rechazar</span>
-                <span className="sm:hidden">Rech.</span>
+                {isProcessing ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600 mr-1"></div>
+                ) : (
+                  <X className="h-4 w-4 mr-1" />
+                )}
+                <span className="hidden sm:inline">{isProcessing ? 'Procesando...' : 'Rechazar'}</span>
+                <span className="sm:hidden">{isProcessing ? '...' : 'Rech.'}</span>
               </Button>
             </>
           )}

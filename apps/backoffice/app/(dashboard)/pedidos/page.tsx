@@ -84,6 +84,7 @@ export default function PedidosPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [processingOrderId, setProcessingOrderId] = useState<string | null>(null)
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-ES', {
@@ -151,31 +152,29 @@ export default function PedidosPage() {
   }
 
   const updateOrderStatus = async (orderId: string, newStatus: 'confirmed' | 'prepared' | 'delivered') => {
-    const timestamp = Date.now()
-    const url = `/api/orders/${orderId}/status?_patch=${timestamp}&_r=${Math.random()}`
+    // Prevenir múltiples ejecuciones simultáneas
+    if (processingOrderId === orderId) {
+      console.log(`⚠️ Already processing order ${orderId.slice(0, 8)} - ignoring duplicate call`)
+      return
+    }
 
     console.log(`🔄 Frontend - Updating order ${orderId.slice(0, 8)} to status: ${newStatus}`)
-    console.log(`🔄 Frontend - PATCH URL: ${url}`)
-    console.log(`🔄 Frontend - Timestamp: ${timestamp}`)
+    setProcessingOrderId(orderId)
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(`/api/orders/${orderId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
           'Pragma': 'no-cache',
-          'Expires': '0',
-          'X-Timestamp': Date.now().toString()
+          'Expires': '0'
         },
         body: JSON.stringify({ status: newStatus })
       })
 
-      console.log(`📥 Frontend - Raw response status: ${response.status}`)
-      console.log(`📥 Frontend - Raw response ok: ${response.ok}`)
-
+      console.log(`📥 Frontend - Response status: ${response.status}`)
       const data = await response.json()
-      console.log(`📥 Frontend - API Response for ${orderId.slice(0, 8)}:`, data)
 
       if (data.success) {
         console.log(`✅ Frontend - Successfully updated order ${orderId.slice(0, 8)} to ${newStatus}`)
@@ -187,22 +186,21 @@ export default function PedidosPage() {
             : order
         ))
 
-        console.log(`✅ Frontend - Order ${orderId.slice(0, 8)} updated locally to ${newStatus}`)
-
         // Esperar 300ms para asegurar que el servidor propagó el cambio
-        // Esto da tiempo a que el RETURNING clause se propague en Supabase
         await new Promise(resolve => setTimeout(resolve, 300))
 
         console.log('🔄 List view - Fetching fresh data from server')
         fetchOrders()
 
       } else {
-        console.error(`❌ Frontend - Error updating order ${orderId.slice(0, 8)}:`, data.error)
+        console.error(`❌ Frontend - Error updating order:`, data.error)
         alert(`Error al actualizar el estado del pedido: ${data.error}`)
       }
     } catch (error) {
-      console.error(`❌ Frontend - Network error updating order ${orderId.slice(0, 8)}:`, error)
+      console.error(`❌ Frontend - Network error:`, error)
       alert('Error de conexión al actualizar el estado del pedido')
+    } finally {
+      setProcessingOrderId(null)
     }
   }
 
@@ -497,10 +495,15 @@ export default function PedidosPage() {
                       <Button
                         size="sm"
                         onClick={() => updateOrderStatus(order.id, 'confirmed')}
-                        className="bg-orange-600 hover:bg-orange-700 min-h-[44px] sm:min-h-[36px]"
+                        disabled={processingOrderId === order.id}
+                        className="bg-orange-600 hover:bg-orange-700 min-h-[44px] sm:min-h-[36px] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        Confirmar Pedido
+                        {processingOrderId === order.id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        ) : (
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                        )}
+                        {processingOrderId === order.id ? 'Procesando...' : 'Confirmar Pedido'}
                       </Button>
                     )}
 
@@ -508,10 +511,15 @@ export default function PedidosPage() {
                       <Button
                         size="sm"
                         onClick={() => updateOrderStatus(order.id, 'prepared')}
-                        className="bg-blue-600 hover:bg-blue-700 min-h-[44px] sm:min-h-[36px]"
+                        disabled={processingOrderId === order.id}
+                        className="bg-blue-600 hover:bg-blue-700 min-h-[44px] sm:min-h-[36px] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Package className="w-4 h-4 mr-2" />
-                        Marcar como Preparado
+                        {processingOrderId === order.id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        ) : (
+                          <Package className="w-4 h-4 mr-2" />
+                        )}
+                        {processingOrderId === order.id ? 'Procesando...' : 'Marcar como Preparado'}
                       </Button>
                     )}
 
@@ -519,10 +527,15 @@ export default function PedidosPage() {
                       <Button
                         size="sm"
                         onClick={() => updateOrderStatus(order.id, 'delivered')}
-                        className="bg-green-600 hover:bg-green-700 min-h-[44px] sm:min-h-[36px]"
+                        disabled={processingOrderId === order.id}
+                        className="bg-green-600 hover:bg-green-700 min-h-[44px] sm:min-h-[36px] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Truck className="w-4 h-4 mr-2" />
-                        Marcar como Entregado
+                        {processingOrderId === order.id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        ) : (
+                          <Truck className="w-4 h-4 mr-2" />
+                        )}
+                        {processingOrderId === order.id ? 'Procesando...' : 'Marcar como Entregado'}
                       </Button>
                     )}
 
