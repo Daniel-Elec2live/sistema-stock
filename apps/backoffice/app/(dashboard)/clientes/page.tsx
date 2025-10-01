@@ -107,7 +107,10 @@ export default function ClientesPage() {
       if (response.ok && data.success) {
         console.log(`✅ Frontend - ${approved ? 'Approved' : 'Revoked'} customer ${customerId.slice(0, 8)}`)
 
-        // Actualizar lista inmediatamente - confiar en la respuesta del servidor
+        // Esperar 300ms para asegurar propagación del cambio en Supabase
+        await new Promise(resolve => setTimeout(resolve, 300))
+
+        // Actualizar lista - ahora el servidor debería tener el cambio propagado
         await fetchCustomers()
       } else {
         console.error(`❌ Frontend - Error updating customer ${customerId.slice(0, 8)}:`, data.error)

@@ -189,8 +189,10 @@ export default function PedidosPage() {
 
         console.log(`✅ Frontend - Order ${orderId.slice(0, 8)} updated locally to ${newStatus}`)
 
-        // REFRESCAR DATOS desde el servidor - La verificación en el endpoint PATCH
-        // confirma que el update se persiste inmediatamente, no hay lag de replicación
+        // Esperar 300ms para asegurar que el servidor propagó el cambio
+        // Esto da tiempo a que el RETURNING clause se propague en Supabase
+        await new Promise(resolve => setTimeout(resolve, 300))
+
         console.log('🔄 List view - Fetching fresh data from server')
         fetchOrders()
 
