@@ -6,6 +6,10 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
+    // 🚨 DEBUG: Verificar qué Supabase URL está usando
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+    console.log(`🔍 CUSTOMERS API - Supabase URL: ${supabaseUrl}`)
+
     const supabase = createSupabaseClient()
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') // 'pending', 'approved', 'all'
@@ -37,11 +41,19 @@ export async function GET(request: NextRequest) {
     const { data: customers, error } = await query
 
     if (error) {
-      console.error('Error fetching customers:', error)
+      console.error('❌ Error fetching customers:', error)
       return NextResponse.json(
         { success: false, error: 'Error al obtener clientes' },
         { status: 500 }
       )
+    }
+
+    // 🚨 DEBUG: Verificar resultados
+    if (!customers || customers.length === 0) {
+      console.log('📋 No customers found in database - returning empty array')
+      console.log(`🚨 DEBUG: Is this expected? Check if Supabase URL matches: ${supabaseUrl}`)
+    } else {
+      console.log(`👥 Found ${customers.length} customers. First 3 IDs:`, customers.slice(0, 3).map(c => c.id.slice(0, 8)))
     }
 
     return NextResponse.json({

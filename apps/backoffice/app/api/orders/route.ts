@@ -8,7 +8,11 @@ export async function GET(request: NextRequest) {
   try {
     // Cache bust - añadir timestamp para forzar lectura fresca
     const timestamp = Date.now()
-    console.log(`🔍 Backoffice API - Fetching all orders [${timestamp}]`)
+
+    // 🚨 DEBUG: Verificar qué Supabase URL está usando
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+    console.log(`🔍 ORDERS API - Supabase URL: ${supabaseUrl}`)
+    console.log(`🔍 ORDERS API - Fetching all orders [${timestamp}]`)
 
     // Headers anti-cache AGRESIVOS para resolver problemas de estados
     const headers = {
@@ -58,12 +62,16 @@ export async function GET(request: NextRequest) {
     }
 
     if (!orders || !Array.isArray(orders) || orders.length === 0) {
-      console.log('📋 No orders found in database')
+      console.log('📋 No orders found in database - returning empty array')
+      console.log(`🚨 DEBUG: Is this expected? Check if Supabase URL matches: ${supabaseUrl}`)
       return NextResponse.json({
         success: true,
         data: []
       }, { headers })
     }
+
+    // 🚨 DEBUG: Mostrar primeros IDs de pedidos encontrados
+    console.log(`📦 Found ${orders.length} orders. First 3 IDs:`, orders.slice(0, 3).map(o => o.id.slice(0, 8)))
 
     // Type guard: En este punto sabemos que orders es un array válido
     const validOrders = orders as any[]
