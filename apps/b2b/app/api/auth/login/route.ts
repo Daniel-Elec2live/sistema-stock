@@ -19,21 +19,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Searching for user with email:', email.toLowerCase())
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select(`
-        id,
-        email,
-        password_hash,
-        customers!customers_user_id_fkey (
-          id,
-          name,
-          company_name,
-          phone,
-          address,
-          is_approved,
-          created_at,
-          updated_at
-        )
-      `)
+      .select('id, email, password_hash')
       .eq('email', email.toLowerCase())
       .single()
 
@@ -44,12 +30,19 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       )
     }
-    
-    console.log('👤 User found:', {
-      id: user.id,
-      email: user.email,
-      hasCustomers: user.customers?.length || 0,
-      customersData: user.customers
+
+    console.log('👤 User found:', { id: user.id, email: user.email })
+
+    // Buscar perfil de customer asociado (query separada para evitar problemas con JOINs)
+    const { data: customers, error: customerError } = await supabase
+      .from('customers')
+      .select('id, name, company_name, phone, address, is_approved, created_at, updated_at')
+      .eq('user_id', user.id)
+
+    console.log('🔍 Customer query result:', {
+      found: customers?.length || 0,
+      error: customerError,
+      customers: customers
     })
 
     // Verificar contraseña
@@ -66,22 +59,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar que el usuario tenga un perfil de cliente
-    console.log('🔍 Checking customers data:', {
-      isArray: Array.isArray(user.customers),
-      type: typeof user.customers,
-      value: user.customers
-    })
-
-    if (!user.customers || !Array.isArray(user.customers) || user.customers.length === 0) {
-      console.log('❌ No customer profile found for user')
+    if (customerError || !customers || customers.length === 0) {
+      console.log('❌ No customer profile found for user:', {
+        error: customerError,
+        customersLength: customers?.length
+      })
       return NextResponse.json(
         { success: false, error: 'Perfil de cliente no encontrado. Por favor contacta al administrador.' },
         { status: 403 }
       )
     }
 
-    const customer = user.customers[0]
-    console.log('✅ Customer profile found:', { id: customer?.id, name: customer?.name })
+    const customer = customers[0]
+    console.log('✅ Customer profile found:', { id: customer.id, name: customer.name, isApproved: customer.is_approved })
 
     // Generar JWT token
     const jwtSecret = process.env.JWT_SECRET
