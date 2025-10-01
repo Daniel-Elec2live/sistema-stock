@@ -16,7 +16,8 @@
       "Read(//c/Users/comer/Downloads/**)",
       "Bash(dir /b \"C:\\Users\\comer\\sistema-stock\\apps\\backoffice\\lib\")",
       "Bash(git reset:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

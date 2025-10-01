@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseClient } from '@/lib/supabase'
+import { createSupabaseClient, updateWithConsistency } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -8,22 +8,11 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // LOG INMEDIATO - Confirmar que la request LLEGA al handler
-  console.log('🚀 [PATCH /api/orders/[id]/status] REQUEST RECEIVED:', {
-    timestamp: new Date().toISOString(),
-    url: request.url,
-    method: request.method,
-    headers: Object.fromEntries(request.headers.entries())
-  })
-
   try {
     const supabase = createSupabaseClient()
     const resolvedParams = await params
     const orderId = resolvedParams.id
 
-    console.log('🔑 [PATCH] Extracted orderId:', orderId)
-
-    // Headers anti-cache
     const headers = {
       'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
       'Pragma': 'no-cache',
@@ -33,8 +22,6 @@ export async function PATCH(
     const body = await request.json()
     const { status } = body
 
-    console.log('📦 [PATCH] Request body parsed:', { status, orderId })
-
     if (!orderId) {
       return NextResponse.json(
         { success: false, error: 'ID de pedido requerido' },
@@ -42,108 +29,80 @@ export async function PATCH(
       )
     }
 
-    if (!status || !['pending', 'confirmed', 'prepared', 'delivered', 'cancelled'].includes(status)) {
+    const validStatuses = ['pending', 'confirmed', 'prepared', 'delivered', 'cancelled']
+    if (!status || !validStatuses.includes(status)) {
       return NextResponse.json(
         { success: false, error: 'Estado de pedido inválido' },
         { status: 400, headers }
       )
     }
 
-    console.log('🔄 Backoffice API - Updating order status:', {
-      orderId,
+    console.log('[ORDER STATUS] Updating order:', {
+      orderId: orderId.slice(0, 8),
       newStatus: status,
-      timestamp: new Date().toISOString(),
-      hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30) + '...'
+      timestamp: new Date().toISOString()
     })
 
-    // Verificar que el pedido existe
-    const { data: existingOrder, error: fetchError } = await supabase
+    // Verificar que el pedido existe (lectura rápida sin complejidad)
+    const { data: existingOrder } = await supabase
       .from('orders')
       .select('id, status')
       .eq('id', orderId)
       .single()
 
-    if (fetchError || !existingOrder) {
-      console.error('❌ Order not found:', fetchError)
+    if (!existingOrder) {
       return NextResponse.json(
         { success: false, error: 'Pedido no encontrado' },
         { status: 404, headers }
       )
     }
 
-    // Preparar los datos de actualización
+    // Preparar datos de actualización
     const updateData: any = {
       status,
       updated_at: new Date().toISOString()
     }
 
-    // Añadir timestamp específico según el estado
-    switch (status) {
-      case 'cancelled':
-        updateData.cancelled_at = new Date().toISOString()
-        // Nota: El trigger de cancelación debería reponer el stock automáticamente
-        break
-      // Los estados confirmed, prepared, delivered no tienen timestamps específicos en el schema actual
-      // Se usa updated_at para todos
+    if (status === 'cancelled') {
+      updateData.cancelled_at = new Date().toISOString()
     }
 
-    // Actualizar el pedido
-    const { data: updatedOrder, error: updateError } = await supabase
-      .from('orders')
-      .update(updateData)
-      .eq('id', orderId)
-      .select('*')
-      .single()
+    // ⭐ SOLUCIÓN: UPDATE atómico con RETURNING clause
+    // Esto garantiza read-after-write consistency
+    const { data: updatedOrder, error: updateError } = await updateWithConsistency(
+      supabase,
+      'orders',
+      updateData,
+      { id: orderId }
+    )
 
     if (updateError) {
-      console.error('❌ Update error:', updateError)
-      console.error('❌ Update error details:', {
-        message: updateError.message,
-        details: updateError.details,
-        hint: updateError.hint,
-        code: updateError.code
-      })
+      console.error('[ORDER STATUS] ❌ Update failed:', updateError)
       return NextResponse.json(
         { success: false, error: 'Error al actualizar el pedido' },
         { status: 500, headers }
       )
     }
 
-    console.log('✅ Order status updated successfully:', {
-      orderId,
+    console.log('[ORDER STATUS] ✅ Update successful:', {
+      orderId: orderId.slice(0, 8),
       oldStatus: existingOrder.status,
-      newStatus: status,
-      actualUpdatedData: updatedOrder
+      newStatus: (updatedOrder as any).status,
+      confirmed: (updatedOrder as any).status === status
     })
-
-    // VERIFICACIÓN INMEDIATA: Comprobar si el update realmente se persistió
-    const { data: verifyOrder, error: verifyError } = await supabase
-      .from('orders')
-      .select('id, status, updated_at')
-      .eq('id', orderId)
-      .single()
-
-    if (verifyOrder?.status !== status) {
-      console.error('🚨 CRITICAL: Update verification failed - expected:', status, 'got:', verifyOrder?.status)
-    }
 
     return NextResponse.json({
       success: true,
       data: {
         order_id: orderId,
         old_status: existingOrder.status,
-        new_status: status,
-        updated_at: updateData.updated_at
+        new_status: (updatedOrder as any).status,
+        updated_at: (updatedOrder as any).updated_at
       }
     }, { headers })
 
   } catch (error) {
-    console.error('🚨 [PATCH] CRITICAL ERROR in handler:', {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-      timestamp: new Date().toISOString()
-    })
+    console.error('[ORDER STATUS] 🚨 Critical error:', error)
     const headers = {
       'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
       'Pragma': 'no-cache',
