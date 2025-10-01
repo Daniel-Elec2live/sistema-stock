@@ -23,16 +23,24 @@ export async function verifyAuth(request: NextRequest): Promise<AuthResult> {
     let token = ''
 
     const authHeader = request.headers.get('authorization')
+    console.log('🔍 verifyAuth - authHeader:', authHeader ? 'exists' : 'null')
+
     if (authHeader && authHeader.startsWith('Bearer ')) {
       token = authHeader.substring(7) // Remover "Bearer "
+      console.log('🎫 verifyAuth - Token from header')
     } else {
       // Si no hay header, buscar en cookies
-      token = request.cookies.get('auth_token')?.value || ''
+      const cookieToken = request.cookies.get('auth_token')?.value
+      console.log('🍪 verifyAuth - Cookie token:', cookieToken ? 'exists' : 'null')
+      token = cookieToken || ''
     }
 
     if (!token) {
+      console.log('❌ verifyAuth - No token found in header or cookies')
       return { success: false, error: 'Token de autorización requerido' }
     }
+
+    console.log('✅ verifyAuth - Token found, verifying...')
 
     // Verificar JWT
     const jwtSecret = process.env.JWT_SECRET

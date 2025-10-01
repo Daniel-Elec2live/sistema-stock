@@ -130,17 +130,20 @@ export async function POST(request: NextRequest) {
 
     // Establecer cookie HTTP-only y Secure (más segura que desde cliente)
     const isProduction = process.env.NODE_ENV === 'production'
+
+    // SameSite=None es necesario para que cookies funcionen en fetch() desde JavaScript
+    // Requiere Secure (HTTPS) en producción
     const cookieOptions = [
       `auth_token=${token}`,
       `Path=/`,
       `Max-Age=${7 * 24 * 60 * 60}`, // 7 días
-      `SameSite=Lax`,
-      isProduction ? 'Secure' : '',
+      'SameSite=None', // Permite envío de cookie en requests fetch desde JS
+      'Secure', // Requerido por SameSite=None (funciona en localhost también)
       'HttpOnly' // Previene acceso desde JavaScript (más seguro)
     ].filter(Boolean).join('; ')
 
     response.headers.set('Set-Cookie', cookieOptions)
-    console.log('🍪 Server set cookie:', { isProduction, hasHttpOnly: true })
+    console.log('🍪 Server set cookie:', { isProduction, sameSite: 'None', hasHttpOnly: true, secure: true })
 
     return response
 
