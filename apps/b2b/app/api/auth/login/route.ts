@@ -115,17 +115,34 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    // Crear respuesta y establecer cookie HTTP-only desde el servidor
+    const response = NextResponse.json({
       success: true,
       data: {
         user: userResponse,
         token,
         expires_in: '7d'
       },
-      message: customer.is_approved 
+      message: customer.is_approved
         ? 'Inicio de sesión exitoso'
         : 'Inicio de sesión exitoso. Tu cuenta está pendiente de aprobación.'
     })
+
+    // Establecer cookie HTTP-only y Secure (más segura que desde cliente)
+    const isProduction = process.env.NODE_ENV === 'production'
+    const cookieOptions = [
+      `auth_token=${token}`,
+      `Path=/`,
+      `Max-Age=${7 * 24 * 60 * 60}`, // 7 días
+      `SameSite=Lax`,
+      isProduction ? 'Secure' : '',
+      'HttpOnly' // Previene acceso desde JavaScript (más seguro)
+    ].filter(Boolean).join('; ')
+
+    response.headers.set('Set-Cookie', cookieOptions)
+    console.log('🍪 Server set cookie:', { isProduction, hasHttpOnly: true })
+
+    return response
 
   } catch (error) {
     if (error instanceof z.ZodError) {

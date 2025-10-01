@@ -108,26 +108,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('✅ Login successful, setting up auth state...')
         const { token: newToken, user: userData } = data.data
 
-        // Guardar en localStorage Y en cookies para el middleware
+        // Guardar en localStorage para lectura cliente
+        // NOTA: La cookie la establece el servidor (HTTP-only, más seguro)
         localStorage.setItem('auth_token', newToken)
-
-        // Establecer cookie con flags correctos para producción
-        const isProduction = window.location.protocol === 'https:'
-        const cookieFlags = [
-          `auth_token=${newToken}`,
-          `path=/`,
-          `max-age=${7 * 24 * 60 * 60}`, // 7 días
-          `SameSite=Lax`,
-          isProduction ? 'Secure' : ''
-        ].filter(Boolean).join('; ')
-
-        document.cookie = cookieFlags
-        console.log('🍪 Cookie set:', { isProduction, cookieFlags: cookieFlags.replace(newToken, '[TOKEN]') })
 
         setToken(newToken)
         setUser(userData)
 
         console.log('👤 User set in context:', userData)
+        console.log('🍪 Cookie establecida por servidor (HTTP-only)')
         return { success: true }
       } else {
         console.log('❌ Login failed:', data.error)
