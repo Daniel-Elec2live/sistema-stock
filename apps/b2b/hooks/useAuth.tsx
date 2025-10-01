@@ -107,14 +107,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data.success) {
         console.log('✅ Login successful, setting up auth state...')
         const { token: newToken, user: userData } = data.data
-        
+
         // Guardar en localStorage Y en cookies para el middleware
         localStorage.setItem('auth_token', newToken)
-        document.cookie = `auth_token=${newToken}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax` // 7 días
-        
+
+        // Establecer cookie con flags correctos para producción
+        const isProduction = window.location.protocol === 'https:'
+        const cookieFlags = [
+          `auth_token=${newToken}`,
+          `path=/`,
+          `max-age=${7 * 24 * 60 * 60}`, // 7 días
+          `SameSite=Lax`,
+          isProduction ? 'Secure' : ''
+        ].filter(Boolean).join('; ')
+
+        document.cookie = cookieFlags
+        console.log('🍪 Cookie set:', { isProduction, cookieFlags: cookieFlags.replace(newToken, '[TOKEN]') })
+
         setToken(newToken)
         setUser(userData)
-        
+
         console.log('👤 User set in context:', userData)
         return { success: true }
       } else {
