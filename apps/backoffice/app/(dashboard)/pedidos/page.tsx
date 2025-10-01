@@ -102,10 +102,13 @@ export default function PedidosPage() {
     })
   }
 
-  const fetchOrders = async () => {
-    setLoading(true)
+  const fetchOrders = async (showLoader = false) => {
+    // Solo mostrar loader en carga inicial o auto-refresh, no después de actualizar
+    if (showLoader) {
+      setLoading(true)
+    }
+
     try {
-      // CRÍTICO: cache: 'no-store' deshabilita el Router Cache de Next.js (lado cliente)
       const response = await fetch(`/api/orders?_t=${Date.now()}`, {
         method: 'GET',
         cache: 'no-store',
@@ -141,7 +144,9 @@ export default function PedidosPage() {
     } catch (error) {
       console.error('Error fetching orders:', error)
     } finally {
-      setLoading(false)
+      if (showLoader) {
+        setLoading(false)
+      }
     }
   }
 
@@ -200,12 +205,12 @@ export default function PedidosPage() {
   }
 
   useEffect(() => {
-    fetchOrders()
+    fetchOrders(true) // Initial load - show spinner
 
     // Polling automático cada 2 minutos para nuevos pedidos (menos agresivo)
     const interval = setInterval(() => {
       console.log('🔄 Auto-refresh: Checking for new orders...')
-      fetchOrders()
+      fetchOrders(true) // Auto-refresh puede mostrar loader
     }, 120000) // 2 minutos
 
     return () => clearInterval(interval)
@@ -267,7 +272,7 @@ export default function PedidosPage() {
 
         <div className="flex flex-col items-end gap-2">
           <Button
-            onClick={fetchOrders}
+            onClick={() => fetchOrders(false)}
             variant="outline"
             size="sm"
           >

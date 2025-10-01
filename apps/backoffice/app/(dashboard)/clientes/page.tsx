@@ -38,14 +38,17 @@ export default function ClientesPage() {
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all')
 
   useEffect(() => {
-    fetchCustomers()
+    fetchCustomers(true) // Initial load - show spinner
   }, [filter])
 
-  const fetchCustomers = async () => {
+  const fetchCustomers = async (showLoader = false) => {
     try {
-      setLoading(true)
+      // Solo mostrar loader en carga inicial, no en refreshes después de acciones
+      if (showLoader) {
+        setLoading(true)
+      }
+
       const params = filter !== 'all' ? `?status=${filter}` : ''
-      // Forzar bypass de cache con timestamp
       const cacheParam = params ? '&' : '?'
       const response = await fetch(`/api/customers${params}${cacheParam}_t=${Date.now()}`, {
         headers: {
@@ -56,12 +59,10 @@ export default function ClientesPage() {
       const data = await response.json()
 
       if (data.success) {
-        // Guardar todos los clientes para contadores
         setAllCustomers(data.customers)
 
         let filteredCustomers = data.customers
 
-        // Filtrar en frontend para el estado "rejected"
         if (filter === 'rejected') {
           filteredCustomers = data.customers.filter((c: Customer) => c.rejected_at)
         } else if (filter === 'pending') {
@@ -75,7 +76,9 @@ export default function ClientesPage() {
     } catch (error) {
       console.error('Error fetching customers:', error)
     } finally {
-      setLoading(false)
+      if (showLoader) {
+        setLoading(false)
+      }
     }
   }
 
