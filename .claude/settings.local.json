@@ -17,7 +17,8 @@
       "Bash(dir /b \"C:\\Users\\comer\\sistema-stock\\apps\\backoffice\\lib\")",
       "Bash(git reset:*)",
       "Bash(sed:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(dir /b \"C:\\Users\\comer\\sistema-stock\\apps\\backoffice\\app\\api\\customers\")"
     ],
     "deny": [],
     "ask": []

@@ -86,18 +86,12 @@ export default function ClientesPage() {
   const approveCustomer = async (customerId: string, approved: boolean) => {
     // Prevenir múltiples ejecuciones simultáneas
     if (processingCustomerId === customerId) {
-      console.log(`⚠️ Already processing customer ${customerId.slice(0, 8)} - ignoring duplicate call`)
       return
     }
-
-    console.log(`🎯 approveCustomer CALLED - Start of function`)
-    console.log(`🎯 Customer ID:`, customerId.slice(0, 8), `Approved:`, approved)
 
     setProcessingCustomerId(customerId)
 
     try {
-      console.log(`📤 Frontend - Sending request:`, { customerId: customerId.slice(0, 8), approved })
-
       const response = await fetch(`/api/customers/${customerId}/approve`, {
         method: 'PUT',
         headers: {
@@ -106,23 +100,20 @@ export default function ClientesPage() {
         body: JSON.stringify({ approved }),
       })
 
-      console.log(`📥 Frontend - Response status: ${response.status}`)
       const data = await response.json()
 
       if (response.ok && data.success) {
-        console.log(`✅ Frontend - ${approved ? 'Approved' : 'Revoked'} customer ${customerId.slice(0, 8)}`)
-
         // Esperar 300ms para asegurar propagación del cambio en Supabase
         await new Promise(resolve => setTimeout(resolve, 300))
 
         // Actualizar lista - ahora el servidor debería tener el cambio propagado
         await fetchCustomers()
       } else {
-        console.error(`❌ Frontend - Error updating customer:`, data.error)
+        console.error('Error updating customer:', data.error)
         alert(`Error: ${data.error}`)
       }
     } catch (error) {
-      console.error(`❌ Frontend - Network error:`, error)
+      console.error('Network error:', error)
       alert('Error de conexión. Inténtalo de nuevo.')
     } finally {
       setProcessingCustomerId(null)

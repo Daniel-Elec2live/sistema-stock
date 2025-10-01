@@ -122,21 +122,6 @@ export default function PedidosPage() {
       const data = await response.json()
 
       if (data.success) {
-        console.log('📋 Frontend - Orders received:', data.data.length)
-        console.log('📊 Frontend - All order statuses:',
-          data.data.map((o: any) => ({
-            id: o.id.slice(0, 8),
-            status: o.status,
-            customer: o.customer_name?.slice(0, 15) || 'N/A'
-          }))
-        )
-        console.log('🔍 Frontend - Status distribution:', {
-          pending: data.data.filter((o: any) => o.status === 'pending').length,
-          confirmed: data.data.filter((o: any) => o.status === 'confirmed').length,
-          prepared: data.data.filter((o: any) => o.status === 'prepared').length,
-          delivered: data.data.filter((o: any) => o.status === 'delivered').length,
-          cancelled: data.data.filter((o: any) => o.status === 'cancelled').length,
-        })
         setOrders(data.data)
         setLastUpdated(new Date())
       } else {
@@ -154,11 +139,9 @@ export default function PedidosPage() {
   const updateOrderStatus = async (orderId: string, newStatus: 'confirmed' | 'prepared' | 'delivered') => {
     // Prevenir múltiples ejecuciones simultáneas
     if (processingOrderId === orderId) {
-      console.log(`⚠️ Already processing order ${orderId.slice(0, 8)} - ignoring duplicate call`)
       return
     }
 
-    console.log(`🔄 Frontend - Updating order ${orderId.slice(0, 8)} to status: ${newStatus}`)
     setProcessingOrderId(orderId)
 
     try {
@@ -173,12 +156,9 @@ export default function PedidosPage() {
         body: JSON.stringify({ status: newStatus })
       })
 
-      console.log(`📥 Frontend - Response status: ${response.status}`)
       const data = await response.json()
 
       if (data.success) {
-        console.log(`✅ Frontend - Successfully updated order ${orderId.slice(0, 8)} to ${newStatus}`)
-
         // Actualizar el estado local inmediatamente para UX
         setOrders(prev => prev.map(order =>
           order.id === orderId
@@ -189,15 +169,14 @@ export default function PedidosPage() {
         // Esperar 300ms para asegurar que el servidor propagó el cambio
         await new Promise(resolve => setTimeout(resolve, 300))
 
-        console.log('🔄 List view - Fetching fresh data from server')
         fetchOrders()
 
       } else {
-        console.error(`❌ Frontend - Error updating order:`, data.error)
+        console.error('Error updating order:', data.error)
         alert(`Error al actualizar el estado del pedido: ${data.error}`)
       }
     } catch (error) {
-      console.error(`❌ Frontend - Network error:`, error)
+      console.error('Network error:', error)
       alert('Error de conexión al actualizar el estado del pedido')
     } finally {
       setProcessingOrderId(null)
@@ -209,7 +188,6 @@ export default function PedidosPage() {
 
     // Polling automático cada 2 minutos para nuevos pedidos (menos agresivo)
     const interval = setInterval(() => {
-      console.log('🔄 Auto-refresh: Checking for new orders...')
       fetchOrders(true) // Auto-refresh puede mostrar loader
     }, 120000) // 2 minutos
 

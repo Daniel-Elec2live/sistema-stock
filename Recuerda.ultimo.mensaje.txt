@@ -209,53 +209,23 @@ Session limit reached ∙ resets 10pm
 
 
 Logs:
-🎯 approveCustomer CALLED - Start of function
-page-bce2ed23013da5e0.js:1 🎯 Customer ID: 8da08d35 Approved: true
-page-bce2ed23013da5e0.js:1 🔄 Frontend - Approving customer 8da08d35
-page-bce2ed23013da5e0.js:1 🎯 Entering try block
-page-bce2ed23013da5e0.js:1 📤 Frontend - Sending request: Object
-page-bce2ed23013da5e0.js:1 📥 Frontend - Response status: 200
-page-bce2ed23013da5e0.js:1 📥 Frontend - Response data for 8da08d35: Object
-page-bce2ed23013da5e0.js:1 ✅ Frontend - Approved customer 8da08d35
-page-bce2ed23013da5e0.js:1 🎯 approveCustomer CALLED - Start of function
-page-bce2ed23013da5e0.js:1 🎯 Customer ID: 8da08d35 Approved: true
-page-bce2ed23013da5e0.js:1 🔄 Frontend - Approving customer 8da08d35
-page-bce2ed23013da5e0.js:1 🎯 Entering try block
-page-bce2ed23013da5e0.js:1 📤 Frontend - Sending request: Object
-page-bce2ed23013da5e0.js:1 📥 Frontend - Response status: 200
-page-bce2ed23013da5e0.js:1 📥 Frontend - Response data for 8da08d35: Object
-page-bce2ed23013da5e0.js:1 ✅ Frontend - Approved customer 8da08d35
-page-bce2ed23013da5e0.js:1 🎯 approveCustomer CALLED - Start of function
-page-bce2ed23013da5e0.js:1 🎯 Customer ID: 8da08d35 Approved: true
-page-bce2ed23013da5e0.js:1 🔄 Frontend - Approving customer 8da08d35
-page-bce2ed23013da5e0.js:1 🎯 Entering try block
-page-bce2ed23013da5e0.js:1 📤 Frontend - Sending request: Object
-page-bce2ed23013da5e0.js:1 📥 Frontend - Response status: 200
-page-bce2ed23013da5e0.js:1 📥 Frontend - Response data for 8da08d35: Object
-page-bce2ed23013da5e0.js:1 ✅ Frontend - Approved customer 8da08d35
-page-bce2ed23013da5e0.js:1 🎯 approveCustomer CALLED - Start of function
-page-bce2ed23013da5e0.js:1 🎯 Customer ID: 8da08d35 Approved: true
-page-bce2ed23013da5e0.js:1 🔄 Frontend - Approving customer 8da08d35
-page-bce2ed23013da5e0.js:1 🎯 Entering try block
-page-bce2ed23013da5e0.js:1 📤 Frontend - Sending request: Object
-page-bce2ed23013da5e0.js:1 📥 Frontend - Response status: 200
-page-bce2ed23013da5e0.js:1 📥 Frontend - Response data for 8da08d35: Object
-page-bce2ed23013da5e0.js:1 ✅ Frontend - Approved customer 8da08d35
-page-be4248d92cf49a87.js:1 📋 Frontend - Orders received: 11
-page-be4248d92cf49a87.js:1 📊 Frontend - All order statuses: Array(11)
-page-be4248d92cf49a87.js:1 🔍 Frontend - Status distribution: Object
-page-be4248d92cf49a87.js:1 🔄 Frontend - Updating order 71996b03 to status: prepared
-page-be4248d92cf49a87.js:1 🔄 Frontend - PATCH URL: /api/orders/71996b03-846e-41fa-8174-4f0cba4fa116/status?_patch=1759302838847&_r=0.16877304945647587
-page-be4248d92cf49a87.js:1 🔄 Frontend - Timestamp: 1759302838847
-page-be4248d92cf49a87.js:1 📥 Frontend - Raw response status: 200
-page-be4248d92cf49a87.js:1 📥 Frontend - Raw response ok: true
-page-be4248d92cf49a87.js:1 📥 Frontend - API Response for 71996b03: Object
-page-be4248d92cf49a87.js:1 ✅ Frontend - Successfully updated order 71996b03 to prepared
-page-be4248d92cf49a87.js:1 ✅ Frontend - Order 71996b03 updated locally to prepared
-page-be4248d92cf49a87.js:1 🔄 List view - Fetching fresh data from server
-page-be4248d92cf49a87.js:1 📋 Frontend - Orders received: 11
-page-be4248d92cf49a87.js:1 📊 Frontend - All order statuses: Array(11)
-page-be4248d92cf49a87.js:1 🔍 Frontend - Status distribution: Object
+📋 Frontend - Orders received: 11
+page-2cb171628bf13a99.js:1 📊 Frontend - All order statuses: Array(11)
+page-2cb171628bf13a99.js:1 🔍 Frontend - Status distribution: Object
+page-2cb171628bf13a99.js:1 🔄 Frontend - Updating order 71996b03 to status: prepared
+page-2cb171628bf13a99.js:1 📥 Frontend - Response status: 200
+page-2cb171628bf13a99.js:1 ✅ Frontend - Successfully updated order 71996b03 to prepared
+page-2cb171628bf13a99.js:1 🔄 List view - Fetching fresh data from server
+page-2cb171628bf13a99.js:1 📋 Frontend - Orders received: 11
+page-2cb171628bf13a99.js:1 📊 Frontend - All order statuses: Array(11)
+page-2cb171628bf13a99.js:1 🔍 Frontend - Status distribution: Object
+page-2cb171628bf13a99.js:1 🔄 Frontend - Updating order fd52d1ac to status: prepared
+page-2cb171628bf13a99.js:1 📥 Frontend - Response status: 200
+page-2cb171628bf13a99.js:1 ✅ Frontend - Successfully updated order fd52d1ac to prepared
+page-2cb171628bf13a99.js:1 🔄 List view - Fetching fresh data from server
+page-2cb171628bf13a99.js:1 📋 Frontend - Orders received: 11
+page-2cb171628bf13a99.js:1 📊 Frontend - All order statuses: Array(11)
+page-2cb171628bf13a99.js:1 🔍 Frontend - Status distribution: Object
 page-0dbff5536144def6.js:1 🎯 updateOrderStatus CALLED - Start of function
 page-0dbff5536144def6.js:1 🎯 Current updating state: false
 page-0dbff5536144def6.js:1 🎯 Order exists: true
@@ -276,13 +246,21 @@ page-0dbff5536144def6.js:1 📥 Order Details - API Response: Object
 page-0dbff5536144def6.js:1 ✅ Order Details - Update successful, refreshing details...
 page-0dbff5536144def6.js:1 ✅ Order Details - Status updated to delivered
 page-0dbff5536144def6.js:1 🔄 Detail view - Fetching fresh data from server
-page-0dbff5536144def6.js:1 🎯 updateOrderStatus CALLED - Start of function
-page-0dbff5536144def6.js:1 🎯 Current updating state: false
-page-0dbff5536144def6.js:1 🎯 Order exists: true
-page-0dbff5536144def6.js:1 🔄 Order Details - Updating 71996b03 to delivered
-page-0dbff5536144def6.js:1 🎯 About to setUpdating(true)
-page-0dbff5536144def6.js:1 🎯 setUpdating(true) called
-page-0dbff5536144def6.js:1 📥 Order Details - API Response: Object
-page-0dbff5536144def6.js:1 ✅ Order Details - Update successful, refreshing details...
-page-0dbff5536144def6.js:1 ✅ Order Details - Status updated to delivered
-page-0dbff5536144def6.js:1 🔄 Detail view - Fetching fresh data from server
+page-2cb171628bf13a99.js:1 📋 Frontend - Orders received: 11
+page-2cb171628bf13a99.js:1 📊 Frontend - All order statuses: Array(11)
+page-2cb171628bf13a99.js:1 🔍 Frontend - Status distribution: Object
+page-4f5f705f7151ccd0.js:1 🎯 approveCustomer CALLED - Start of function
+page-4f5f705f7151ccd0.js:1 🎯 Customer ID: 8da08d35 Approved: true
+page-4f5f705f7151ccd0.js:1 📤 Frontend - Sending request: Object
+page-4f5f705f7151ccd0.js:1 📥 Frontend - Response status: 200
+page-4f5f705f7151ccd0.js:1 ✅ Frontend - Approved customer 8da08d35
+page-4f5f705f7151ccd0.js:1 🎯 approveCustomer CALLED - Start of function
+page-4f5f705f7151ccd0.js:1 🎯 Customer ID: 1249c29e Approved: true
+page-4f5f705f7151ccd0.js:1 📤 Frontend - Sending request: Object
+page-4f5f705f7151ccd0.js:1 📥 Frontend - Response status: 200
+page-4f5f705f7151ccd0.js:1 ✅ Frontend - Approved customer 1249c29e
+page-4f5f705f7151ccd0.js:1 🎯 approveCustomer CALLED - Start of function
+page-4f5f705f7151ccd0.js:1 🎯 Customer ID: 990e8400 Approved: false
+page-4f5f705f7151ccd0.js:1 📤 Frontend - Sending request: Object
+page-4f5f705f7151ccd0.js:1 📥 Frontend - Response status: 200
+page-4f5f705f7151ccd0.js:1 ✅ Frontend - Revoked customer 990e8400

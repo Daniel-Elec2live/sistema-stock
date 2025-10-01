@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
+      .gte('created_at', '2000-01-01') // Cache-busting: filtro siempre true, fuerza query fresca
       .order('created_at', { ascending: false })
 
     // Filtrar por estado si se especifica
