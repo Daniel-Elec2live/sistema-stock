@@ -241,12 +241,24 @@ export default function PedidosPage() {
       const data = await response.json()
 
       if (data.success) {
+        const actualNewStatus = data.data.new_payment_status
+
         console.log(`✅ [PAYMENT] Payment status updated:`, {
           old: data.data.old_payment_status,
-          new: data.data.new_payment_status,
-          changed: data.data.old_payment_status !== data.data.new_payment_status
+          new: actualNewStatus,
+          changed: data.data.old_payment_status !== actualNewStatus
         })
 
+        // SOLUCIÓN: Actualizar estado local INMEDIATAMENTE con el valor real de la BD
+        setOrders(prevOrders =>
+          prevOrders.map(o =>
+            o.id === orderId
+              ? { ...o, payment_status: actualNewStatus as 'pending' | 'paid' }
+              : o
+          )
+        )
+
+        // Refrescar en background para asegurar consistencia
         await new Promise(resolve => setTimeout(resolve, 500))
         await fetchOrders(false)
       } else {
