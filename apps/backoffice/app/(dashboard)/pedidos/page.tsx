@@ -210,7 +210,7 @@ export default function PedidosPage() {
     }
   }
 
-  const togglePaymentStatus = async (orderId: string, currentStatus: string) => {
+  const togglePaymentStatus = async (orderId: string) => {
     if (processingPaymentId === orderId) {
       return
     }
@@ -218,7 +218,14 @@ export default function PedidosPage() {
     setProcessingPaymentId(orderId)
 
     try {
-      // Alternar: si está paid → pending, si está pending → paid
+      // Obtener el estado ACTUAL del pedido desde el estado de React
+      const currentOrder = orders.find(o => o.id === orderId)
+      if (!currentOrder) {
+        console.error('[PAYMENT] Order not found in state')
+        return
+      }
+
+      const currentStatus = currentOrder.payment_status || 'pending'
       const newStatus = currentStatus === 'paid' ? 'pending' : 'paid'
 
       console.log(`🔄 [PAYMENT] Toggling payment status:`, {
@@ -258,9 +265,8 @@ export default function PedidosPage() {
           )
         )
 
-        // Refrescar en background para asegurar consistencia
-        await new Promise(resolve => setTimeout(resolve, 500))
-        await fetchOrders(false)
+        // NO refrescar inmediatamente - confiar en el valor de la BD
+        // El polling automático lo actualizará en 2 minutos si hace falta
       } else {
         console.error('Error updating payment:', data.error)
         alert(`Error al actualizar el estado de pago: ${data.error}`)
@@ -566,7 +572,7 @@ export default function PedidosPage() {
                     {order.status !== 'cancelled' && (
                       <Button
                         size="sm"
-                        onClick={() => togglePaymentStatus(order.id, order.payment_status || 'pending')}
+                        onClick={() => togglePaymentStatus(order.id)}
                         disabled={processingPaymentId === order.id}
                         className={`min-h-[44px] sm:min-h-[36px] disabled:opacity-50 disabled:cursor-not-allowed ${
                           (order.payment_status || 'pending') === 'paid'
