@@ -99,6 +99,11 @@ export async function PATCH(
     }
 
     // PASO 1: Ejecutar UPDATE
+    console.log('[PAYMENT STATUS] 🔨 Executing UPDATE:', {
+      orderId: orderId.slice(0, 8),
+      newPaymentStatus: payment_status
+    })
+
     const { error: updateError } = await supabase
       .from('orders')
       .update({
@@ -108,12 +113,14 @@ export async function PATCH(
       .eq('id', orderId)
 
     if (updateError) {
-      console.error('[PAYMENT STATUS] Error al actualizar:', updateError)
+      console.error('[PAYMENT STATUS] ❌ UPDATE failed:', updateError)
       return NextResponse.json(
         { success: false, error: 'Error al actualizar el estado de pago' },
         { status: 500, headers }
       )
     }
+
+    console.log('[PAYMENT STATUS] ✅ UPDATE executed successfully')
 
     // PASO 2: VERIFICAR el estado real despues del UPDATE
     // Añadir cache-busting query (igual que en orders route)
