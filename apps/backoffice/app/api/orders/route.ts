@@ -82,6 +82,7 @@ export async function GET(request: NextRequest) {
     console.log('📊 RAW orders from DB:', orders?.map(o => ({
       id: o.id.slice(0, 8),
       status: o.status,
+      payment_status: o.payment_status,
       updated_at: o.updated_at
     })))
 
