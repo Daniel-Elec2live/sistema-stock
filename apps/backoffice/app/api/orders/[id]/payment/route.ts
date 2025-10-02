@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseClient } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -9,7 +9,24 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = createSupabaseClient()
+    const timestamp = Date.now()
+
+    // Crear cliente fresco con headers únicos (igual que en orders/[id]/status)
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: { persistSession: false },
+        db: { schema: 'public' },
+        global: {
+          headers: {
+            'Cache-Control': 'no-cache, no-store',
+            'X-Request-ID': `payment-${timestamp}`
+          }
+        }
+      }
+    )
+
     const resolvedParams = await params
     const orderId = resolvedParams.id
 
@@ -76,24 +93,31 @@ export async function PATCH(
     }
 
     // PASO 2: VERIFICAR el estado real despues del UPDATE
+    // Añadir cache-busting query (igual que en orders route)
     const { data: verifiedOrder, error: verifyError } = await supabase
       .from('orders')
       .select('payment_status, updated_at')
       .eq('id', orderId)
+      .gte('created_at', '2000-01-01') // Cache buster
       .single()
 
     if (verifyError || !verifiedOrder) {
-      console.error('[PAYMENT STATUS] Error al verificar:', verifyError)
+      console.error('[PAYMENT STATUS] ❌ Error al verificar:', verifyError)
       return NextResponse.json(
         { success: false, error: 'Error al verificar el pago actualizado' },
         { status: 500, headers }
       )
     }
 
-    console.log('[PAYMENT STATUS] Actualizado correctamente:', {
+    const actualPaymentStatus = verifiedOrder.payment_status
+    const statusChangedByTrigger = actualPaymentStatus !== payment_status
+
+    console.log('[PAYMENT STATUS] ✅ Update verificado:', {
       orderId: orderId.slice(0, 8),
       oldPaymentStatus: existingOrder.payment_status,
-      newPaymentStatus: verifiedOrder.payment_status
+      requestedPaymentStatus: payment_status,
+      actualPaymentStatus: actualPaymentStatus,
+      statusMatches: !statusChangedByTrigger
     })
 
     return NextResponse.json({
@@ -101,7 +125,8 @@ export async function PATCH(
       data: {
         order_id: orderId,
         old_payment_status: existingOrder.payment_status,
-        new_payment_status: verifiedOrder.payment_status,
+        new_payment_status: actualPaymentStatus, // Estado REAL de la BD
+        status_changed_by_trigger: statusChangedByTrigger,
         updated_at: verifiedOrder.updated_at
       }
     }, { headers })

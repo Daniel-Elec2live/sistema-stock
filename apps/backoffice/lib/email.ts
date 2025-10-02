@@ -5,7 +5,7 @@ const WAREHOUSE_EMAIL = process.env.WAREHOUSE_EMAIL!
 
 // TEMPORAL: Usar dominio sandbox de Resend hasta verificar dominio propio
 // Para producción: verificar latraviata1999.com en Resend Dashboard
-const FROM_EMAIL = 'La Traviata <onboarding@resend.dev>'
+const FROM_EMAIL = 'La Traviata <daniel.vega@elec2live.com>'
 
 interface OrderEmailData {
   orderId: string

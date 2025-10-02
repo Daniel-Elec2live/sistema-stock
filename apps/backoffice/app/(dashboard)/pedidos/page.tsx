@@ -544,32 +544,22 @@ export default function PedidosPage() {
                         size="sm"
                         onClick={() => togglePaymentStatus(order.id, order.payment_status || 'pending')}
                         disabled={processingPaymentId === order.id}
-                        variant="outline"
-                        className={`min-h-[44px] sm:min-h-[36px] disabled:opacity-50 disabled:cursor-not-allowed border-2 ${
+                        className={`min-h-[44px] sm:min-h-[36px] disabled:opacity-50 disabled:cursor-not-allowed ${
                           (order.payment_status || 'pending') === 'paid'
-                            ? 'border-green-600 text-green-700 hover:bg-green-50'
-                            : 'border-red-600 text-red-700 hover:bg-red-50'
+                            ? 'bg-green-600 hover:bg-green-700 text-white'
+                            : 'bg-red-600 hover:bg-red-700 text-white'
                         }`}
                       >
                         {processingPaymentId === order.id ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                         ) : (
                           <DollarSign className="w-4 h-4 mr-2" />
                         )}
-                        <span className="hidden sm:inline">
-                          {processingPaymentId === order.id
-                            ? 'Procesando...'
-                            : (order.payment_status || 'pending') === 'paid'
-                            ? 'Marcar Pendiente'
-                            : 'Marcar Pagado'}
-                        </span>
-                        <span className="sm:hidden">
-                          {processingPaymentId === order.id
-                            ? '...'
-                            : (order.payment_status || 'pending') === 'paid'
-                            ? 'Pendiente'
-                            : 'Pagado'}
-                        </span>
+                        {processingPaymentId === order.id
+                          ? 'Procesando...'
+                          : (order.payment_status || 'pending') === 'paid'
+                          ? 'Pagado'
+                          : 'Pendiente Pago'}
                       </Button>
                     )}
 
