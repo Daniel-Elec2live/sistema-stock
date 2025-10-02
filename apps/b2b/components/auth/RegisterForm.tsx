@@ -71,7 +71,7 @@ export function RegisterForm() {
     
     try {
       const result = await register(formData)
-      
+
       if (result.success) {
         toast({
           title: "¡Registro exitoso!",
@@ -79,9 +79,12 @@ export function RegisterForm() {
         })
         router.push('/login?registered=true')
       } else {
+        // Si hay detalles de validación de Zod, mostrar el error específico
+        const errorMessage = result.error || "No se pudo crear la cuenta"
+
         toast({
           title: "Error en el registro",
-          description: result.error || "No se pudo crear la cuenta",
+          description: errorMessage,
           variant: "destructive"
         })
       }

@@ -9,7 +9,7 @@ interface AuthContextType {
   loading: boolean
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
   register: (userData: RegisterData) => Promise<{ success: boolean; error?: string }>
-  logout: () => void
+  logout: () => Promise<void>
   refreshUser: () => Promise<void>
   token: string | null
 }
@@ -145,7 +145,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data.success) {
         return { success: true }
       } else {
-        return { success: false, error: data.error || 'Error en el registro' }
+        // Si hay detalles de validación, formatearlos de manera legible
+        let errorMessage = data.error || 'Error en el registro'
+
+        if (data.details && Array.isArray(data.details)) {
+          // Mapear campos en español para mejor UX
+          const fieldNames: Record<string, string> = {
+            email: 'Email',
+            password: 'Contraseña',
+            confirmPassword: 'Confirmación de contraseña',
+            name: 'Nombre',
+            company_name: 'Empresa',
+            phone: 'Teléfono',
+            address: 'Dirección'
+          }
+
+          const errors = data.details.map((detail: any) => {
+            const field = fieldNames[detail.path[0]] || detail.path[0]
+            return `${field}: ${detail.message}`
+          }).join('. ')
+
+          errorMessage = errors
+        }
+
+        return { success: false, error: errorMessage }
       }
     } catch (error) {
       console.error('❌ Register error:', error)
@@ -155,13 +178,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  const logout = useCallback(() => {
-    localStorage.removeItem('auth_token')
-    // Nota: No podemos limpiar cookie HTTP-only desde JavaScript
-    // El servidor debe tener un endpoint /api/auth/logout para invalidarla
-    setToken(null)
-    setUser(null)
-    router.push('/login')
+  const logout = useCallback(async () => {
+    try {
+      console.log('🚪 useAuth - Logging out...')
+
+      // Llamar al endpoint de logout para invalidar la cookie HTTP-only
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include' // Importante: enviar cookie para que el servidor la invalide
+      })
+
+      // Limpiar estado local
+      localStorage.removeItem('auth_token')
+      setToken(null)
+      setUser(null)
+
+      console.log('✅ useAuth - Logged out successfully')
+      router.push('/login')
+    } catch (error) {
+      console.error('❌ useAuth - Logout error:', error)
+      // Incluso si falla el endpoint, limpiar estado local y redirigir
+      localStorage.removeItem('auth_token')
+      setToken(null)
+      setUser(null)
+      router.push('/login')
+    }
   }, [router])
 
   const refreshUser = useCallback(async () => {

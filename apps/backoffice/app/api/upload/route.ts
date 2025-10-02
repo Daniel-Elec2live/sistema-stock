@@ -14,29 +14,38 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // Validar tipo de archivo
-    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf']
+    // Obtener tipo de subida (imagen de producto o documento)
+    const uploadType = formData.get('type') as string || 'documento'
+
+    // Validar tipo de archivo según el tipo de subida
+    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+    const allowedDocTypes = ['application/pdf', 'image/jpeg', 'image/png']
+
+    const allowedTypes = uploadType === 'producto' ? allowedImageTypes : allowedDocTypes
+
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Tipo de archivo no soportado' },
+        { error: `Tipo de archivo no soportado para ${uploadType === 'producto' ? 'imágenes de productos' : 'documentos'}` },
         { status: 400 }
       )
     }
-    
-    // Validar tamaño (10MB máximo)
-    if (file.size > 10 * 1024 * 1024) {
+
+    // Validar tamaño (5MB para imágenes de productos, 10MB para documentos)
+    const maxSize = uploadType === 'producto' ? 5 * 1024 * 1024 : 10 * 1024 * 1024
+    if (file.size > maxSize) {
       return NextResponse.json(
-        { error: 'Archivo demasiado grande (máximo 10MB)' },
+        { error: `Archivo demasiado grande (máximo ${uploadType === 'producto' ? '5MB' : '10MB'})` },
         { status: 400 }
       )
     }
-    
+
     const supabase = createSupabaseClient()
-    
+
     // Generar nombre único
     const timestamp = Date.now()
     const fileName = `${timestamp}-${file.name}`
-    const filePath = `documentos/${fileName}`
+    const folder = uploadType === 'producto' ? 'productos' : 'documentos'
+    const filePath = `${folder}/${fileName}`
     
     // Subir a Supabase Storage
     const { error } = await supabase.storage

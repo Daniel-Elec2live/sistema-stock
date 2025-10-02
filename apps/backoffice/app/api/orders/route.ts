@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseClient } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+export const revalidate = 0 // No cachear NUNCA
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,18 +26,35 @@ export async function GET(request: NextRequest) {
       'Vary': 'Accept-Encoding, User-Agent'
     }
 
-    const supabase = createSupabaseClient()
+    // Verificar que tenemos el service_role key
+    console.log('🔑 Service Role Key length:', process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0)
+    console.log('🔑 Service Role Key starts with:', process.env.SUPABASE_SERVICE_ROLE_KEY?.slice(0, 20))
 
-    // Obtener todos los pedidos con cache-busting a nivel de query
-    // El problema: cada Lambda tiene su propia conexión pooled que cachea queries
-    // Solución: añadir filtro que siempre sea true pero único por timestamp
-    const cacheBuster = Date.now()
+    // SOLUCIÓN DEFINITIVA: Crear cliente fresco en cada request
+    // Esto evita que Supabase reutilice conexiones con cache
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: { persistSession: false },
+        db: { schema: 'public' },
+        global: {
+          headers: {
+            'Cache-Control': 'no-cache, no-store',
+            'X-Request-ID': `orders-${timestamp}`
+          }
+        }
+      }
+    )
+
+    // Query con logs detallados
     const { data: orders, error } = await supabase
       .from('orders')
       .select(`
         id,
         customer_id,
         status,
+        payment_status,
         total_amount,
         total_items,
         notes,
@@ -47,9 +66,24 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
-      .gte('created_at', '2000-01-01') // Filtro que siempre es true, fuerza query fresca
       .order('created_at', { ascending: false })
       .limit(1000)
+
+    console.log('🔧 Query result:', {
+      hasError: !!error,
+      errorMessage: error?.message,
+      errorCode: error?.code,
+      errorDetails: error?.details,
+      ordersCount: orders?.length || 0,
+      ordersIsArray: Array.isArray(orders)
+    })
+
+    // DEBUG: Ver estados RAW de la BD
+    console.log('📊 RAW orders from DB:', orders?.map(o => ({
+      id: o.id.slice(0, 8),
+      status: o.status,
+      updated_at: o.updated_at
+    })))
 
     console.log(`🔧 Query executed with cache buster for ${orders?.length || 0} orders`)
 

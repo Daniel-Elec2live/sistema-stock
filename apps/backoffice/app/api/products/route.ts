@@ -14,7 +14,8 @@ const productSchema = z.object({
   stock_maximo: z.number().optional(),
   categoria: z.string().min(1, 'Categoría es requerida'),
   proveedor: z.string().min(1, 'Proveedor es requerido'),
-  referencia: z.string().min(1, 'Referencia es requerida')
+  referencia: z.string().min(1, 'Referencia es requerida'),
+  image_url: z.string().url().optional().nullable()
 })
 
 export async function GET(request: NextRequest) {

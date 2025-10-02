@@ -13,7 +13,6 @@ import {
   Building,
   Phone,
   MapPin,
-  Calendar,
   FileText,
   ShoppingBag,
   AlertTriangle,
@@ -104,7 +103,6 @@ export default function OrderDetailsPage() {
 
   const [order, setOrder] = useState<OrderDetails | null>(null)
   const [loading, setLoading] = useState(true)
-  const [updating, setUpdating] = useState(false)
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-ES', {
@@ -147,61 +145,6 @@ export default function OrderDetailsPage() {
       console.error('Error fetching order details:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const updateOrderStatus = async (newStatus: 'confirmed' | 'prepared' | 'delivered') => {
-    console.log(`🎯 updateOrderStatus CALLED - Start of function`)
-    console.log(`🎯 Current updating state:`, updating)
-    console.log(`🎯 Order exists:`, !!order)
-
-    if (!order) {
-      console.log(`⛔ updateOrderStatus ABORTED - No order`)
-      return
-    }
-
-    console.log(`🔄 Order Details - Updating ${orderId.slice(0, 8)} to ${newStatus}`)
-    console.log(`🎯 About to setUpdating(true)`)
-
-    setUpdating(true)
-    console.log(`🎯 setUpdating(true) called`)
-    try {
-      const response = await fetch(`/api/orders/${orderId}/status?_patch=${Date.now()}&_r=${Math.random()}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-          'X-Timestamp': Date.now().toString()
-        },
-        body: JSON.stringify({ status: newStatus })
-      })
-
-      const data = await response.json()
-      console.log(`📥 Order Details - API Response:`, data)
-
-      if (data.success) {
-        console.log(`✅ Order Details - Update successful, refreshing details...`)
-
-        // Actualizar estado local inmediatamente para UX
-        setOrder(prev => prev ? { ...prev, status: newStatus, updated_at: new Date().toISOString() } : null)
-
-        console.log(`✅ Order Details - Status updated to ${newStatus}`)
-
-        // REFRESCAR DATOS desde el servidor para sincronización
-        console.log('🔄 Detail view - Fetching fresh data from server')
-        fetchOrderDetails()
-
-      } else {
-        console.error(`❌ Order Details - Update failed:`, data.error)
-        alert(`Error al actualizar el estado del pedido: ${data.error}`)
-      }
-    } catch (error) {
-      console.error('Error updating order status:', error)
-      alert('Error al actualizar el estado del pedido')
-    } finally {
-      setUpdating(false)
     }
   }
 
@@ -458,56 +401,9 @@ export default function OrderDetailsPage() {
 
               <Separator />
 
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                {order.status === 'pending' && (
-                  <Button
-                    type="button"
-                    onClick={() => updateOrderStatus('confirmed')}
-                    disabled={updating}
-                    className="w-full bg-orange-600 hover:bg-orange-700"
-                  >
-                    {updating ? (
-                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                    )}
-                    Confirmar Pedido
-                  </Button>
-                )}
-
-                {order.status === 'confirmed' && (
-                  <Button
-                    type="button"
-                    onClick={() => updateOrderStatus('prepared')}
-                    disabled={updating}
-                    className="w-full bg-blue-600 hover:bg-blue-700"
-                  >
-                    {updating ? (
-                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Package className="w-4 h-4 mr-2" />
-                    )}
-                    Marcar como Preparado
-                  </Button>
-                )}
-
-                {order.status === 'prepared' && (
-                  <Button
-                    type="button"
-                    onClick={() => updateOrderStatus('delivered')}
-                    disabled={updating}
-                    className="w-full bg-green-600 hover:bg-green-700"
-                  >
-                    {updating ? (
-                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Truck className="w-4 h-4 mr-2" />
-                    )}
-                    Marcar como Entregado
-                  </Button>
-                )}
-              </div>
+              <p className="text-sm text-gray-600 text-center">
+                Usa los botones de la lista de pedidos para cambiar el estado
+              </p>
             </CardContent>
           </Card>
 

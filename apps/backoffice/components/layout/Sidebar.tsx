@@ -70,7 +70,13 @@ const navigationItems = [
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const pathname = usePathname()
+
+  // Marcar como montado (solo cliente)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Cerrar sidebar móvil al cambiar de ruta
   useEffect(() => {
@@ -79,16 +85,18 @@ export function Sidebar() {
 
   // Evitar scroll del body cuando el sidebar móvil está abierto
   useEffect(() => {
+    if (!isMounted) return
+
     if (isMobileOpen) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
     }
-    
+
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [isMobileOpen])
+  }, [isMobileOpen, isMounted])
 
   return (
     <>

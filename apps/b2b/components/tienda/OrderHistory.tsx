@@ -164,21 +164,14 @@ export function OrderHistory({ orders, loading, error }: OrderHistoryProps) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   <div className="flex items-center space-x-2">
                     <ShoppingBag className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-600">
                       {order.total_items} {order.total_items === 1 ? 'artículo' : 'artículos'}
                     </span>
                   </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Package className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-600">
-                      {order.items?.length || 0} {(order.items?.length || 0) === 1 ? 'producto' : 'productos'} diferentes
-                    </span>
-                  </div>
-                  
+
                   <div className="font-semibold text-[var(--color-tomate)]">
                     Total: {formatPrice(order.total_amount)}
                   </div>

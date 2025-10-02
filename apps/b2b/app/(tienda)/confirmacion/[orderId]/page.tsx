@@ -95,12 +95,34 @@ export default function ConfirmacionPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
-          <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Pedido no encontrado</h1>
-          <p className="text-gray-600 mb-6">{error || 'No se pudo cargar la información del pedido'}</p>
-          <Link href="/catalogo">
-            <Button className="btn-primary">Volver al catálogo</Button>
-          </Link>
+          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">¡Pedido Creado!</h1>
+          <p className="text-gray-600 mb-2">Tu pedido ha sido procesado correctamente.</p>
+          {orderId && (
+            <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 mb-6">
+              <span>Pedido ID:</span>
+              <code className="bg-gray-100 px-2 py-1 rounded font-mono">
+                #{orderId.slice(-8)}
+              </code>
+            </div>
+          )}
+          <p className="text-gray-600 mb-6">
+            Puedes ver el estado de tu pedido en la sección "Mis Pedidos"
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/pedidos">
+              <Button variant="outline">
+                <Package className="w-4 h-4 mr-2" />
+                Ver mis pedidos
+              </Button>
+            </Link>
+            <Link href="/catalogo">
+              <Button className="btn-primary">
+                <ArrowRight className="w-4 h-4 mr-2" />
+                Seguir comprando
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     )

@@ -57,6 +57,7 @@ export async function PUT(
         proveedor: body.proveedor,
         referencia: body.referencia,
         precio_promedio: body.precio_promedio,
+        image_url: body.image_url,
         updated_at: new Date().toISOString()
       })
       .eq('id', params.id)

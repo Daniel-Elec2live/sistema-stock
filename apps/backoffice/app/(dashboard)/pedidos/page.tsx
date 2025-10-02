@@ -21,7 +21,9 @@ import {
   Building,
   Phone,
   MapPin,
-  RefreshCw
+  RefreshCw,
+  DollarSign,
+  CreditCard
 } from 'lucide-react'
 
 interface Order {
@@ -31,6 +33,7 @@ interface Order {
   customer_phone?: string
   customer_address?: string
   status: 'pending' | 'confirmed' | 'prepared' | 'delivered' | 'cancelled'
+  payment_status?: 'pending' | 'paid'
   total_amount: number
   total_items: number
   created_at: string
@@ -76,6 +79,17 @@ const statusConfig = {
   }
 }
 
+const paymentStatusConfig = {
+  pending: {
+    label: 'Pendiente de pago',
+    color: 'bg-red-100 text-red-800'
+  },
+  paid: {
+    label: 'Pagado',
+    color: 'bg-green-100 text-green-800'
+  }
+}
+
 export default function PedidosPage() {
   const router = useRouter()
   const [orders, setOrders] = useState<Order[]>([])
@@ -85,6 +99,7 @@ export default function PedidosPage() {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [processingOrderId, setProcessingOrderId] = useState<string | null>(null)
+  const [processingPaymentId, setProcessingPaymentId] = useState<string | null>(null)
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-ES', {
@@ -110,7 +125,10 @@ export default function PedidosPage() {
     }
 
     try {
-      const response = await fetch(`/api/orders?_t=${Date.now()}`, {
+      const timestamp = Date.now()
+      console.log(`🔄 [FRONTEND] Fetching orders at ${timestamp}`)
+
+      const response = await fetch(`/api/orders?_t=${timestamp}`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -121,9 +139,20 @@ export default function PedidosPage() {
       })
       const data = await response.json()
 
+      console.log(`📥 [FRONTEND] Received ${data.data?.length || 0} orders:`, data.data?.map((o: any) => ({
+        id: o.id.slice(0, 8),
+        status: o.status,
+        updated_at: o.updated_at
+      })))
+
       if (data.success) {
-        setOrders(data.data)
+        console.log(`✅ [FRONTEND] Setting orders to state`)
+        // Forzar nuevo array para que React detecte el cambio
+        setOrders([...data.data])
         setLastUpdated(new Date())
+
+        // Force re-render (React 18+)
+        console.log(`🔄 [FRONTEND] State updated, should trigger re-render`)
       } else {
         console.error('Error fetching orders:', data.error)
       }
@@ -159,17 +188,15 @@ export default function PedidosPage() {
       const data = await response.json()
 
       if (data.success) {
-        // Actualizar el estado local inmediatamente para UX
-        setOrders(prev => prev.map(order =>
-          order.id === orderId
-            ? { ...order, status: newStatus, updated_at: new Date().toISOString() }
-            : order
-        ))
+        console.log(`✅ [UPDATE] Status changed successfully, fetching fresh data...`)
 
-        // Esperar 300ms para asegurar que el servidor propagó el cambio
-        await new Promise(resolve => setTimeout(resolve, 300))
+        // Esperar 500ms para asegurar que el servidor propagó el cambio
+        await new Promise(resolve => setTimeout(resolve, 500))
 
-        fetchOrders()
+        // Refrescar datos del servidor SIN actualización optimista
+        await fetchOrders(false)
+
+        console.log(`✅ [UPDATE] Fresh data loaded`)
 
       } else {
         console.error('Error updating order:', data.error)
@@ -180,6 +207,45 @@ export default function PedidosPage() {
       alert('Error de conexión al actualizar el estado del pedido')
     } finally {
       setProcessingOrderId(null)
+    }
+  }
+
+  const togglePaymentStatus = async (orderId: string, currentStatus: string) => {
+    if (processingPaymentId === orderId) {
+      return
+    }
+
+    // Alternar entre pending y paid
+    const newStatus = currentStatus === 'paid' ? 'pending' : 'paid'
+    setProcessingPaymentId(orderId)
+
+    try {
+      const response = await fetch(`/api/orders/${orderId}/payment`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        },
+        body: JSON.stringify({ payment_status: newStatus })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        console.log(`✅ [PAYMENT] Payment status toggled to ${newStatus}`)
+        await new Promise(resolve => setTimeout(resolve, 500))
+        await fetchOrders(false)
+      } else {
+        console.error('Error updating payment:', data.error)
+        alert(`Error al actualizar el estado de pago: ${data.error}`)
+      }
+    } catch (error) {
+      console.error('Network error:', error)
+      alert('Error de conexión al actualizar el pago')
+    } finally {
+      setProcessingPaymentId(null)
     }
   }
 
@@ -401,6 +467,10 @@ export default function PedidosPage() {
                         <StatusIcon className="w-3 h-3 mr-1" />
                         {statusInfo.label}
                       </Badge>
+                      <Badge className={paymentStatusConfig[order.payment_status || 'pending'].color}>
+                        <DollarSign className="w-3 h-3 mr-1" />
+                        {paymentStatusConfig[order.payment_status || 'pending'].label}
+                      </Badge>
                     </div>
                   </div>
                 </CardHeader>
@@ -468,6 +538,40 @@ export default function PedidosPage() {
                       Ver Detalle
                     </Button>
 
+                    {/* Botón de pago - alternar entre pagado/pendiente */}
+                    {order.status !== 'cancelled' && (
+                      <Button
+                        size="sm"
+                        onClick={() => togglePaymentStatus(order.id, order.payment_status || 'pending')}
+                        disabled={processingPaymentId === order.id}
+                        variant="outline"
+                        className={`min-h-[44px] sm:min-h-[36px] disabled:opacity-50 disabled:cursor-not-allowed border-2 ${
+                          (order.payment_status || 'pending') === 'paid'
+                            ? 'border-green-600 text-green-700 hover:bg-green-50'
+                            : 'border-red-600 text-red-700 hover:bg-red-50'
+                        }`}
+                      >
+                        {processingPaymentId === order.id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                        ) : (
+                          <DollarSign className="w-4 h-4 mr-2" />
+                        )}
+                        <span className="hidden sm:inline">
+                          {processingPaymentId === order.id
+                            ? 'Procesando...'
+                            : (order.payment_status || 'pending') === 'paid'
+                            ? 'Marcar Pendiente'
+                            : 'Marcar Pagado'}
+                        </span>
+                        <span className="sm:hidden">
+                          {processingPaymentId === order.id
+                            ? '...'
+                            : (order.payment_status || 'pending') === 'paid'
+                            ? 'Pendiente'
+                            : 'Pagado'}
+                        </span>
+                      </Button>
+                    )}
 
                     {order.status === 'pending' && (
                       <Button

@@ -1,6 +1,7 @@
 // apps/backoffice/app/api/alerts/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseClient } from '@/lib/supabase'
+import { sendStockAlert } from '@/lib/email'
 
 // Tipo para la respuesta de batches con relación products
 interface BatchWithProduct {
@@ -14,6 +15,7 @@ interface BatchWithProduct {
 }
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function GET(request: NextRequest) {
   try {
@@ -58,7 +60,7 @@ export async function GET(request: NextRequest) {
     
     // Formatear alertas con tipos corregidos
     const caducidadesTipadas = caducidades as BatchWithProduct[] | null
-    
+
     const alertas = [
       ...(stockBajo || []).map(product => ({
         id: `stock-${product.id}`,
@@ -79,7 +81,23 @@ export async function GET(request: NextRequest) {
         batch_id: batch.id
       }))
     ]
-    
+
+    // Enviar emails para alertas críticas de stock (sin stock o muy bajo)
+    const criticalStockProducts = (stockBajo || []).filter(p => p.stock_actual === 0)
+    if (criticalStockProducts.length > 0) {
+      // Enviar emails en paralelo sin bloquear respuesta
+      Promise.all(
+        criticalStockProducts.map(product =>
+          sendStockAlert({
+            productName: product.nombre,
+            currentStock: product.stock_actual,
+            minimumStock: product.stock_minimo,
+            alertType: product.stock_actual === 0 ? 'out_of_stock' : 'critical'
+          })
+        )
+      ).catch(err => console.error('[ALERTS] ❌ Error enviando emails de stock crítico:', err))
+    }
+
     return NextResponse.json({
       alertas,
       resumen: {

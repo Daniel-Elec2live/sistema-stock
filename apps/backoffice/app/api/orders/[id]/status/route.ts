@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseClient, updateWithConsistency } from '@/lib/supabase'
+import { sendOrderStatusUpdateToCustomer, sendOrderStatusUpdateToWarehouse } from '@/lib/email'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -43,10 +44,10 @@ export async function PATCH(
       timestamp: new Date().toISOString()
     })
 
-    // Verificar que el pedido existe (lectura rápida sin complejidad)
+    // Verificar que el pedido existe y obtener datos para emails
     const { data: existingOrder } = await supabase
       .from('orders')
-      .select('id, status')
+      .select('id, status, customer_id, total_amount, order_number')
       .eq('id', orderId)
       .single()
 
@@ -67,14 +68,11 @@ export async function PATCH(
       updateData.cancelled_at = new Date().toISOString()
     }
 
-    // ⭐ SOLUCIÓN: UPDATE atómico con RETURNING clause
-    // Esto garantiza read-after-write consistency
-    const { data: updatedOrder, error: updateError } = await updateWithConsistency(
-      supabase,
-      'orders',
-      updateData,
-      { id: orderId }
-    )
+    // PASO 1: Ejecutar UPDATE
+    const { error: updateError } = await supabase
+      .from('orders')
+      .update(updateData)
+      .eq('id', orderId)
 
     if (updateError) {
       console.error('[ORDER STATUS] ❌ Update failed:', updateError)
@@ -84,20 +82,98 @@ export async function PATCH(
       )
     }
 
-    console.log('[ORDER STATUS] ✅ Update successful:', {
+    // PASO 2: VERIFICAR el estado real después del UPDATE
+    // Esto captura cambios hechos por triggers
+    const { data: verifiedOrder, error: verifyError } = await supabase
+      .from('orders')
+      .select('status, stock_reserved_at, order_number, cancellation_reason, updated_at')
+      .eq('id', orderId)
+      .single()
+
+    if (verifyError || !verifiedOrder) {
+      console.error('[ORDER STATUS] ❌ Verification failed:', verifyError)
+      return NextResponse.json(
+        { success: false, error: 'Error al verificar el pedido actualizado' },
+        { status: 500, headers }
+      )
+    }
+
+    // PASO 3: Verificar si el trigger cambió el estado
+    const actualStatus = verifiedOrder.status
+    const statusChanged = actualStatus !== status
+
+    if (statusChanged) {
+      console.warn('[ORDER STATUS] ⚠️ Trigger modified status:', {
+        requestedStatus: status,
+        actualStatus: actualStatus,
+        reason: verifiedOrder.cancellation_reason
+      })
+
+      // Si el trigger canceló el pedido, devolver error descriptivo
+      if (actualStatus === 'cancelled') {
+        return NextResponse.json(
+          {
+            success: false,
+            error: verifiedOrder.cancellation_reason || 'El pedido no pudo ser confirmado',
+            actual_status: actualStatus
+          },
+          { status: 400, headers }
+        )
+      }
+    }
+
+    console.log('[ORDER STATUS] ✅ Update verified:', {
       orderId: orderId.slice(0, 8),
       oldStatus: existingOrder.status,
-      newStatus: (updatedOrder as any).status,
-      confirmed: (updatedOrder as any).status === status
+      requestedStatus: status,
+      actualStatus: actualStatus,
+      statusMatches: !statusChanged,
+      stockReserved: !!verifiedOrder.stock_reserved_at
     })
+
+    // PASO 4: Enviar emails si el estado cambió realmente
+    if (existingOrder.status !== actualStatus) {
+      // Obtener datos del cliente y items para el email
+      const { data: customer } = await supabase
+        .from('customers')
+        .select('name, email')
+        .eq('id', existingOrder.customer_id)
+        .single()
+
+      const { data: items } = await supabase
+        .from('order_items')
+        .select('product_name, quantity, unit_price, total_price')
+        .eq('order_id', orderId)
+
+      if (customer && items) {
+        const emailData = {
+          orderId,
+          orderNumber: verifiedOrder.order_number,
+          customerName: customer.name,
+          customerEmail: customer.email,
+          status: actualStatus,
+          totalAmount: existingOrder.total_amount,
+          items
+        }
+
+        // Enviar emails en paralelo (no bloquean la respuesta)
+        Promise.all([
+          sendOrderStatusUpdateToCustomer(emailData, existingOrder.status, actualStatus),
+          sendOrderStatusUpdateToWarehouse(emailData, existingOrder.status, actualStatus)
+        ]).catch(err => console.error('[ORDER STATUS] ❌ Error enviando emails:', err))
+      }
+    }
 
     return NextResponse.json({
       success: true,
       data: {
         order_id: orderId,
         old_status: existingOrder.status,
-        new_status: (updatedOrder as any).status,
-        updated_at: (updatedOrder as any).updated_at
+        new_status: actualStatus,  // Estado REAL de la BD
+        status_changed_by_trigger: statusChanged,
+        updated_at: verifiedOrder.updated_at,
+        stock_reserved: !!verifiedOrder.stock_reserved_at,
+        order_number: verifiedOrder.order_number
       }
     }, { headers })
 

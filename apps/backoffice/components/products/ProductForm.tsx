@@ -3,11 +3,11 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { Save, Package } from 'lucide-react'
+import { Save, Package, Upload, X, Image as ImageIcon } from 'lucide-react'
 import { productSchema } from '@/lib/validations'
 import { Product } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -32,10 +32,60 @@ export function ProductForm({
   const [proveedorSuggestions, setProveedorSuggestions] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [proveedorInput, setProveedorInput] = useState(initialData?.proveedor || '')
+  const [imageSource, setImageSource] = useState<'url' | 'file'>('url')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string>(initialData?.image_url || '')
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
+  const [imageUrlError, setImageUrlError] = useState<string>('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const { 
-    register, 
-    handleSubmit, 
+  // Función para validar URL de imagen
+  const validateImageUrl = async (url: string): Promise<boolean> => {
+    if (!url) {
+      setImageUrlError('')
+      return true // URL vacía es válida (opcional)
+    }
+
+    // Validar formato de URL
+    try {
+      const urlObj = new URL(url)
+
+      // Rechazar URLs de redirección de Google
+      if (urlObj.hostname.includes('google.com') && urlObj.pathname.includes('/url')) {
+        setImageUrlError('URL no válida. Usa la URL directa de la imagen, no enlaces de búsqueda de Google.')
+        return false
+      }
+
+      // Validar que la URL apunte a una imagen (extensión)
+      const validExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg']
+      const hasValidExtension = validExtensions.some(ext =>
+        urlObj.pathname.toLowerCase().endsWith(ext)
+      )
+
+      // Si no tiene extensión válida, intentar verificar el Content-Type
+      if (!hasValidExtension) {
+        // Para Supabase Storage y otros servicios, la extensión puede estar en query params
+        const isSupabaseStorage = urlObj.hostname.includes('supabase.co') && urlObj.pathname.includes('/storage/')
+        const isGoogleUserContent = urlObj.hostname.includes('googleusercontent.com')
+
+        if (!isSupabaseStorage && !isGoogleUserContent) {
+          setImageUrlError('La URL debe apuntar directamente a una imagen (.jpg, .png, .webp, etc.)')
+          return false
+        }
+      }
+
+      setImageUrlError('')
+      return true
+    } catch (e) {
+      setImageUrlError('URL no válida. Debe comenzar con https://')
+      return false
+    }
+  }
+
+  const {
+    register,
+    handleSubmit,
     formState: { errors },
     watch,
     setValue,
@@ -155,8 +205,21 @@ export function ProductForm({
     'ml'
   ]
 
+  const handleFormSubmit = async (data: ProductFormData) => {
+    // Validar URL de imagen antes de enviar
+    if (data.image_url) {
+      const isValid = await validateImageUrl(data.image_url)
+      if (!isValid) {
+        return // No enviar si la URL no es válida
+      }
+    }
+
+    // Enviar datos
+    onSubmit(data)
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       {/* Información básica */}
       <Card className="p-6">
         <div className="flex items-center gap-2 mb-4">
@@ -279,19 +342,204 @@ export function ProductForm({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              URL de Imagen (opcional)
+              Imagen del Producto (opcional)
             </label>
-            <Input
-              {...register('image_url')}
-              placeholder="https://ejemplo.com/imagen.jpg"
-              className="h-12 lg:h-10"
-            />
+
+            {/* Selector de tipo de imagen */}
+            <div className="flex gap-2 mb-3">
+              <Button
+                type="button"
+                variant={imageSource === 'url' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setImageSource('url')}
+                className="flex-1"
+              >
+                URL de Imagen
+              </Button>
+              <Button
+                type="button"
+                variant={imageSource === 'file' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setImageSource('file')}
+                className="flex-1"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Subir Archivo
+              </Button>
+            </div>
+
+            {/* Input según el tipo seleccionado */}
+            {imageSource === 'url' ? (
+              <>
+                <Input
+                  {...register('image_url')}
+                  placeholder="https://ejemplo.com/imagen.jpg"
+                  className={cn(
+                    "h-12 lg:h-10",
+                    imageUrlError && "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  onChange={async (e) => {
+                    const url = e.target.value
+                    setValue('image_url', url)
+
+                    // Validar URL
+                    const isValid = await validateImageUrl(url)
+                    if (isValid || !url) {
+                      setImagePreview(url)
+                    }
+                  }}
+                  onBlur={async (e) => {
+                    // Validar al perder foco
+                    await validateImageUrl(e.target.value)
+                  }}
+                />
+                {imageUrlError ? (
+                  <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                    <span className="font-semibold">⚠</span>
+                    {imageUrlError}
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Introduce la URL directa de una imagen (debe terminar en .jpg, .png, etc.)
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+
+                    // Validar tamaño
+                    if (file.size > 5 * 1024 * 1024) {
+                      alert('La imagen debe ser menor a 5MB')
+                      return
+                    }
+
+                    setImageFile(file)
+
+                    // Crear preview
+                    const reader = new FileReader()
+                    reader.onloadend = () => {
+                      setImagePreview(reader.result as string)
+                    }
+                    reader.readAsDataURL(file)
+
+                    // Subir imagen
+                    setUploadingImage(true)
+                    try {
+                      const formData = new FormData()
+                      formData.append('file', file)
+                      formData.append('type', 'producto')
+
+                      const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                      })
+
+                      if (response.ok) {
+                        const data = await response.json()
+                        setValue('image_url', data.fileUrl)
+                        setImagePreview(data.fileUrl)
+                        setUploadSuccess(true)
+
+                        // Ocultar mensaje de éxito después de 3 segundos
+                        setTimeout(() => setUploadSuccess(false), 3000)
+                      } else {
+                        const error = await response.json()
+                        alert(error.error || 'Error al subir imagen')
+                        setImageFile(null)
+                        setImagePreview('')
+                      }
+                    } catch (error) {
+                      console.error('Error uploading image:', error)
+                      alert('Error al subir imagen')
+                      setImageFile(null)
+                      setImagePreview('')
+                    } finally {
+                      setUploadingImage(false)
+                    }
+                  }}
+                />
+
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1 h-12 lg:h-10"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadingImage}
+                  >
+                    {uploadingImage ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                        Subiendo...
+                      </>
+                    ) : (
+                      <>
+                        <ImageIcon className="w-4 h-4 mr-2" />
+                        Seleccionar Imagen
+                      </>
+                    )}
+                  </Button>
+
+                  {imageFile && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setImageFile(null)
+                        setImagePreview('')
+                        setValue('image_url', '')
+                        if (fileInputRef.current) fileInputRef.current.value = ''
+                      }}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+
+                <p className="text-xs text-gray-500 mt-1">
+                  Formatos: JPG, PNG, WebP, GIF (máx. 5MB)
+                </p>
+
+                {/* Mensaje de éxito */}
+                {uploadSuccess && (
+                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md flex items-center gap-2">
+                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-xs text-green-700 font-medium">
+                      Imagen subida correctamente
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Preview de la imagen */}
+            {imagePreview && (
+              <div className="mt-3">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-full h-48 object-cover rounded-md border border-gray-200"
+                  onError={() => setImagePreview('')}
+                />
+              </div>
+            )}
+
             {errors.image_url && (
               <p className="text-red-600 text-sm mt-1">{errors.image_url.message}</p>
             )}
-            <p className="text-xs text-gray-500 mt-1">
-              Introduce la URL de una imagen del producto
-            </p>
           </div>
         </div>
       </Card>

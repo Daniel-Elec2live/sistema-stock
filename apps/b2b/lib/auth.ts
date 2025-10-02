@@ -56,40 +56,44 @@ export async function verifyAuth(request: NextRequest): Promise<AuthResult> {
       return { success: false, error: 'Token inválido o expirado' }
     }
 
-    // Obtener información actual del usuario desde la base de datos
+    // Obtener información actual del usuario desde la base de datos (query separada)
+    console.log('🔍 verifyAuth - Fetching user by ID:', decoded.userId)
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select(`
-        id,
-        email,
-        customers!customers_user_id_fkey (
-          id,
-          email,
-          name,
-          company_name,
-          phone,
-          address,
-          is_approved,
-          created_at,
-          updated_at
-        )
-      `)
+      .select('id, email')
       .eq('id', decoded.userId)
       .single()
 
     if (userError || !user) {
+      console.log('❌ verifyAuth - User not found:', userError)
       return { success: false, error: 'Usuario no encontrado' }
     }
 
+    console.log('✅ verifyAuth - User found, fetching customer...')
+
+    // Obtener perfil de customer (query separada para evitar problemas con JOINs)
+    const { data: customers, error: customerError } = await supabase
+      .from('customers')
+      .select('id, email, name, company_name, phone, address, is_approved, created_at, updated_at')
+      .eq('user_id', user.id)
+
+    console.log('🔍 verifyAuth - Customer query result:', {
+      found: customers?.length || 0,
+      error: customerError
+    })
+
     // Verificar que el usuario tenga un perfil de cliente
-    if (!user.customers || user.customers.length === 0) {
+    if (customerError || !customers || customers.length === 0) {
+      console.log('❌ verifyAuth - No customer profile found')
       return { success: false, error: 'Perfil de cliente no encontrado' }
     }
 
-    const customer = user.customers[0]
+    const customer = customers[0]
+    console.log('✅ verifyAuth - Customer found:', { id: customer.id, name: customer.name })
 
     // Verificar que el customer ID del token coincida con el actual
     if (customer.id !== decoded.customerId) {
+      console.log('❌ verifyAuth - Customer ID mismatch')
       return { success: false, error: 'Token inválido' }
     }
 

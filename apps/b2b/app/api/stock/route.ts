@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { ProductWithDiscount, ProductFilters } from '@/lib/types'
 import { verifyAuth } from '@/lib/auth'
+import { DEFAULT_MARGIN_PERCENTAGE } from '@/lib/pricing'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -115,10 +116,14 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching customer discounts:', discountsError)
     }
 
-    // Calcular precios finales aplicando descuentos
+    // Calcular precios finales aplicando margen y descuentos
     const productsWithDiscounts: ProductWithDiscount[] = products.map((product) => {
-      // El precio_promedio es el precio base SIN descuentos aplicados
-      const basePrice = product.precio_promedio || 0
+      // precio_promedio es el COSTO PROMEDIO de compra (sin margen)
+      const averageCost = product.precio_promedio || 0
+
+      // Aplicar margen del 20% para obtener precio de venta base
+      const priceWithMargin = averageCost * (1 + DEFAULT_MARGIN_PERCENTAGE / 100)
+
       let bestDiscount = 0
 
       if (customerDiscounts) {
@@ -146,18 +151,18 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // Calcular precio final aplicando descuento UNA SOLA VEZ
-      const discountAmount = (basePrice * bestDiscount) / 100
-      const finalPrice = Math.max(0, basePrice - discountAmount)
+      // Calcular precio final aplicando descuento sobre el precio con margen
+      const discountAmount = (priceWithMargin * bestDiscount) / 100
+      const finalPrice = Math.max(0, priceWithMargin - discountAmount)
 
       return {
         ...product,
         discount_percentage: bestDiscount,
-        // discounted_price es el precio final CON descuento aplicado
-        discounted_price: finalPrice,
-        final_price: finalPrice,
-        // Mantener el precio base original para mostrar tachado
-        original_price: basePrice
+        // discounted_price es el precio final CON margen y descuento aplicados
+        discounted_price: Math.round(finalPrice * 100) / 100,
+        final_price: Math.round(finalPrice * 100) / 100,
+        // original_price es el precio con margen SIN descuento (para mostrar tachado)
+        original_price: Math.round(priceWithMargin * 100) / 100
       }
     })
 
