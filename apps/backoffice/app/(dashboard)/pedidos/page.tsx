@@ -248,25 +248,16 @@ export default function PedidosPage() {
       const data = await response.json()
 
       if (data.success) {
-        const actualNewStatus = data.data.new_payment_status
+        console.log(`✅ [PAYMENT] Payment status changed successfully, fetching fresh data...`)
 
-        console.log(`✅ [PAYMENT] Payment status updated:`, {
-          old: data.data.old_payment_status,
-          new: actualNewStatus,
-          changed: data.data.old_payment_status !== actualNewStatus
-        })
+        // Esperar 500ms para asegurar que el servidor propagó el cambio
+        await new Promise(resolve => setTimeout(resolve, 500))
 
-        // SOLUCIÓN: Actualizar estado local INMEDIATAMENTE con el valor real de la BD
-        setOrders(prevOrders =>
-          prevOrders.map(o =>
-            o.id === orderId
-              ? { ...o, payment_status: actualNewStatus as 'pending' | 'paid' }
-              : o
-          )
-        )
+        // Refrescar datos del servidor SIN actualización optimista
+        await fetchOrders(false)
 
-        // NO refrescar inmediatamente - confiar en el valor de la BD
-        // El polling automático lo actualizará en 2 minutos si hace falta
+        console.log(`✅ [PAYMENT] Fresh data loaded`)
+
       } else {
         console.error('Error updating payment:', data.error)
         alert(`Error al actualizar el estado de pago: ${data.error}`)
