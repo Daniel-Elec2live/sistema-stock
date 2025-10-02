@@ -55,17 +55,18 @@ export async function PATCH(
       )
     }
 
-    console.log('[PAYMENT STATUS] Updating payment:', {
+    console.log('[PAYMENT STATUS] 📥 Request received:', {
       orderId: orderId.slice(0, 8),
-      newPaymentStatus: payment_status,
+      requestedPaymentStatus: payment_status,
       timestamp: new Date().toISOString()
     })
 
-    // Verificar que el pedido existe
+    // Verificar que el pedido existe y obtener estado actual
     const { data: existingOrder } = await supabase
       .from('orders')
       .select('id, payment_status')
       .eq('id', orderId)
+      .gte('created_at', '2000-01-01') // Cache buster
       .single()
 
     if (!existingOrder) {
@@ -75,7 +76,29 @@ export async function PATCH(
       )
     }
 
-    // PASO 1: Ejecutar UPDATE simple
+    console.log('[PAYMENT STATUS] 📋 Current state in DB:', {
+      orderId: orderId.slice(0, 8),
+      currentPaymentStatus: existingOrder.payment_status,
+      requestedPaymentStatus: payment_status,
+      willChange: existingOrder.payment_status !== payment_status
+    })
+
+    // Si ya está en el estado solicitado, no hacer nada
+    if (existingOrder.payment_status === payment_status) {
+      console.log('[PAYMENT STATUS] ⚠️  No change needed - already in requested state')
+      return NextResponse.json({
+        success: true,
+        data: {
+          order_id: orderId,
+          old_payment_status: existingOrder.payment_status,
+          new_payment_status: existingOrder.payment_status,
+          status_changed_by_trigger: false,
+          updated_at: new Date().toISOString()
+        }
+      }, { headers })
+    }
+
+    // PASO 1: Ejecutar UPDATE
     const { error: updateError } = await supabase
       .from('orders')
       .update({

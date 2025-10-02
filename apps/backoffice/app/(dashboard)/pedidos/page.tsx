@@ -215,11 +215,18 @@ export default function PedidosPage() {
       return
     }
 
-    // Alternar entre pending y paid
-    const newStatus = currentStatus === 'paid' ? 'pending' : 'paid'
     setProcessingPaymentId(orderId)
 
     try {
+      // Alternar: si está paid → pending, si está pending → paid
+      const newStatus = currentStatus === 'paid' ? 'pending' : 'paid'
+
+      console.log(`🔄 [PAYMENT] Toggling payment status:`, {
+        orderId: orderId.slice(0, 8),
+        currentStatus,
+        newStatus
+      })
+
       const response = await fetch(`/api/orders/${orderId}/payment`, {
         method: 'PATCH',
         headers: {
@@ -234,7 +241,12 @@ export default function PedidosPage() {
       const data = await response.json()
 
       if (data.success) {
-        console.log(`✅ [PAYMENT] Payment status toggled to ${newStatus}`)
+        console.log(`✅ [PAYMENT] Payment status updated:`, {
+          old: data.data.old_payment_status,
+          new: data.data.new_payment_status,
+          changed: data.data.old_payment_status !== data.data.new_payment_status
+        })
+
         await new Promise(resolve => setTimeout(resolve, 500))
         await fetchOrders(false)
       } else {
