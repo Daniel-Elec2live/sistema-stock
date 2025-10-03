@@ -121,7 +121,7 @@ ${itemsList}
 ⚡ ACCIÓN REQUERIDA
 
 Accede al backoffice para revisar y confirmar este pedido:
-→ https://sistema-stock-lac.vercel.app/pedidos
+→ https://sistema-stock-lac.vercel.app/
 
 Una vez confirmado, el cliente recibirá una notificación automática.
 
@@ -311,7 +311,7 @@ ACCIÓN SUGERIDA: Revisar niveles y planificar pedido al proveedor.`
 ───────────────────────────────────────────────────
 
 📊 Accede al backoffice para gestionar la reposición:
-→ https://sistema-stock-lac.vercel.app/stock
+→ https://sistema-stock-lac.vercel.app/
 
 Sistema de Gestión La Traviata`
     })

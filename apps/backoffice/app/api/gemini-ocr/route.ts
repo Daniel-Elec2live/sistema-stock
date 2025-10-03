@@ -62,7 +62,7 @@ REGLAS CRÍTICAS:
 CONTEXTO: Sistema de gestión de stock para restaurante/tienda de alimentación.
 `
 
-async function downloadImageAsBase64(imageUrl: string): Promise<string> {
+async function downloadImageAsBase64(imageUrl: string): Promise<{ base64: string; mimeType: string }> {
   try {
     const response = await fetch(imageUrl, {
       headers: {
@@ -77,23 +77,35 @@ async function downloadImageAsBase64(imageUrl: string): Promise<string> {
     }
 
     const contentType = response.headers.get('content-type')
-    if (!contentType?.startsWith('image/')) {
-      throw new Error(`Tipo de archivo inválido: ${contentType}`)
+    // Aceptar imágenes y PDFs
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'application/pdf']
+    if (!contentType || !validTypes.some(type => contentType.startsWith(type))) {
+      throw new Error(`Tipo de archivo no soportado: ${contentType}. Formatos válidos: JPG, PNG, WEBP, PDF`)
     }
 
     // Verificar tamaño (máximo 10MB)
     const contentLength = response.headers.get('content-length')
     if (contentLength && parseInt(contentLength) > 10 * 1024 * 1024) {
-      throw new Error('Imagen demasiado grande (máximo 10MB)')
+      throw new Error('Archivo demasiado grande (máximo 10MB)')
     }
 
     const buffer = await response.arrayBuffer()
     const base64 = Buffer.from(buffer).toString('base64')
 
-    return base64
+    // Normalizar mime type
+    let mimeType = contentType
+    if (contentType.includes('jpeg') || contentType.includes('jpg')) {
+      mimeType = 'image/jpeg'
+    } else if (contentType.includes('png')) {
+      mimeType = 'image/png'
+    } else if (contentType.includes('pdf')) {
+      mimeType = 'application/pdf'
+    }
+
+    return { base64, mimeType }
   } catch (error) {
-    console.error('Error descargando imagen:', error)
-    throw new Error(`Error descargando imagen: ${error instanceof Error ? error.message : 'Error desconocido'}`)
+    console.error('Error descargando archivo:', error)
+    throw new Error(`Error descargando archivo: ${error instanceof Error ? error.message : 'Error desconocido'}`)
   }
 }
 
@@ -173,26 +185,86 @@ export async function POST(request: NextRequest) {
 
     console.log(`[OCR] Iniciando procesamiento - ID: ${processing_id}`)
 
-    // 1. Descargar imagen
-    console.log(`[OCR] Descargando imagen desde: ${image_url.substring(0, 100)}...`)
-    const imageBase64 = await downloadImageAsBase64(image_url)
+    // 1. Descargar archivo
+    console.log(`[OCR] Descargando archivo desde: ${image_url.substring(0, 100)}...`)
+    const { base64, mimeType } = await downloadImageAsBase64(image_url)
+    console.log(`[OCR] Archivo descargado - Tipo: ${mimeType}`)
 
-    // 2. Procesar con Gemini
-    console.log(`[OCR] Procesando con Gemini Vision...`)
-    const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' })
+    // 2. Procesar con Gemini usando API REST directa
+    console.log(`[OCR] Procesando con Gemini Vision (API REST)...`)
 
-    const result = await model.generateContent([
-      GEMINI_PROMPT,
-      {
-        inlineData: {
-          data: imageBase64,
-          mimeType: 'image/jpeg'
+    // Intentar con diferentes versiones de API y modelos
+    // Gemini 2.0 es la versión más reciente (enero 2025)
+    const apiVersions = ['v1beta', 'v1']
+    const models = [
+      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash',
+      'gemini-1.5-flash-latest',
+      'gemini-1.5-flash',
+      'gemini-1.5-pro-latest',
+      'gemini-1.5-pro'
+    ]
+
+    let responseText = ''
+    let success = false
+
+    for (const apiVersion of apiVersions) {
+      if (success) break
+
+      for (const modelName of models) {
+        if (success) break
+
+        try {
+          console.log(`[OCR] Intentando ${apiVersion}/${modelName}...`)
+
+          const url = `https://generativelanguage.googleapis.com/${apiVersion}/models/${modelName}:generateContent?key=${apiKey}`
+
+          const requestBody = {
+            contents: [{
+              parts: [
+                { text: GEMINI_PROMPT },
+                {
+                  inline_data: {
+                    mime_type: mimeType,
+                    data: base64
+                  }
+                }
+              ]
+            }]
+          }
+
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+          })
+
+          if (!response.ok) {
+            const errorText = await response.text()
+            console.log(`[OCR] Error con ${apiVersion}/${modelName}:`, response.status, errorText.substring(0, 200))
+            continue
+          }
+
+          const data = await response.json()
+
+          if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+            responseText = data.candidates[0].content.parts[0].text
+            success = true
+            console.log(`[OCR] ✅ Éxito con ${apiVersion}/${modelName}`)
+            break
+          }
+        } catch (err: any) {
+          console.log(`[OCR] Error probando ${apiVersion}/${modelName}:`, err.message)
         }
       }
-    ])
+    }
 
-    const responseText = result.response.text()
+    if (!success || !responseText) {
+      throw new Error('No se pudo procesar con ninguna versión de Gemini. Verifica que la API key sea válida y tenga acceso a Gemini.')
+    }
+
     console.log(`[OCR] Respuesta Gemini raw:`, responseText.substring(0, 200) + '...')
 
     // 3. Parsear respuesta JSON

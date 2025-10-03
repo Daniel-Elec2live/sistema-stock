@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { sendPaymentStatusUpdateToCustomer } from '@/lib/email'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -61,10 +62,10 @@ export async function PATCH(
       timestamp: new Date().toISOString()
     })
 
-    // Verificar que el pedido existe y obtener estado actual
+    // Verificar que el pedido existe y obtener estado actual + datos para email
     const { data: existingOrder } = await supabase
       .from('orders')
-      .select('id, payment_status')
+      .select('id, payment_status, customer_id, order_number')
       .eq('id', orderId)
       .gte('created_at', '2000-01-01') // Cache buster
       .single()
@@ -149,6 +150,27 @@ export async function PATCH(
       actualPaymentStatus: actualPaymentStatus,
       statusMatches: !statusChangedByTrigger
     })
+
+    // PASO 3: Enviar email al cliente si el estado cambió (solo cuando se marca como pagado)
+    if (existingOrder.payment_status !== actualPaymentStatus && actualPaymentStatus === 'paid') {
+      // Obtener datos del cliente para el email
+      const { data: customer } = await supabase
+        .from('customers')
+        .select('name, email')
+        .eq('id', existingOrder.customer_id)
+        .single()
+
+      if (customer?.email) {
+        // Enviar email en paralelo (no bloquea la respuesta)
+        sendPaymentStatusUpdateToCustomer(
+          customer.email,
+          customer.name,
+          orderId,
+          existingOrder.order_number,
+          actualPaymentStatus
+        ).catch(err => console.error('[PAYMENT STATUS] ❌ Error enviando email:', err))
+      }
+    }
 
     return NextResponse.json({
       success: true,

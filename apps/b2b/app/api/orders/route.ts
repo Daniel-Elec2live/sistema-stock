@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
 import { verifyAuth } from '@/lib/auth'
 import { BackorderItem } from '@/lib/types'
+import { sendOrderConfirmationToCustomer, sendNewOrderToWarehouse } from '@/lib/email'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -293,6 +294,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Enviar emails de confirmación (no bloquean la respuesta)
+    const emailData = {
+      orderId: order.id,
+      orderNumber: order.id.slice(0, 8).toUpperCase(),
+      customerName: user.customer?.name || user.email,
+      customerEmail: user.email,
+      status: order.status,
+      totalAmount: totalAmount,
+      items: orderItems
+    }
+
+    Promise.all([
+      sendOrderConfirmationToCustomer(emailData),
+      sendNewOrderToWarehouse(emailData)
+    ]).catch(err => console.error('[B2B ORDERS] ❌ Error enviando emails:', err))
+
     return NextResponse.json({
       success: true,
       data: {
@@ -301,7 +318,7 @@ export async function POST(request: NextRequest) {
         has_backorder: hasBackorder,
         backorder_items: hasBackorder ? backorderItems : undefined
       },
-      message: hasBackorder 
+      message: hasBackorder
         ? 'Pedido creado con artículos pendientes por falta de stock'
         : 'Pedido creado exitosamente'
     })

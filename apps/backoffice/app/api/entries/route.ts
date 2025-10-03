@@ -18,8 +18,16 @@ interface ProductoEntrada {
   caducidad?: string
 }
 
-const entrySchema = z.object({
-  tipo: z.enum(['ocr', 'manual']),
+// Schema para entrada OCR (solo necesita documento)
+const ocrEntrySchema = z.object({
+  tipo: z.literal('ocr'),
+  documento_url: z.string().min(1, 'documento_url es requerido para OCR'),
+  archivo_nombre: z.string().optional()
+})
+
+// Schema para entrada manual (necesita todos los datos)
+const manualEntrySchema = z.object({
+  tipo: z.literal('manual'),
   proveedor: z.string().min(1, 'Proveedor es requerido'),
   fecha: z.string().min(1, 'Fecha es requerida'),
   documento_url: z.string().optional(),
@@ -32,6 +40,8 @@ const entrySchema = z.object({
     caducidad: z.string().optional()
   })).min(1, 'Debe haber al menos un producto')
 })
+
+const entrySchema = z.discriminatedUnion('tipo', [ocrEntrySchema, manualEntrySchema])
 
 export async function GET(request: NextRequest) {
   try {
@@ -69,14 +79,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { tipo, documento_url, archivo_nombre, ...data } = entrySchema.parse(body)
-    
+    const validatedData = entrySchema.parse(body)
+
     const supabase = createSupabaseClient()
-    
-    if (tipo === 'ocr') {
-      if (!documento_url) {
-        throw new Error('documento_url es requerido para OCR')
-      }
+
+    if (validatedData.tipo === 'ocr') {
+      const { documento_url, archivo_nombre } = validatedData
 
       // 1. Procesar con Gemini OCR directamente
       console.log('[ENTRIES] Procesando con Gemini OCR...')
@@ -139,28 +147,30 @@ export async function POST(request: NextRequest) {
 
     } else {
       // Entrada manual
+      const { proveedor, fecha, productos, documento_url, archivo_nombre } = validatedData
+
       const { data: entrada, error: entradaError } = await supabase
         .from('entries')
         .insert({
           tipo: 'manual',
           estado: 'completed',
-          proveedor_text: data.proveedor,
-          fecha_factura: data.fecha,
-          productos: data.productos,
+          proveedor_text: proveedor,
+          fecha_factura: fecha,
+          productos: productos,
           created_at: new Date().toISOString()
         })
         .select()
         .single()
-      
+
       if (entradaError) {
         throw new Error(`Error creando entrada: ${entradaError.message}`)
       }
-      
+
       // Actualizar stock y precios para cada producto
-      if (data.productos) {
+      if (productos) {
         const processedProductIds = new Set<string>()
-        for (const producto of data.productos) {
-          const productId = await updateStock(supabase, producto as ProductoEntrada, data.proveedor || 'Proveedor Desconocido')
+        for (const producto of productos) {
+          const productId = await updateStock(supabase, producto as ProductoEntrada, proveedor || 'Proveedor Desconocido')
 
           // Actualizar precio de venta basado en nueva entrada
           if (productId && !processedProductIds.has(productId)) {

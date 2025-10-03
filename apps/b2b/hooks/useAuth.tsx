@@ -41,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchUser = async () => {
     try {
       console.log('📡 useAuth - Calling /api/auth/me (cookie enviada automáticamente)')
+      console.log('📡 useAuth - Current URL:', window.location.href)
 
       // La cookie HTTP-only se envía automáticamente con el request
       // NO necesitamos leerla desde JavaScript ni pasarla en headers
@@ -52,6 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
 
       console.log('📥 useAuth - /api/auth/me response:', response.status, response.ok ? 'OK' : 'ERROR')
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.log('📥 useAuth - Error response body:', errorText)
+      }
 
       if (response.ok) {
         const data = await response.json()

@@ -210,7 +210,7 @@ export default function PedidosPage() {
     }
   }
 
-  const togglePaymentStatus = async (orderId: string) => {
+  const togglePaymentStatus = async (orderId: string, desiredStatus: 'pending' | 'paid') => {
     if (processingPaymentId === orderId) {
       return
     }
@@ -218,20 +218,9 @@ export default function PedidosPage() {
     setProcessingPaymentId(orderId)
 
     try {
-      // Obtener el estado ACTUAL del pedido desde el estado de React
-      const currentOrder = orders.find(o => o.id === orderId)
-      if (!currentOrder) {
-        console.error('[PAYMENT] Order not found in state')
-        return
-      }
-
-      const currentStatus = currentOrder.payment_status || 'pending'
-      const newStatus = currentStatus === 'paid' ? 'pending' : 'paid'
-
-      console.log(`🔄 [PAYMENT] Toggling payment status:`, {
+      console.log(`🔄 [PAYMENT] Updating payment status:`, {
         orderId: orderId.slice(0, 8),
-        currentStatus,
-        newStatus
+        desiredStatus
       })
 
       const response = await fetch(`/api/orders/${orderId}/payment`, {
@@ -242,7 +231,7 @@ export default function PedidosPage() {
           'Pragma': 'no-cache',
           'Expires': '0'
         },
-        body: JSON.stringify({ payment_status: newStatus })
+        body: JSON.stringify({ payment_status: desiredStatus })
       })
 
       const data = await response.json()
@@ -559,29 +548,39 @@ export default function PedidosPage() {
                       Ver Detalle
                     </Button>
 
-                    {/* Botón de pago - alternar entre pagado/pendiente */}
+                    {/* Botón de pago - cambiar estado */}
                     {order.status !== 'cancelled' && (
-                      <Button
-                        size="sm"
-                        onClick={() => togglePaymentStatus(order.id)}
-                        disabled={processingPaymentId === order.id}
-                        className={`min-h-[44px] sm:min-h-[36px] disabled:opacity-50 disabled:cursor-not-allowed ${
-                          (order.payment_status || 'pending') === 'paid'
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-red-600 hover:bg-red-700 text-white'
-                        }`}
-                      >
-                        {processingPaymentId === order.id ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <>
+                        {(order.payment_status || 'pending') === 'pending' ? (
+                          <Button
+                            size="sm"
+                            onClick={() => togglePaymentStatus(order.id, 'paid')}
+                            disabled={processingPaymentId === order.id}
+                            className="min-h-[44px] sm:min-h-[36px] bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
+                          >
+                            {processingPaymentId === order.id ? (
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            ) : (
+                              <DollarSign className="w-4 h-4 mr-2" />
+                            )}
+                            {processingPaymentId === order.id ? 'Procesando...' : 'Marcar Pagado'}
+                          </Button>
                         ) : (
-                          <DollarSign className="w-4 h-4 mr-2" />
+                          <Button
+                            size="sm"
+                            onClick={() => togglePaymentStatus(order.id, 'pending')}
+                            disabled={processingPaymentId === order.id}
+                            className="min-h-[44px] sm:min-h-[36px] bg-yellow-600 hover:bg-yellow-700 text-white disabled:opacity-50"
+                          >
+                            {processingPaymentId === order.id ? (
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            ) : (
+                              <DollarSign className="w-4 h-4 mr-2" />
+                            )}
+                            {processingPaymentId === order.id ? 'Procesando...' : 'Marcar Pendiente'}
+                          </Button>
                         )}
-                        {processingPaymentId === order.id
-                          ? 'Procesando...'
-                          : (order.payment_status || 'pending') === 'paid'
-                          ? 'Pagado'
-                          : 'Pendiente Pago'}
-                      </Button>
+                      </>
                     )}
 
                     {order.status === 'pending' && (

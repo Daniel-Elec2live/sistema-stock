@@ -128,6 +128,7 @@ export async function GET(request: NextRequest) {
           customer_phone: customer?.phone,
           customer_address: customer?.address,
           status: order.status,
+          payment_status: order.payment_status,
           total_amount: order.total_amount,
           total_items: order.total_items,
           notes: order.notes,
