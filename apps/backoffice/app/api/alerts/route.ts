@@ -21,22 +21,38 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '10')
-    
+
+    console.log('[ALERTS] 📥 Fetching alerts with limit:', limit)
+
     const supabase = createSupabaseClient()
-    
-    // Stock bajo - usando rpc o query más específica
-    const { data: stockBajo } = await supabase
+
+    // Stock bajo - obtener todos los productos y filtrar en memoria
+    // (PostgREST no soporta comparaciones entre columnas directamente)
+    console.log('[ALERTS] 🔍 Querying all products from database...')
+
+    const { data: allProducts, error: productsError } = await supabase
       .from('products')
       .select('id, nombre, stock_actual, stock_minimo')
-      .filter('stock_actual', 'lt', 'stock_minimo')
-      .limit(limit)
-    
-    // Si el filtro anterior no funciona, usar esta alternativa:
-    // const { data: allProducts } = await supabase
-    //   .from('products')
-    //   .select('id, nombre, stock_actual, stock_minimo')
-    // 
-    // const stockBajo = allProducts?.filter(p => p.stock_actual < p.stock_minimo).slice(0, limit)
+      .order('stock_actual', { ascending: true })
+
+    console.log('[ALERTS] 📊 All products query result:', {
+      totalCount: allProducts?.length || 0,
+      error: productsError?.message,
+      sample: allProducts?.slice(0, 3).map(p => ({
+        nombre: p.nombre,
+        actual: p.stock_actual,
+        minimo: p.stock_minimo,
+        isBelowMin: p.stock_actual < p.stock_minimo
+      }))
+    })
+
+    // Filtrar productos con stock bajo
+    const stockBajo = allProducts?.filter(p => p.stock_actual < p.stock_minimo).slice(0, limit)
+
+    console.log('[ALERTS] ⚠️  Stock bajo filtered result:', {
+      count: stockBajo?.length || 0,
+      products: stockBajo?.map(p => ({ nombre: p.nombre, actual: p.stock_actual, minimo: p.stock_minimo }))
+    })
     
     // Caducidades próximas (próximos 7 días)
     const fechaLimite = new Date()
@@ -82,30 +98,50 @@ export async function GET(request: NextRequest) {
       }))
     ]
 
-    // Enviar emails para alertas críticas de stock (sin stock o muy bajo)
-    const criticalStockProducts = (stockBajo || []).filter(p => p.stock_actual === 0)
-    if (criticalStockProducts.length > 0) {
+    // Enviar emails para alertas de stock (agotado o crítico)
+    if (stockBajo && stockBajo.length > 0) {
+      console.log('[ALERTS] 📧 Preparing to send', stockBajo.length, 'stock alert emails...')
+
       // Enviar emails en paralelo sin bloquear respuesta
       Promise.all(
-        criticalStockProducts.map(product =>
-          sendStockAlert({
+        stockBajo.map(product => {
+          const alertType = product.stock_actual === 0 ? 'out_of_stock' : 'critical'
+          console.log('[ALERTS] 📤 Sending email for:', product.nombre, `(${alertType})`)
+
+          return sendStockAlert({
             productName: product.nombre,
             currentStock: product.stock_actual,
             minimumStock: product.stock_minimo,
-            alertType: product.stock_actual === 0 ? 'out_of_stock' : 'critical'
+            alertType
           })
-        )
-      ).catch(err => console.error('[ALERTS] ❌ Error enviando emails de stock crítico:', err))
+        })
+      )
+        .then(results => {
+          const successful = results.filter(r => r.success).length
+          console.log('[ALERTS] ✅ Successfully sent', successful, 'of', results.length, 'emails')
+        })
+        .catch(err => console.error('[ALERTS] ❌ Error enviando emails de stock:', err))
+    } else {
+      console.log('[ALERTS] ℹ️  No stock alerts to send emails for')
     }
 
-    return NextResponse.json({
+    const response = {
       alertas,
       resumen: {
         stock_bajo: stockBajo?.length || 0,
         caducidades_proximas: caducidades?.length || 0,
         total: alertas.length
       }
+    }
+
+    console.log('[ALERTS] 📤 Returning response:', {
+      totalAlerts: response.alertas.length,
+      stockBajo: response.resumen.stock_bajo,
+      caducidades: response.resumen.caducidades_proximas,
+      alertIds: response.alertas.slice(0, 3).map(a => a.id)
     })
+
+    return NextResponse.json(response)
     
   } catch (error) {
     console.error('Error en GET /api/alerts:', error)
