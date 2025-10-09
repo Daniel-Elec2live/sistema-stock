@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createSupabaseClient, updateWithConsistency } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
@@ -70,6 +71,10 @@ export async function PUT(
       rejected_at: (data as any).rejected_at,
       confirmed: (data as any).is_approved === approved
     })
+
+    // ⭐ REVALIDAR cache de Next.js para forzar datos frescos en próximo GET
+    revalidatePath('/api/customers')
+    revalidatePath('/clientes')
 
     return NextResponse.json({
       success: true,

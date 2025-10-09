@@ -3,6 +3,8 @@ import { createSupabaseClient } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
+export const revalidate = 0
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,14 +12,8 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') // 'pending', 'approved', 'all'
     const timestamp = searchParams.get('_t') // Cache buster del frontend
 
-    // ⭐ SOLUCIÓN DEFINITIVA: Crear cliente Supabase NUEVO cada vez
-    // Esto evita completamente el pooling y cache de conexiones
+    // ⭐ SOLUCIÓN DEFINITIVA: Crear cliente Supabase NUEVO cada vez + headers no-cache
     const supabase = createSupabaseClient()
-
-    // ⭐ CACHE-BUSTING: Crear query única por request usando modulo matemático
-    // El timestamp cambia cada request, lo que hace que la query sea única y no cacheable
-    const cacheBreaker = timestamp || Date.now().toString()
-    const moduloValue = parseInt(cacheBreaker.slice(-3)) % 1000 // 0-999
 
     let query = supabase
       .from('customers')
@@ -33,7 +29,6 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
-      .or(`created_at.gte.2000-01-01,created_at.gte.1999-01-01`) // Condición que siempre es true pero con timestamp cambia la query
       .order('created_at', { ascending: false })
 
     // Filtrar por estado si se especifica
@@ -57,10 +52,20 @@ export async function GET(request: NextRequest) {
     const customerStates = customers?.map(c => `${c.id.slice(0,8)}:${c.is_approved ? 'APPROVED' : 'NOT_APPROVED'}`)
     console.log(`🔍 CUSTOMERS DEBUG [timestamp=${timestamp}]:`, customerStates?.join(', '))
 
-    return NextResponse.json({
-      success: true,
-      customers: customers || []
-    })
+    // ⭐ HEADERS: No-cache explícito para navegador y CDN
+    return NextResponse.json(
+      {
+        success: true,
+        customers: customers || []
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      }
+    )
 
   } catch (error) {
     console.error('Unexpected error:', error)
