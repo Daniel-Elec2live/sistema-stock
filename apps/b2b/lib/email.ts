@@ -1,5 +1,18 @@
 import nodemailer from 'nodemailer'
 
+// Validar variables de entorno requeridas
+if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+  console.error('❌ [EMAIL] GMAIL_USER o GMAIL_APP_PASSWORD no están configurados')
+}
+if (!process.env.WAREHOUSE_EMAIL) {
+  console.error('❌ [EMAIL] WAREHOUSE_EMAIL no está configurado')
+}
+
+console.log('[EMAIL CONFIG] Inicializando...')
+console.log('[EMAIL CONFIG] GMAIL_USER:', process.env.GMAIL_USER ? '✅ Set' : '❌ Missing')
+console.log('[EMAIL CONFIG] GMAIL_APP_PASSWORD:', process.env.GMAIL_APP_PASSWORD ? '✅ Set' : '❌ Missing')
+console.log('[EMAIL CONFIG] WAREHOUSE_EMAIL:', process.env.WAREHOUSE_EMAIL || '❌ Missing')
+
 // Configurar transporter de Nodemailer con Gmail
 const transporter = nodemailer.createTransport({
   service: 'gmail',

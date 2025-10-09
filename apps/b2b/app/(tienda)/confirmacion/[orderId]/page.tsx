@@ -72,7 +72,7 @@ export default function ConfirmacionPage() {
     if (navigator.share) {
       navigator.share({
         title: 'Pedido La Traviata 1999',
-        text: `Mi pedido #${orderId.slice(-8)} ha sido confirmado`,
+        text: `Mi pedido #${orderId.slice(0, 8).toUpperCase()} ha sido confirmado`,
         url: window.location.href
       })
     } else {
@@ -102,7 +102,7 @@ export default function ConfirmacionPage() {
             <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 mb-6">
               <span>Pedido ID:</span>
               <code className="bg-gray-100 px-2 py-1 rounded font-mono">
-                #{orderId.slice(-8)}
+                #{orderId.slice(0, 8).toUpperCase()}
               </code>
             </div>
           )}

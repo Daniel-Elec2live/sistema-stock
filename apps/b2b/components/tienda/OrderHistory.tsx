@@ -141,7 +141,7 @@ export function OrderHistory({ orders, loading, error }: OrderHistoryProps) {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                     <h3 className="font-semibold text-gray-900">
-                      Pedido #{order.id.slice(-8)}
+                      Pedido #{order.id.slice(0, 8).toUpperCase()}
                     </h3>
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge className={`border ${getStatusColor(order.status)}`}>
@@ -260,7 +260,7 @@ export function OrderHistory({ orders, loading, error }: OrderHistoryProps) {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              Pedido #{selectedOrder?.id.slice(-8)}
+              Pedido #{selectedOrder?.id.slice(0, 8).toUpperCase()}
             </DialogTitle>
           </DialogHeader>
           

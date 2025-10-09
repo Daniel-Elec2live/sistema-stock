@@ -41,6 +41,36 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      // Permitir imágenes de dominios comunes de CDN/noticias
+      {
+        protocol: 'https',
+        hostname: '*.ecestaticos.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.cloudinary.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.imgix.net',
+        port: '',
+        pathname: '/**',
+      },
+      // Permitir cualquier HTTPS para flexibilidad (menos seguro pero más compatible)
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
     ],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

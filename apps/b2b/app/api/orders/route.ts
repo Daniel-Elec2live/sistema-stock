@@ -305,10 +305,22 @@ export async function POST(request: NextRequest) {
       items: orderItems
     }
 
+    console.log('[B2B ORDERS] 📧 Enviando emails de confirmación...')
+    console.log('[B2B ORDERS] Email data:', {
+      orderId: emailData.orderId.slice(0, 8),
+      customerEmail: emailData.customerEmail,
+      itemCount: emailData.items.length
+    })
+
     Promise.all([
       sendOrderConfirmationToCustomer(emailData),
       sendNewOrderToWarehouse(emailData)
-    ]).catch(err => console.error('[B2B ORDERS] ❌ Error enviando emails:', err))
+    ]).then(results => {
+      console.log('[B2B ORDERS] ✅ Emails enviados:', results)
+    }).catch(err => {
+      console.error('[B2B ORDERS] ❌ Error enviando emails:', err)
+      console.error('[B2B ORDERS] Error stack:', err.stack)
+    })
 
     return NextResponse.json({
       success: true,

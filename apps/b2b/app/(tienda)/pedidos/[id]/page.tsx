@@ -120,7 +120,7 @@ export default function PedidoDetallePage() {
     if (navigator.share) {
       navigator.share({
         title: 'Pedido La Traviata 1999',
-        text: `Detalles del pedido #${orderId.slice(-8)}`,
+        text: `Detalles del pedido #${orderId.slice(0, 8).toUpperCase()}`,
         url: window.location.href
       })
     } else {
@@ -188,7 +188,7 @@ export default function PedidoDetallePage() {
 
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Pedido #{orderId.slice(-8)}
+              Pedido #{orderId.slice(0, 8).toUpperCase()}
             </h1>
             <p className="text-sm sm:text-base text-gray-600">
               Creado el {formatDate(order.created_at)}
@@ -261,16 +261,38 @@ export default function PedidoDetallePage() {
             </h2>
 
             <div className="space-y-4">
+              {/* Estado: Pedido creado / En espera de confirmación */}
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-500" />
                 <div>
-                  <span className="font-medium">Pedido confirmado</span>
+                  <span className="font-medium">Pedido creado</span>
                   <p className="text-sm text-gray-500">{formatDate(order.created_at)}</p>
                 </div>
               </div>
 
               {order.status !== 'cancelled' && (
                 <>
+                  {/* Estado: Pedido confirmado (solo si no es pending) */}
+                  <div className={`flex items-center space-x-3 ${
+                    order.status === 'pending' ? 'opacity-50' : ''
+                  }`}>
+                    <CheckCircle className={`w-5 h-5 ${
+                      order.status !== 'pending' ? 'text-green-500' : 'text-gray-400'
+                    }`} />
+                    <div>
+                      <span className="font-medium">
+                        {order.status === 'pending' ? 'En espera de confirmación' : 'Pedido confirmado'}
+                      </span>
+                      {order.status !== 'pending' && order.confirmed_at && (
+                        <p className="text-sm text-gray-500">{formatDate(order.confirmed_at)}</p>
+                      )}
+                      {order.status === 'pending' && (
+                        <p className="text-sm text-gray-500">Esperando confirmación del almacén</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Estado: En preparación */}
                   <div className={`flex items-center space-x-3 ${
                     ['prepared', 'delivered'].includes(order.status) ? '' : 'opacity-50'
                   }`}>
@@ -285,6 +307,7 @@ export default function PedidoDetallePage() {
                     </div>
                   </div>
 
+                  {/* Estado: Entregado */}
                   <div className={`flex items-center space-x-3 ${
                     order.status === 'delivered' ? '' : 'opacity-50'
                   }`}>
