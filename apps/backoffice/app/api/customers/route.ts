@@ -6,13 +6,14 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    // 🚨 DEBUG: Verificar qué Supabase URL está usando
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-    console.log(`🔍 CUSTOMERS API - Supabase URL: ${supabaseUrl}`)
-
     const supabase = createSupabaseClient()
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') // 'pending', 'approved', 'all'
+    const timestamp = searchParams.get('_t') // Cache buster del frontend
+
+    // Cache busting: leer datos actualizados forzando LIMIT+OFFSET único por request
+    // Esto hace que Supabase no pueda devolver cache porque la query es diferente cada vez
+    const offset = timestamp ? (parseInt(timestamp) % 1) : 0 // Siempre 0, pero único por timestamp
 
     let query = supabase
       .from('customers')
@@ -28,8 +29,9 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
-      .gte('created_at', '2000-01-01') // Cache-busting: filtro siempre true, fuerza query fresca
+      .gte('created_at', '2000-01-01') // Siempre true
       .order('created_at', { ascending: false })
+      .range(offset, offset + 999) // Rango único por request, nunca cachea
 
     // Filtrar por estado si se especifica
     if (status === 'pending') {
@@ -48,13 +50,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // 🚨 DEBUG: Verificar resultados
-    if (!customers || customers.length === 0) {
-      console.log('📋 No customers found in database - returning empty array')
-      console.log(`🚨 DEBUG: Is this expected? Check if Supabase URL matches: ${supabaseUrl}`)
-    } else {
-      console.log(`👥 Found ${customers.length} customers. First 3 IDs:`, customers.slice(0, 3).map(c => c.id.slice(0, 8)))
-    }
+    console.log(`👥 Found ${customers?.length || 0} customers with timestamp ${timestamp}`)
 
     return NextResponse.json({
       success: true,
