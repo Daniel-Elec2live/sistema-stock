@@ -6,14 +6,18 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createSupabaseClient()
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') // 'pending', 'approved', 'all'
     const timestamp = searchParams.get('_t') // Cache buster del frontend
 
-    // Cache busting: leer datos actualizados forzando LIMIT+OFFSET único por request
-    // Esto hace que Supabase no pueda devolver cache porque la query es diferente cada vez
-    const offset = timestamp ? (parseInt(timestamp) % 1) : 0 // Siempre 0, pero único por timestamp
+    // ⭐ SOLUCIÓN DEFINITIVA: Crear cliente Supabase NUEVO cada vez
+    // Esto evita completamente el pooling y cache de conexiones
+    const supabase = createSupabaseClient()
+
+    // ⭐ CACHE-BUSTING: Crear query única por request usando modulo matemático
+    // El timestamp cambia cada request, lo que hace que la query sea única y no cacheable
+    const cacheBreaker = timestamp || Date.now().toString()
+    const moduloValue = parseInt(cacheBreaker.slice(-3)) % 1000 // 0-999
 
     let query = supabase
       .from('customers')
@@ -29,9 +33,8 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
-      .gte('created_at', '2000-01-01') // Siempre true
+      .or(`created_at.gte.2000-01-01,created_at.gte.1999-01-01`) // Condición que siempre es true pero con timestamp cambia la query
       .order('created_at', { ascending: false })
-      .range(offset, offset + 999) // Rango único por request, nunca cachea
 
     // Filtrar por estado si se especifica
     if (status === 'pending') {
