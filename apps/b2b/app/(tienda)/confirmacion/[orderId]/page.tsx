@@ -107,7 +107,7 @@ export default function ConfirmacionPage() {
             </div>
           )}
           <p className="text-gray-600 mb-6">
-            Puedes ver el estado de tu pedido en la sección "Mis Pedidos"
+            Puedes ver el estado de tu pedido en la sección &quot;Mis Pedidos&quot;
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/pedidos">
