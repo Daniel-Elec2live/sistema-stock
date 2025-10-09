@@ -103,11 +103,19 @@ export default function ClientesPage() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        // Esperar 300ms para asegurar propagación del cambio en Supabase
-        await new Promise(resolve => setTimeout(resolve, 300))
+        // ⭐ SOLUCIÓN: Actualizar estado local directamente con datos del PUT
+        // NO hacer GET - evita problemas de caché de conexiones Supabase
+        const updatedCustomer = data.customer
 
-        // Actualizar lista - ahora el servidor debería tener el cambio propagado
-        await fetchCustomers()
+        // Actualizar allCustomers
+        setAllCustomers(prev =>
+          prev.map(c => c.id === customerId ? { ...c, ...updatedCustomer } : c)
+        )
+
+        // Actualizar customers filtrados
+        setCustomers(prev =>
+          prev.map(c => c.id === customerId ? { ...c, ...updatedCustomer } : c)
+        )
       } else {
         console.error('Error updating customer:', data.error)
         alert(`Error: ${data.error}`)
