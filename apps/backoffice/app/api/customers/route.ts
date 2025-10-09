@@ -50,7 +50,9 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.log(`👥 Found ${customers?.length || 0} customers with timestamp ${timestamp}`)
+    // EXTREME DEBUG: Mostrar estado is_approved de CADA customer
+    const customerStates = customers?.map(c => `${c.id.slice(0,8)}:${c.is_approved ? 'APPROVED' : 'NOT_APPROVED'}`)
+    console.log(`🔍 CUSTOMERS DEBUG [timestamp=${timestamp}]:`, customerStates?.join(', '))
 
     return NextResponse.json({
       success: true,
