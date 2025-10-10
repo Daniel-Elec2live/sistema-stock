@@ -93,6 +93,48 @@ REGLAS CRÍTICAS:
 - Si algo no está claro, ponlo en "notas"
 - Solo productos alimentarios, ignorar servicios/gastos
 
+ANÁLISIS DE COLUMNAS COMPLEJAS (RAZONA ANTES DE EXTRAER):
+Las facturas pueden tener múltiples columnas. DEBES RAZONAR qué columna usar:
+
+1. DESCUENTOS:
+   - Si hay columna "Descuento" o "Dto." → NO restes del precio, usa el precio YA CON descuento aplicado
+   - Si solo hay "Precio s/dto" y "Precio c/dto" → usa el precio CON descuento
+   - Anota en "notas" si aplicaste descuento: "Precio incluye X% descuento"
+
+2. PESO vs CANTIDAD:
+   - Si producto es por peso (kg/g) → usa columna "Peso" o "Kg" como cantidad
+   - Si producto es por unidades (ud/caja) → usa columna "Cantidad" o "Uds"
+   - Si hay AMBAS columnas:
+     * Identifica la unidad real del producto (¿se vende por kg o por unidad?)
+     * Ejemplo: "Tomate" → usa peso en kg; "Lata de tomate" → usa unidades
+   - Anota en "notas": "Usé columna Peso (3.5 kg)" o "Usé columna Cantidad (12 uds)"
+
+3. CAJAS y UNIDADES:
+   - Si hay "Cajas" y "Uds/Caja" → MULTIPLICA para obtener cantidad total
+   - Ejemplo: 3 cajas × 24 uds/caja = 72 uds → cantidad: 72, unidad: "ud"
+   - Si solo hay "Cajas" sin desglose → cantidad es número de cajas, unidad: "caja"
+   - Anota en "notas": "Calculado: 3 cajas × 24 uds = 72 uds"
+
+4. PRECIO UNITARIO vs TOTAL:
+   - SIEMPRE usa precio UNITARIO (precio por kg/ud/litro)
+   - Si solo hay precio total → DIVIDE entre cantidad para obtener unitario
+   - Ejemplo: Total 45€, Cantidad 15kg → precio unitario: 3€/kg
+   - Anota en "notas": "Precio unitario calculado: 45€ ÷ 15kg = 3€/kg"
+
+5. MÚLTIPLES COLUMNAS DE PRECIO:
+   - Prioridad: "P.Unit." > "Precio" > "Importe" > "Total"
+   - Si hay "Precio Base" y "Precio Final" → usa Precio Final
+   - Ignora columnas como "PVP Sugerido" o "Precio Catálogo"
+
+6. CASOS AMBIGUOS:
+   - Si NO estás seguro de qué columna usar → pon confianza baja (< 0.7)
+   - Anota en "notas" TODAS tus dudas y decisiones
+   - Ejemplo: "Columna 'Peso' vs 'Bultos' ambigua, asumí Peso como cantidad"
+
+7. VALORES CALCULADOS:
+   - Si tuviste que CALCULAR algo (multiplicar, dividir) → explícalo en "notas"
+   - Reduce confianza si hiciste suposiciones: confianza 0.8 → 0.6
+
 MATCHING INTELIGENTE:
 - Si el proveedor coincide con alguno de la lista CONOCIDOS, usa ESE nombre exacto
 - Si un producto parece ser el mismo que uno EXISTENTE, pon su nombre exacto en "producto_existente_id"
@@ -136,6 +178,48 @@ REGLAS CRÍTICAS:
 - Confianza de 0.0 a 1.0 basada en claridad
 - Si algo no está claro, ponlo en "notas"
 - Solo productos alimentarios, ignorar servicios/gastos
+
+ANÁLISIS DE COLUMNAS COMPLEJAS (RAZONA ANTES DE EXTRAER):
+Las facturas pueden tener múltiples columnas. DEBES RAZONAR qué columna usar:
+
+1. DESCUENTOS:
+   - Si hay columna "Descuento" o "Dto." → NO restes del precio, usa el precio YA CON descuento aplicado
+   - Si solo hay "Precio s/dto" y "Precio c/dto" → usa el precio CON descuento
+   - Anota en "notas" si aplicaste descuento: "Precio incluye X% descuento"
+
+2. PESO vs CANTIDAD:
+   - Si producto es por peso (kg/g) → usa columna "Peso" o "Kg" como cantidad
+   - Si producto es por unidades (ud/caja) → usa columna "Cantidad" o "Uds"
+   - Si hay AMBAS columnas:
+     * Identifica la unidad real del producto (¿se vende por kg o por unidad?)
+     * Ejemplo: "Tomate" → usa peso en kg; "Lata de tomate" → usa unidades
+   - Anota en "notas": "Usé columna Peso (3.5 kg)" o "Usé columna Cantidad (12 uds)"
+
+3. CAJAS y UNIDADES:
+   - Si hay "Cajas" y "Uds/Caja" → MULTIPLICA para obtener cantidad total
+   - Ejemplo: 3 cajas × 24 uds/caja = 72 uds → cantidad: 72, unidad: "ud"
+   - Si solo hay "Cajas" sin desglose → cantidad es número de cajas, unidad: "caja"
+   - Anota en "notas": "Calculado: 3 cajas × 24 uds = 72 uds"
+
+4. PRECIO UNITARIO vs TOTAL:
+   - SIEMPRE usa precio UNITARIO (precio por kg/ud/litro)
+   - Si solo hay precio total → DIVIDE entre cantidad para obtener unitario
+   - Ejemplo: Total 45€, Cantidad 15kg → precio unitario: 3€/kg
+   - Anota en "notas": "Precio unitario calculado: 45€ ÷ 15kg = 3€/kg"
+
+5. MÚLTIPLES COLUMNAS DE PRECIO:
+   - Prioridad: "P.Unit." > "Precio" > "Importe" > "Total"
+   - Si hay "Precio Base" y "Precio Final" → usa Precio Final
+   - Ignora columnas como "PVP Sugerido" o "Precio Catálogo"
+
+6. CASOS AMBIGUOS:
+   - Si NO estás seguro de qué columna usar → pon confianza baja (< 0.7)
+   - Anota en "notas" TODAS tus dudas y decisiones
+   - Ejemplo: "Columna 'Peso' vs 'Bultos' ambigua, asumí Peso como cantidad"
+
+7. VALORES CALCULADOS:
+   - Si tuviste que CALCULAR algo (multiplicar, dividir) → explícalo en "notas"
+   - Reduce confianza si hiciste suposiciones: confianza 0.8 → 0.6
 
 CONTEXTO: Sistema de gestión de stock para restaurante/tienda de alimentación.
 `
