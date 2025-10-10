@@ -1,6 +1,7 @@
 // apps/backoffice/app/api/gemini-ocr/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { createSupabaseClient } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -29,8 +30,85 @@ interface GeminiOCRResponse {
   tiempo_procesamiento: number
 }
 
-// Prompt optimizado para facturas/albaranes españoles
-const GEMINI_PROMPT = `
+// Función para generar prompt dinámico con contexto de productos/proveedores existentes
+async function buildEnhancedPrompt(): Promise<string> {
+  try {
+    const supabase = createSupabaseClient()
+
+    // Obtener proveedores únicos (solo los más recientes/frecuentes)
+    const { data: proveedoresData } = await supabase
+      .from('products')
+      .select('proveedor')
+      .not('proveedor', 'is', null)
+      .limit(100)
+
+    const proveedoresSet = new Set(proveedoresData?.map(p => p.proveedor) || [])
+    const proveedores = Array.from(proveedoresSet).slice(0, 30) // Top 30
+
+    // Obtener productos existentes (nombres únicos)
+    const { data: productosData } = await supabase
+      .from('products')
+      .select('nombre, proveedor, unidad')
+      .eq('is_active', true)
+      .limit(200)
+
+    const productos = productosData || []
+
+    // Construir lista de contexto
+    const proveedoresContext = proveedores.length > 0
+      ? `\n\nPROVEEDORES CONOCIDOS (intenta matchear con estos nombres si es posible):\n${proveedores.map(p => `- ${p}`).join('\n')}`
+      : ''
+
+    const productosContext = productos.length > 0
+      ? `\n\nPRODUCTOS EXISTENTES EN SISTEMA (si reconoces alguno, usa EXACTAMENTE este nombre):\n${productos.slice(0, 50).map(p => `- "${p.nombre}" (${p.unidad}${p.proveedor ? `, proveedor: ${p.proveedor}` : ''})`).join('\n')}`
+      : ''
+
+    return `
+Analiza esta factura o albarán español y extrae la información en formato JSON exacto:
+
+{
+  "proveedor": "Nombre completo de la empresa proveedora",
+  "fecha": "YYYY-MM-DD",
+  "productos": [
+    {
+      "nombre": "Nombre del producto limpio (singular, sin códigos)",
+      "cantidad": 0.00,
+      "precio": 0.00,
+      "unidad": "kg|ud|l|caja|bolsa|g",
+      "caducidad": "YYYY-MM-DD o null",
+      "producto_existente_id": "nombre_exacto_si_matchea_con_lista o null"
+    }
+  ],
+  "confianza": 0.95,
+  "notas": "Observaciones importantes"
+}
+
+REGLAS CRÍTICAS:
+- Nombres de productos LIMPIOS: "Tomate Cherry" NO "TOMATES CHERRY 5KG REF:TC001"
+- Precios UNITARIOS, nunca totales de línea
+- Fechas SIEMPRE en formato YYYY-MM-DD
+- Cantidad como número decimal (5.5, no "5,5")
+- Unidades estándar: kg, g, l, ml, ud, caja, bolsa
+- Confianza de 0.0 a 1.0 basada en claridad
+- Si algo no está claro, ponlo en "notas"
+- Solo productos alimentarios, ignorar servicios/gastos
+
+MATCHING INTELIGENTE:
+- Si el proveedor coincide con alguno de la lista CONOCIDOS, usa ESE nombre exacto
+- Si un producto parece ser el mismo que uno EXISTENTE, pon su nombre exacto en "producto_existente_id"
+- Para matching de productos: ignora mayúsculas/minúsculas, acentos, y variaciones menores
+- Ejemplos de match:
+  * "TOMATES CHERRY 500G" → matchea con "Tomate Cherry"
+  * "Aceite oliva virgen extra" → matchea con "Aceite de Oliva Virgen Extra"
+  * "Queso manchego curado" → matchea con "Queso Manchego"
+${proveedoresContext}${productosContext}
+
+CONTEXTO: Sistema de gestión de stock para restaurante/tienda de alimentación.
+`
+  } catch (error) {
+    console.warn('[OCR] Error obteniendo contexto de BD, usando prompt básico:', error)
+    // Fallback a prompt sin contexto
+    return `
 Analiza esta factura o albarán español y extrae la información en formato JSON exacto:
 
 {
@@ -61,6 +139,8 @@ REGLAS CRÍTICAS:
 
 CONTEXTO: Sistema de gestión de stock para restaurante/tienda de alimentación.
 `
+  }
+}
 
 async function downloadImageAsBase64(imageUrl: string): Promise<{ base64: string; mimeType: string }> {
   try {
@@ -185,12 +265,17 @@ export async function POST(request: NextRequest) {
 
     console.log(`[OCR] Iniciando procesamiento - ID: ${processing_id}`)
 
-    // 1. Descargar archivo
+    // 1. Construir prompt con contexto de productos/proveedores
+    console.log(`[OCR] Construyendo prompt con contexto de BD...`)
+    const enhancedPrompt = await buildEnhancedPrompt()
+    console.log(`[OCR] Prompt generado con contexto de productos existentes`)
+
+    // 2. Descargar archivo
     console.log(`[OCR] Descargando archivo desde: ${image_url.substring(0, 100)}...`)
     const { base64, mimeType } = await downloadImageAsBase64(image_url)
     console.log(`[OCR] Archivo descargado - Tipo: ${mimeType}`)
 
-    // 2. Procesar con Gemini usando API REST directa
+    // 3. Procesar con Gemini usando API REST directa
     console.log(`[OCR] Procesando con Gemini Vision (API REST)...`)
 
     // Intentar con diferentes versiones de API y modelos
@@ -222,7 +307,7 @@ export async function POST(request: NextRequest) {
           const requestBody = {
             contents: [{
               parts: [
-                { text: GEMINI_PROMPT },
+                { text: enhancedPrompt },
                 {
                   inline_data: {
                     mime_type: mimeType,
