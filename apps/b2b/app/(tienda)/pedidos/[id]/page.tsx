@@ -283,9 +283,6 @@ export default function PedidoDetallePage() {
                       <span className="font-medium">
                         {order.status === 'pending' ? 'En espera de confirmación' : 'Pedido confirmado'}
                       </span>
-                      {order.status !== 'pending' && order.confirmed_at && (
-                        <p className="text-sm text-gray-500">{formatDate(order.confirmed_at)}</p>
-                      )}
                       {order.status === 'pending' && (
                         <p className="text-sm text-gray-500">Esperando confirmación del almacén</p>
                       )}
