@@ -89,12 +89,15 @@ export async function POST(request: NextRequest) {
       // 1. Procesar con Gemini OCR directamente
       console.log('[ENTRIES] Procesando con Gemini OCR...')
 
-      // Determinar URL base: en producción usar la URL de Vercel, en desarrollo localhost
-      const baseUrl = process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXTAUTH_URL || 'http://localhost:3000'
+      // Determinar URL base: priorizar variable custom, luego producción conocida, luego localhost
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+        || (process.env.VERCEL_ENV === 'production' ? 'https://sistema-stock-lac.vercel.app' : null)
+        || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null)
+        || process.env.NEXTAUTH_URL
+        || 'http://localhost:3000'
 
       console.log('[ENTRIES] Using baseUrl:', baseUrl)
+      console.log('[ENTRIES] VERCEL_ENV:', process.env.VERCEL_ENV)
 
       const geminiResponse = await fetch(`${baseUrl}/api/gemini-ocr`, {
         method: 'POST',
