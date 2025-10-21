@@ -156,8 +156,8 @@ export async function PATCH(
           items
         }
 
-        // Enviar emails en paralelo (no bloquean la respuesta)
-        Promise.all([
+        // Enviar emails en paralelo (esperando a que se completen)
+        await Promise.all([
           sendOrderStatusUpdateToCustomer(emailData, existingOrder.status, actualStatus),
           sendOrderStatusUpdateToWarehouse(emailData, existingOrder.status, actualStatus)
         ]).catch(err => console.error('[ORDER STATUS] ❌ Error enviando emails:', err))

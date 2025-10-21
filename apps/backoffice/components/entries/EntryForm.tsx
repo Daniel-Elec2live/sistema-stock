@@ -85,7 +85,12 @@ export function EntryForm({ onSubmit, initialData }: EntryFormProps) {
       const fetchProductos = async () => {
         setLoadingProductos(true)
         try {
-          const response = await fetch(`/api/productos?proveedor=${encodeURIComponent(selectedProveedor)}`)
+          const response = await fetch(`/api/productos?proveedor=${encodeURIComponent(selectedProveedor)}&_t=${Date.now()}`, {
+            cache: 'no-store',
+            headers: {
+              'Cache-Control': 'no-cache'
+            }
+          })
           if (response.ok) {
             const { productos } = await response.json()
             setProductos(productos)

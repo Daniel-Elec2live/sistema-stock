@@ -312,7 +312,7 @@ export async function POST(request: NextRequest) {
       itemCount: emailData.items.length
     })
 
-    Promise.all([
+    await Promise.all([
       sendOrderConfirmationToCustomer(emailData),
       sendNewOrderToWarehouse(emailData)
     ]).then(results => {

@@ -112,15 +112,25 @@ export default function AjustesPage() {
   const fetchData = async () => {
     try {
       const [productsRes, adjustmentsRes] = await Promise.all([
-        fetch('/api/products?limit=100'),
-        fetch('/api/stock/adjustments?limit=10')
+        fetch(`/api/products?limit=100&_t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        }),
+        fetch(`/api/stock/adjustments?limit=10&_t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        })
       ])
-      
+
       if (productsRes.ok) {
         const productsData = await productsRes.json()
         setProducts(productsData.products || [])
       }
-      
+
       if (adjustmentsRes.ok) {
         const adjustmentsData = await adjustmentsRes.json()
         setAdjustments(adjustmentsData.adjustments || [])

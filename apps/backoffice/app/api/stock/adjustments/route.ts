@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
     
     const { data: adjustments, error } = await query
-    
+
     if (error) {
       console.error('Error obteniendo ajustes:', error)
       return NextResponse.json(
@@ -33,9 +33,16 @@ export async function GET(request: NextRequest) {
         { status: 500 }
       )
     }
-    
-    return NextResponse.json({ adjustments: adjustments || [] })
-    
+
+    const response = NextResponse.json({ adjustments: adjustments || [] })
+
+    // Headers para evitar cache
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+
+    return response
+
   } catch (error) {
     console.error('Error interno:', error)
     return NextResponse.json(
