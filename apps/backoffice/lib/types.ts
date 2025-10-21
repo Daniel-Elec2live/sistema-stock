@@ -57,6 +57,11 @@ export interface StockAdjustment {
   motivo: string
   observaciones?: string
   created_at: string
+  // Datos del JOIN con products (opcional)
+  product?: {
+    nombre: string
+    unidad: string
+  }
 }
 
 export interface Alert {
