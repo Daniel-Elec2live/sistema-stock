@@ -15,7 +15,13 @@ export async function GET(request: NextRequest) {
     
     let query = supabase
       .from('stock_adjustments')
-      .select('*')
+      .select(`
+        *,
+        product:products (
+          nombre,
+          unidad
+        )
+      `)
       .order('created_at', { ascending: false })
       .limit(limit)
     

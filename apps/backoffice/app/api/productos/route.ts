@@ -30,6 +30,10 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    console.log('[PRODUCTOS API] Proveedor:', proveedor || 'TODOS')
+    console.log('[PRODUCTOS API] Total productos:', products?.length || 0)
+    console.log('[PRODUCTOS API] Primeros 3:', products?.slice(0, 3).map(p => ({ id: p.id.slice(0, 8), nombre: p.nombre, proveedor: p.proveedor })))
+
     const response = NextResponse.json({ productos: products || [] })
 
     // Headers para evitar cache

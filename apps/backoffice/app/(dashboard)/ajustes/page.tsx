@@ -133,6 +133,9 @@ export default function AjustesPage() {
 
       if (adjustmentsRes.ok) {
         const adjustmentsData = await adjustmentsRes.json()
+        console.log('[AJUSTES DEBUG] Ajustes recibidos:', adjustmentsData.adjustments?.length || 0)
+        console.log('[AJUSTES DEBUG] Primeros 3 ajustes:', adjustmentsData.adjustments?.slice(0, 3))
+        console.log('[AJUSTES DEBUG] Productos disponibles:', products.length)
         setAdjustments(adjustmentsData.adjustments || [])
       }
     } catch (error) {
@@ -506,10 +509,12 @@ export default function AjustesPage() {
 
           <div className="space-y-3">
             {adjustments.map((adjustment) => {
-              const product = products.find(p => p.id === adjustment.product_id)
-              
+              // Usar datos del JOIN en lugar de buscar en el array
+              const productName = adjustment.product?.nombre || 'Producto eliminado'
+              const productUnit = adjustment.product?.unidad || 'ud'
+
               return (
-                <div 
+                <div
                   key={adjustment.id}
                   className="p-3 border border-gray-200 rounded-lg"
                 >
@@ -517,17 +522,17 @@ export default function AjustesPage() {
                     <div className="flex items-center gap-2">
                       {getAjusteTipoBadge(adjustment.tipo)}
                       <span className="text-sm font-medium text-gray-900">
-                        {product?.nombre || 'Producto eliminado'}
+                        {productName}
                       </span>
                     </div>
                     <span className="text-sm text-gray-500">
                       {formatDate(adjustment.created_at)}
                     </span>
                   </div>
-                  
+
                   <div className="text-sm text-gray-700 mb-1">
                     <span className="font-medium">
-                      {adjustment.tipo === 'devolucion' ? '+' : '-'}{adjustment.cantidad} {product?.unidad}
+                      {adjustment.tipo === 'devolucion' ? '+' : '-'}{adjustment.cantidad} {productUnit}
                     </span>
                     {' • '}
                     <span>{adjustment.motivo}</span>

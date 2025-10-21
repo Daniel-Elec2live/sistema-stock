@@ -27,7 +27,11 @@ export async function GET() {
         .filter(Boolean)
     )
     const proveedores = Array.from(uniqueProveedores).sort()
-    
+
+    console.log('[PROVEEDORES API] Total productos:', products?.length || 0)
+    console.log('[PROVEEDORES API] Proveedores únicos:', proveedores.length)
+    console.log('[PROVEEDORES API] Lista:', proveedores)
+
     const response = NextResponse.json({ proveedores })
 
     // Headers para evitar cache
