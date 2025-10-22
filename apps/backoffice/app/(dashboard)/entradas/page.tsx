@@ -100,6 +100,7 @@ export default function EntradasPage() {
   const [activeTab, setActiveTab] = useState('ocr')
   const [ocrResult, setOCRResult] = useState<OCRResult | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [refreshHistorial, setRefreshHistorial] = useState(0)
 
   const handleFileUpload = async (file: File) => {
     setIsProcessing(true)
@@ -167,6 +168,10 @@ export default function EntradasPage() {
         console.log('[ENTRADAS OCR] ✅ Validación exitosa:', result)
         // Resetear formulario y mostrar success
         setOCRResult(null)
+        // Refrescar historial
+        setRefreshHistorial(prev => prev + 1)
+        // Cambiar a tab de historial para ver el resultado
+        setActiveTab('historial')
         alert('✅ Entrada validada y stock actualizado correctamente')
       } else {
         const error = await response.json()
@@ -301,7 +306,7 @@ export default function EntradasPage() {
 
         {activeTab === 'historial' && (
           <TabsContent>
-            <HistorialEntradas />
+            <HistorialEntradas refreshTrigger={refreshHistorial} />
           </TabsContent>
         )}
       </Tabs>
@@ -310,28 +315,29 @@ export default function EntradasPage() {
 }
 
 // Componente de historial de entradas
-function HistorialEntradas() {
+function HistorialEntradas({ refreshTrigger }: { refreshTrigger?: number }) {
   const [entradas, setEntradas] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedEntrada, setSelectedEntrada] = useState<any | null>(null)
 
-  useEffect(() => {
-    const fetchEntradas = async () => {
-      try {
-        const response = await fetch('/api/entries?limit=10&order=desc')
-        if (response.ok) {
-          const data = await response.json()
-          setEntradas(data.entries || [])
-        }
-      } catch (error) {
-        console.error('Error fetching entries:', error)
-      } finally {
-        setLoading(false)
+  const fetchEntradas = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/entries?limit=10&order=desc')
+      if (response.ok) {
+        const data = await response.json()
+        setEntradas(data.entries || [])
       }
+    } catch (error) {
+      console.error('Error fetching entries:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchEntradas()
-  }, [])
+  }, [refreshTrigger])
 
   if (loading) {
     return (

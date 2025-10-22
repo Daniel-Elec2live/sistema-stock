@@ -96,20 +96,52 @@ REGLAS CRÍTICAS:
 ANÁLISIS DE COLUMNAS COMPLEJAS (RAZONA ANTES DE EXTRAER):
 Las facturas pueden tener múltiples columnas. DEBES RAZONAR qué columna usar:
 
-1. DESCUENTOS (VALIDAR CONTRA PRECIO FINAL):
-   - Si hay columna "Descuento" o "Dto." → NO restes del precio, usa el precio YA CON descuento aplicado
-   - Si solo hay "Precio s/dto" y "Precio c/dto" → usa el precio CON descuento
-   - VALIDACIÓN CRÍTICA: multiplica (cantidad × precio_unitario) y verifica que coincida con el total de la línea
-   - Si NO coincide → hay un error, revisa si usaste el precio correcto (con/sin descuento)
-   - Ejemplo validación:
-     * Cantidad: 10 kg
-     * Precio sin dto: 5€/kg
-     * Descuento: 10%
-     * Total línea: 45€
-     * Cálculo: 10 × 5 × 0.9 = 45€ ✅ CORRECTO
-     * Si hubieras usado 5€: 10 × 5 = 50€ ≠ 45€ ❌ ERROR
-   - Si detectas error en tu cálculo → corrige el precio unitario para que coincida con el total
-   - Anota en "notas": "Precio validado contra total: 10kg × 4.50€ = 45€ ✅"
+1. PRECIO UNITARIO - MÉTODO INFALIBLE (úsalo SIEMPRE):
+
+   ⚠️ REGLA DE ORO: precio = TOTAL de línea ÷ CANTIDAD
+
+   NO intentes leer columnas de precio ni aplicar descuentos manualmente.
+   El TOTAL de línea ya tiene TODO incluido (precio × cantidad - descuentos).
+
+   EJEMPLO VISUAL DE FACTURA:
+   ┌────────────┬──────────┬────────┬──────────┬──────┬─────────┐
+   │ Producto   │ Cantidad │ Unidad │ P.Unit   │ Dto  │ TOTAL   │
+   ├────────────┼──────────┼────────┼──────────┼──────┼─────────┤
+   │ Tomate     │ 10       │ kg     │ 5.00€/kg │ 10%  │ 45.00€  │
+   │ Lechuga    │ 5        │ ud     │ 2.00€/ud │ -    │ 10.00€  │
+   └────────────┴──────────┴────────┴──────────┴──────┴─────────┘
+
+   ✅ EXTRACCIÓN CORRECTA:
+   {
+     "productos": [
+       {
+         "nombre": "Tomate",
+         "cantidad": 10,
+         "unidad": "kg",
+         "precio": 4.50,  ← 45.00€ ÷ 10kg = 4.50€/kg
+         "notas": "✓ Verificado: 10kg × 4.50€ = 45.00€"
+       },
+       {
+         "nombre": "Lechuga",
+         "cantidad": 5,
+         "unidad": "ud",
+         "precio": 2.00,  ← 10.00€ ÷ 5ud = 2.00€/ud
+         "notas": "✓ Verificado: 5ud × 2.00€ = 10.00€"
+       }
+     ]
+   }
+
+   ❌ ERRORES COMUNES (NO HAGAS ESTO):
+   - precio: 5.00  (precio sin descuento - ¡NO!)
+   - precio: 0.50  (el descuento - ¡NO!)
+   - precio: 4.05  (mal calculado - ¡NO!)
+
+   NOMBRES DE COLUMNAS COMUNES PARA "TOTAL":
+   - "Total", "Importe", "Subtotal", "Precio Total"
+   - Generalmente es la ÚLTIMA columna numérica de cada línea
+
+   VALIDACIÓN OBLIGATORIA (hazlo mentalmente):
+   cantidad × precio ≈ total (tolerancia ±0.05€)
 
 2. PESO vs CANTIDAD:
    - Si producto es por peso (kg/g) → usa columna "Peso" o "Kg" como cantidad
@@ -192,20 +224,52 @@ REGLAS CRÍTICAS:
 ANÁLISIS DE COLUMNAS COMPLEJAS (RAZONA ANTES DE EXTRAER):
 Las facturas pueden tener múltiples columnas. DEBES RAZONAR qué columna usar:
 
-1. DESCUENTOS (VALIDAR CONTRA PRECIO FINAL):
-   - Si hay columna "Descuento" o "Dto." → NO restes del precio, usa el precio YA CON descuento aplicado
-   - Si solo hay "Precio s/dto" y "Precio c/dto" → usa el precio CON descuento
-   - VALIDACIÓN CRÍTICA: multiplica (cantidad × precio_unitario) y verifica que coincida con el total de la línea
-   - Si NO coincide → hay un error, revisa si usaste el precio correcto (con/sin descuento)
-   - Ejemplo validación:
-     * Cantidad: 10 kg
-     * Precio sin dto: 5€/kg
-     * Descuento: 10%
-     * Total línea: 45€
-     * Cálculo: 10 × 5 × 0.9 = 45€ ✅ CORRECTO
-     * Si hubieras usado 5€: 10 × 5 = 50€ ≠ 45€ ❌ ERROR
-   - Si detectas error en tu cálculo → corrige el precio unitario para que coincida con el total
-   - Anota en "notas": "Precio validado contra total: 10kg × 4.50€ = 45€ ✅"
+1. PRECIO UNITARIO - MÉTODO INFALIBLE (úsalo SIEMPRE):
+
+   ⚠️ REGLA DE ORO: precio = TOTAL de línea ÷ CANTIDAD
+
+   NO intentes leer columnas de precio ni aplicar descuentos manualmente.
+   El TOTAL de línea ya tiene TODO incluido (precio × cantidad - descuentos).
+
+   EJEMPLO VISUAL DE FACTURA:
+   ┌────────────┬──────────┬────────┬──────────┬──────┬─────────┐
+   │ Producto   │ Cantidad │ Unidad │ P.Unit   │ Dto  │ TOTAL   │
+   ├────────────┼──────────┼────────┼──────────┼──────┼─────────┤
+   │ Tomate     │ 10       │ kg     │ 5.00€/kg │ 10%  │ 45.00€  │
+   │ Lechuga    │ 5        │ ud     │ 2.00€/ud │ -    │ 10.00€  │
+   └────────────┴──────────┴────────┴──────────┴──────┴─────────┘
+
+   ✅ EXTRACCIÓN CORRECTA:
+   {
+     "productos": [
+       {
+         "nombre": "Tomate",
+         "cantidad": 10,
+         "unidad": "kg",
+         "precio": 4.50,  ← 45.00€ ÷ 10kg = 4.50€/kg
+         "notas": "✓ Verificado: 10kg × 4.50€ = 45.00€"
+       },
+       {
+         "nombre": "Lechuga",
+         "cantidad": 5,
+         "unidad": "ud",
+         "precio": 2.00,  ← 10.00€ ÷ 5ud = 2.00€/ud
+         "notas": "✓ Verificado: 5ud × 2.00€ = 10.00€"
+       }
+     ]
+   }
+
+   ❌ ERRORES COMUNES (NO HAGAS ESTO):
+   - precio: 5.00  (precio sin descuento - ¡NO!)
+   - precio: 0.50  (el descuento - ¡NO!)
+   - precio: 4.05  (mal calculado - ¡NO!)
+
+   NOMBRES DE COLUMNAS COMUNES PARA "TOTAL":
+   - "Total", "Importe", "Subtotal", "Precio Total"
+   - Generalmente es la ÚLTIMA columna numérica de cada línea
+
+   VALIDACIÓN OBLIGATORIA (hazlo mentalmente):
+   cantidad × precio ≈ total (tolerancia ±0.05€)
 
 2. PESO vs CANTIDAD:
    - Si producto es por peso (kg/g) → usa columna "Peso" o "Kg" como cantidad
