@@ -96,10 +96,20 @@ REGLAS CRÍTICAS:
 ANÁLISIS DE COLUMNAS COMPLEJAS (RAZONA ANTES DE EXTRAER):
 Las facturas pueden tener múltiples columnas. DEBES RAZONAR qué columna usar:
 
-1. DESCUENTOS:
+1. DESCUENTOS (VALIDAR CONTRA PRECIO FINAL):
    - Si hay columna "Descuento" o "Dto." → NO restes del precio, usa el precio YA CON descuento aplicado
    - Si solo hay "Precio s/dto" y "Precio c/dto" → usa el precio CON descuento
-   - Anota en "notas" si aplicaste descuento: "Precio incluye X% descuento"
+   - VALIDACIÓN CRÍTICA: multiplica (cantidad × precio_unitario) y verifica que coincida con el total de la línea
+   - Si NO coincide → hay un error, revisa si usaste el precio correcto (con/sin descuento)
+   - Ejemplo validación:
+     * Cantidad: 10 kg
+     * Precio sin dto: 5€/kg
+     * Descuento: 10%
+     * Total línea: 45€
+     * Cálculo: 10 × 5 × 0.9 = 45€ ✅ CORRECTO
+     * Si hubieras usado 5€: 10 × 5 = 50€ ≠ 45€ ❌ ERROR
+   - Si detectas error en tu cálculo → corrige el precio unitario para que coincida con el total
+   - Anota en "notas": "Precio validado contra total: 10kg × 4.50€ = 45€ ✅"
 
 2. PESO vs CANTIDAD:
    - Si producto es por peso (kg/g) → usa columna "Peso" o "Kg" como cantidad
@@ -182,10 +192,20 @@ REGLAS CRÍTICAS:
 ANÁLISIS DE COLUMNAS COMPLEJAS (RAZONA ANTES DE EXTRAER):
 Las facturas pueden tener múltiples columnas. DEBES RAZONAR qué columna usar:
 
-1. DESCUENTOS:
+1. DESCUENTOS (VALIDAR CONTRA PRECIO FINAL):
    - Si hay columna "Descuento" o "Dto." → NO restes del precio, usa el precio YA CON descuento aplicado
    - Si solo hay "Precio s/dto" y "Precio c/dto" → usa el precio CON descuento
-   - Anota en "notas" si aplicaste descuento: "Precio incluye X% descuento"
+   - VALIDACIÓN CRÍTICA: multiplica (cantidad × precio_unitario) y verifica que coincida con el total de la línea
+   - Si NO coincide → hay un error, revisa si usaste el precio correcto (con/sin descuento)
+   - Ejemplo validación:
+     * Cantidad: 10 kg
+     * Precio sin dto: 5€/kg
+     * Descuento: 10%
+     * Total línea: 45€
+     * Cálculo: 10 × 5 × 0.9 = 45€ ✅ CORRECTO
+     * Si hubieras usado 5€: 10 × 5 = 50€ ≠ 45€ ❌ ERROR
+   - Si detectas error en tu cálculo → corrige el precio unitario para que coincida con el total
+   - Anota en "notas": "Precio validado contra total: 10kg × 4.50€ = 45€ ✅"
 
 2. PESO vs CANTIDAD:
    - Si producto es por peso (kg/g) → usa columna "Peso" o "Kg" como cantidad
