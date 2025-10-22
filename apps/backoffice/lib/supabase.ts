@@ -22,7 +22,9 @@ export function createSupabaseClient() {
         // Forzar que PostgREST use prefer=return=representation
         'Prefer': 'return=representation',
         // Cache-Control para evitar caching en proxies
-        'Cache-Control': 'no-cache, no-store, must-revalidate'
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        // Forzar conexión fresca (evita connection pooling cache)
+        'X-Client-Info': `supabase-js/${Date.now()}`
       }
     }
   })
