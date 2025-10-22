@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       .from('stock_adjustments')
       .select(`
         *,
-        product:products (
+        products!inner (
           nombre,
           unidad
         )

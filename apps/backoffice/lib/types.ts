@@ -57,8 +57,8 @@ export interface StockAdjustment {
   motivo: string
   observaciones?: string
   created_at: string
-  // Datos del JOIN con products (opcional)
-  product?: {
+  // Datos del JOIN con products (nombre de la tabla)
+  products?: {
     nombre: string
     unidad: string
   }

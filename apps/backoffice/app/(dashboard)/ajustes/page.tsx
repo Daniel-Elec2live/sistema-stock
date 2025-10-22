@@ -510,8 +510,8 @@ export default function AjustesPage() {
           <div className="space-y-3">
             {adjustments.map((adjustment) => {
               // Usar datos del JOIN en lugar de buscar en el array
-              const productName = adjustment.product?.nombre || 'Producto eliminado'
-              const productUnit = adjustment.product?.unidad || 'ud'
+              const productName = adjustment.products?.nombre || 'Producto eliminado'
+              const productUnit = adjustment.products?.unidad || 'ud'
 
               return (
                 <div
