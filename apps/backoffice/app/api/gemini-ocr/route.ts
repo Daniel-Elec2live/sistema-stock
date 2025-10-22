@@ -92,6 +92,7 @@ REGLAS CRÍTICAS:
 - Confianza de 0.0 a 1.0 basada en claridad
 - Si algo no está claro, ponlo en "notas"
 - Solo productos alimentarios, ignorar servicios/gastos
+- ⚠️ CADUCIDAD: SOLO si está EXPLÍCITAMENTE escrita en la factura. Si NO aparece → null (NO supongas ni inventes fechas)
 
 ANÁLISIS DE COLUMNAS COMPLEJAS (RAZONA ANTES DE EXTRAER):
 Las facturas pueden tener múltiples columnas. DEBES RAZONAR qué columna usar:
@@ -220,6 +221,7 @@ REGLAS CRÍTICAS:
 - Confianza de 0.0 a 1.0 basada en claridad
 - Si algo no está claro, ponlo en "notas"
 - Solo productos alimentarios, ignorar servicios/gastos
+- ⚠️ CADUCIDAD: SOLO si está EXPLÍCITAMENTE escrita en la factura. Si NO aparece → null (NO supongas ni inventes fechas)
 
 ANÁLISIS DE COLUMNAS COMPLEJAS (RAZONA ANTES DE EXTRAER):
 Las facturas pueden tener múltiples columnas. DEBES RAZONAR qué columna usar:

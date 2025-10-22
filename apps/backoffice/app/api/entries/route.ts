@@ -48,23 +48,28 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '20')
     const order = searchParams.get('order') || 'desc'
-    
+
+    console.log('[ENTRIES GET] Obteniendo entradas con limit:', limit, 'order:', order)
+
     const supabase = createSupabaseClient()
-    
+
     const { data: entries, error } = await supabase
       .from('entries')
       .select('*')
       .order('created_at', { ascending: order === 'asc' })
       .limit(limit)
-    
+
     if (error) {
-      console.error('Error obteniendo entradas:', error)
+      console.error('[ENTRIES GET] Error obteniendo entradas:', error)
       return NextResponse.json(
         { error: 'Error obteniendo entradas' },
         { status: 500 }
       )
     }
-    
+
+    console.log('[ENTRIES GET] ✅ Entradas obtenidas:', entries?.length || 0)
+    console.log('[ENTRIES GET] Estados:', entries?.map(e => ({ id: e.id, estado: e.estado, proveedor: e.proveedor_text })))
+
     return NextResponse.json({ entries: entries || [] })
     
   } catch (error) {
@@ -211,24 +216,49 @@ export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
     const { id, estado, ...data } = body
-    
+
+    console.log('[ENTRIES PUT] Recibiendo validación:', { id, estado, proveedor: data.proveedor, productosCount: data.productos?.length })
+
     const supabase = createSupabaseClient()
-    
-    // Actualizar entrada
-    const { error: updateError } = await supabase
+
+    // Verificar que la entrada existe antes de actualizar
+    const { data: existingEntry, error: fetchError } = await supabase
       .from('entries')
-      .update({
-        estado,
-        proveedor_text: data.proveedor,
-        fecha_factura: data.fecha,
-        productos: data.productos,
-        validated_at: new Date().toISOString()
-      })
+      .select('*')
       .eq('id', id)
-    
+      .single()
+
+    if (fetchError || !existingEntry) {
+      console.error('[ENTRIES PUT] Entrada no encontrada:', id, fetchError)
+      throw new Error(`Entrada no encontrada: ${id}`)
+    }
+
+    console.log('[ENTRIES PUT] Entrada existente encontrada:', { id: existingEntry.id, estado_actual: existingEntry.estado })
+
+    // Actualizar entrada
+    const updateData = {
+      estado,
+      proveedor_text: data.proveedor,
+      fecha_factura: data.fecha,
+      productos: data.productos,
+      validated_at: new Date().toISOString()
+    }
+
+    console.log('[ENTRIES PUT] Actualizando con data:', updateData)
+
+    const { data: updatedEntry, error: updateError } = await supabase
+      .from('entries')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single()
+
     if (updateError) {
+      console.error('[ENTRIES PUT] Error actualizando:', updateError)
       throw new Error(`Error actualizando entrada: ${updateError.message}`)
     }
+
+    console.log('[ENTRIES PUT] ✅ Entrada actualizada exitosamente:', { id: updatedEntry.id, estado: updatedEntry.estado })
     
     // Si se valida, actualizar stock y precios
     if (estado === 'validated' && data.productos) {
