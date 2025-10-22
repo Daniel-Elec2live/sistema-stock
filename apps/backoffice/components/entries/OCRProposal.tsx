@@ -8,16 +8,19 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { CheckCircle, AlertTriangle, Edit, X } from 'lucide-react'
 
+interface ProductoOCR {
+  nombre: string
+  cantidad: number
+  precio: number
+  unidad: string
+  caducidad?: string
+  producto_existente_id?: string | null
+}
+
 interface ValidationData {
   proveedor?: string
   fecha?: string
-  productos?: Array<{
-    nombre: string
-    cantidad: number
-    precio: number
-    unidad: string
-    caducidad?: string
-  }>
+  productos?: Array<ProductoOCR>
 }
 
 interface OCRProposalProps {
@@ -25,13 +28,7 @@ interface OCRProposalProps {
     id: string
     proveedor?: string
     fecha?: string
-    productos?: Array<{
-      nombre: string
-      cantidad: number
-      precio: number
-      unidad: string
-      caducidad?: string
-    }>
+    productos?: Array<ProductoOCR>
     confianza?: number
   }
   onValidate: (data: ValidationData) => void
@@ -143,9 +140,17 @@ export function OCRProposal({ data, onValidate, onCancel }: OCRProposalProps) {
                       className="h-8"
                     />
                   ) : (
-                    <p className="text-sm font-medium text-gray-900">
-                      {producto.nombre}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-gray-900">
+                        {producto.nombre}
+                      </p>
+                      {producto.producto_existente_id && (
+                        <Badge variant="secondary" className="text-xs bg-green-100 text-green-800 border-green-200">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Match BD
+                        </Badge>
+                      )}
+                    </div>
                   )}
                 </div>
                 
