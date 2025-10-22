@@ -10,7 +10,7 @@ export const productSchema = z.object({
   categoria: z.string().min(1, 'Categoría es requerida').max(50, 'Categoría muy larga'),
   proveedor: z.string().min(1, 'Proveedor es requerido').max(100, 'Proveedor muy largo'),
   referencia: z.string().min(1, 'Referencia es requerida').max(20, 'Referencia muy larga'),
-  image_url: z.string().url('URL de imagen inválida').optional()
+  image_url: z.string().url('URL de imagen inválida').or(z.literal('')).optional()
 })
 
 export const entryProductSchema = z.object({
