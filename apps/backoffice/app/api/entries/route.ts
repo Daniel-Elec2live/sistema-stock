@@ -145,7 +145,31 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // 4. Preparar respuesta compatible con frontend existente
+      // 4. CREAR ENTRADA EN BD con estado 'draft' (pendiente de validación)
+      const { data: entradaDraft, error: draftError } = await supabase
+        .from('entries')
+        .insert({
+          id: geminiResult.processing_id, // Usar el ID del OCR
+          tipo: 'ocr',
+          estado: 'draft',
+          proveedor_text: proveedorFinal,
+          fecha_factura: geminiResult.fecha,
+          productos: geminiResult.productos || [],
+          documento_url: documento_url,
+          archivo_nombre: archivo_nombre,
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (draftError) {
+        console.error('[ENTRIES] Error creando entrada draft:', draftError)
+        throw new Error(`Error creando entrada: ${draftError.message}`)
+      }
+
+      console.log('[ENTRIES] ✅ Entrada draft creada en BD:', entradaDraft.id)
+
+      // 5. Preparar respuesta compatible con frontend existente
       const ocrResultForFrontend = {
         id: geminiResult.processing_id,
         status: 'completed' as const,
