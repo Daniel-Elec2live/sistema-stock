@@ -150,23 +150,32 @@ export default function EntradasPage() {
 
   const handleOCRValidation = async (validatedData: ValidationData) => {
     try {
+      console.log('[ENTRADAS OCR] Validando entrada:', { id: ocrResult?.id, validatedData })
+
       const response = await fetch('/api/entries', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: ocrResult?.id,
           ...validatedData,
-          estado: 'validada'
+          estado: 'validated' // Corregido de 'validada' a 'validated'
         })
       })
-      
+
       if (response.ok) {
+        const result = await response.json()
+        console.log('[ENTRADAS OCR] ✅ Validación exitosa:', result)
         // Resetear formulario y mostrar success
         setOCRResult(null)
-        // TODO: Mostrar toast de éxito
+        alert('✅ Entrada validada y stock actualizado correctamente')
+      } else {
+        const error = await response.json()
+        console.error('[ENTRADAS OCR] ❌ Error en validación:', error)
+        alert(`❌ Error: ${error.error || 'Error desconocido'}`)
       }
     } catch (error) {
-      console.error('Error validando entrada:', error)
+      console.error('[ENTRADAS OCR] ❌ Error validando entrada:', error)
+      alert('❌ Error al validar entrada')
     }
   }
 
