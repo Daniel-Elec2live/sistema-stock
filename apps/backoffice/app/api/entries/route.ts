@@ -283,21 +283,24 @@ export async function PUT(request: NextRequest) {
     }
 
     console.log('[ENTRIES PUT] ✅ Entrada actualizada exitosamente:', { id: updatedEntry.id, estado: updatedEntry.estado })
-    
-    // Si se valida, actualizar stock y precios
-    if (estado === 'validated' && data.productos) {
-      const processedProductIds = new Set<string>()
-      for (const producto of data.productos) {
-        const productId = await updateStock(supabase, producto as ProductoEntrada, data.proveedor || 'Proveedor Desconocido')
 
-        // Actualizar precio de venta basado en nueva entrada
-        if (productId && !processedProductIds.has(productId)) {
-          await updateProductPrice(productId)
-          processedProductIds.add(productId)
-        }
-      }
-    }
-    
+    // IMPORTANTE: NO procesamos stock manualmente en el PUT
+    // El trigger process_validated_entry_trigger de la BD ya lo hace automáticamente
+    // cuando el estado cambia de 'draft' → 'validated'
+    //
+    // PROBLEMA ANTERIOR (causaba duplicación x2):
+    // 1. UPDATE cambia estado → 'validated'
+    // 2. Trigger detecta cambio y procesa productos → suma stock (+120g)
+    // 3. Este código volvía a procesar productos → suma stock otra vez (+120g)
+    // 4. Resultado: 120g en factura → 240g en stock ❌
+    //
+    // NOTA: Las entradas manuales (POST) SÍ procesan stock manualmente porque
+    // usan estado 'completed' (no 'validated'), entonces el trigger NO se ejecuta.
+    //
+    // Ver trigger en: supabase/00-SCHEMA-DEFINITIVO.sql líneas 1519-1616
+
+    console.log('[ENTRIES PUT] Stock procesado automáticamente vía trigger process_validated_entry_trigger')
+
     return NextResponse.json({
       success: true,
       message: 'Entrada validada y stock actualizado'
