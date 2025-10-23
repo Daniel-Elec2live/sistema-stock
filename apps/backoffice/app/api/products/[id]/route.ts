@@ -83,44 +83,88 @@ export async function PUT(
   }
 }
 
-// DELETE - Eliminar un producto
+// DELETE - Eliminar un producto (soft delete si tiene pedidos asociados)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const supabase = createSupabaseClient()
-    
+
     // Verificar que el producto existe
     const { data: existingProduct, error: checkError } = await supabase
       .from('products')
-      .select('id')
+      .select('id, nombre')
       .eq('id', params.id)
       .single()
-    
+
     if (checkError || !existingProduct) {
       return NextResponse.json(
         { error: 'Producto no encontrado' },
         { status: 404 }
       )
     }
-    
-    // Eliminar el producto
-    const { error } = await supabase
+
+    // Verificar si el producto tiene pedidos asociados
+    const { data: orderItems, error: orderCheckError } = await supabase
+      .from('order_items')
+      .select('id')
+      .eq('product_id', params.id)
+      .limit(1)
+
+    if (orderCheckError) {
+      console.error('Error al verificar pedidos:', orderCheckError)
+      return NextResponse.json(
+        { error: 'Error al verificar referencias del producto' },
+        { status: 500 }
+      )
+    }
+
+    // Si tiene pedidos asociados, hacer soft delete (marcar como inactivo)
+    if (orderItems && orderItems.length > 0) {
+      const { error: updateError } = await supabase
+        .from('products')
+        .update({
+          is_active: false,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', params.id)
+
+      if (updateError) {
+        console.error('Error al desactivar producto:', updateError)
+        return NextResponse.json(
+          { error: 'Error al desactivar producto' },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({
+        success: true,
+        soft_delete: true,
+        message: 'El producto no se puede eliminar porque tiene pedidos asociados. Se ha marcado como inactivo.'
+      })
+    }
+
+    // Si no tiene pedidos, hacer hard delete (eliminar físicamente)
+    const { error: deleteError } = await supabase
       .from('products')
       .delete()
       .eq('id', params.id)
-    
-    if (error) {
-      console.error('Error al eliminar producto:', error)
+
+    if (deleteError) {
+      console.error('Error al eliminar producto:', deleteError)
       return NextResponse.json(
         { error: 'Error al eliminar producto' },
         { status: 500 }
       )
     }
-    
-    return NextResponse.json({ success: true })
-    
+
+    return NextResponse.json({
+      success: true,
+      soft_delete: false,
+      message: 'Producto eliminado correctamente'
+    })
+
   } catch (error) {
     console.error('Error interno:', error)
     return NextResponse.json(

@@ -14,7 +14,8 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('products')
       .select('id, nombre, unidad, proveedor')
-    
+      .eq('is_active', true)
+
     // Filtrar por proveedor si se proporciona
     if (proveedor) {
       query = query.eq('proveedor', proveedor)

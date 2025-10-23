@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
           precio_compra
         )
       `)
+      .eq('is_active', true)
       .order('nombre')
       .range(offset, offset + limit - 1)
     

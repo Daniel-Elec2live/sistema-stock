@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
     const { data: allProducts, error: productsError } = await supabase
       .from('products')
       .select('id, nombre, stock_actual, stock_minimo')
+      .eq('is_active', true)
       .order('stock_actual', { ascending: true })
 
     console.log('[ALERTS] 📊 All products query result:', {
